@@ -13,6 +13,11 @@ type Category = {
   name: string;
 };
 
+type Collection = {
+  id: string;
+  name: string;
+};
+
 export type ProductData = {
   id: string;
   title: string;
@@ -51,7 +56,10 @@ function SubmitButton({
   );
 }
 
-function buildInitialState(product?: ProductData): FormState {
+function buildInitialState(
+  product?: ProductData,
+  selectedCollectionIds?: string[],
+): FormState {
   if (!product) return initialFormState;
 
   return {
@@ -64,22 +72,27 @@ function buildInitialState(product?: ProductData): FormState {
       categoryId: product.categoryId,
       published: product.published,
       featured: product.featured,
+      collectionIds: selectedCollectionIds ?? [],
     },
   };
 }
 
 export function ProductForm({
   categories,
+  collections = [],
   product,
+  selectedCollectionIds = [],
 }: {
   categories: Category[];
+  collections?: Collection[];
   product?: ProductData;
+  selectedCollectionIds?: string[];
 }) {
   const isEdit = Boolean(product);
   const action = isEdit ? updateProductAction : createProductAction;
   const [state, formAction] = useActionState(
     action,
-    buildInitialState(product),
+    buildInitialState(product, selectedCollectionIds),
   );
 
   const defaultCategoryId = categories[0]?.id ?? "";
@@ -201,6 +214,24 @@ export function ProductForm({
             Featured
           </label>
         </div>
+
+        {collections.length > 0 && (
+          <div className="space-y-3 md:col-span-2">
+            <p className="text-sm font-medium">Collections</p>
+            {collections.map((c) => (
+              <label key={c.id} className="flex items-center gap-2 text-sm">
+                <input
+                  name="collectionIds"
+                  type="checkbox"
+                  value={c.id}
+                  defaultChecked={state.values.collectionIds.includes(c.id)}
+                  className="h-4 w-4 rounded border-border"
+                />
+                {c.name}
+              </label>
+            ))}
+          </div>
+        )}
       </div>
 
       {!canSubmit && (

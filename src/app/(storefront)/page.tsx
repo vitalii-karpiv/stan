@@ -1,4 +1,13 @@
-export default function HomePage() {
+import { db } from "@/lib/db";
+import { CollectionCard } from "@/components/storefront/collection-card";
+
+export default async function HomePage() {
+  const collections = await db.collection.findMany({
+    where: { products: { some: {} } },
+    orderBy: { name: "asc" },
+    include: { _count: { select: { products: true } } },
+  });
+
   return (
     <div>
       {/* Hero */}
@@ -17,14 +26,29 @@ export default function HomePage() {
         </a>
       </section>
 
-      {/* Collections placeholder */}
+      {/* Collections */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Collections
         </h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Coming soon — browse by seasonal and special collections.
-        </p>
+        {collections.length > 0 ? (
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {collections.map((collection) => (
+              <CollectionCard
+                key={collection.id}
+                name={collection.name}
+                slug={collection.slug}
+                season={collection.season}
+                imageUrl={collection.imageUrl}
+                productCount={collection._count.products}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="mt-2 text-sm text-muted-foreground">
+            New collections coming soon.
+          </p>
+        )}
       </section>
 
       {/* Featured products placeholder */}

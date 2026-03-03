@@ -4,10 +4,16 @@ import { ProductForm } from "@/components/admin/product-form";
 import { db } from "@/lib/db";
 
 export default async function NewProductPage() {
-  const categories = await db.category.findMany({
-    orderBy: { name: "asc" },
-    select: { id: true, name: true },
-  });
+  const [categories, collections] = await Promise.all([
+    db.category.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+    db.collection.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+  ]);
 
   return (
     <div>
@@ -26,7 +32,7 @@ export default async function NewProductPage() {
         </Link>
       </div>
 
-      <ProductForm categories={categories} />
+      <ProductForm categories={categories} collections={collections} />
     </div>
   );
 }

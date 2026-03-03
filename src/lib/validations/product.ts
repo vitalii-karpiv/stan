@@ -14,6 +14,7 @@ const productFields = z.object({
   categoryId: z.string().trim().min(1, "Category is required"),
   published: z.boolean().default(false),
   featured: z.boolean().default(false),
+  collectionIds: z.array(z.string()).default([]),
 });
 
 function normalizeProductData(
@@ -42,7 +43,7 @@ export const updateProductSchema = productFields.transform(normalizeProductData)
 
 export type ProductInput = z.input<typeof productFields>;
 
-type FieldKey = keyof ProductInput;
+type FieldKey = keyof ProductInput | "collectionIds";
 
 export type FormValues = {
   title: string;
@@ -51,6 +52,7 @@ export type FormValues = {
   categoryId: string;
   published: boolean;
   featured: boolean;
+  collectionIds: string[];
 };
 
 export type FormState = {
@@ -69,5 +71,6 @@ export const initialFormState: FormState = {
     categoryId: "",
     published: false,
     featured: false,
+    collectionIds: [],
   },
 };

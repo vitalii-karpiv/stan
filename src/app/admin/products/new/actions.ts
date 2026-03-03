@@ -22,6 +22,7 @@ function extractValues(formData: FormData) {
     categoryId: str("categoryId"),
     published: formData.get("published") === "on",
     featured: formData.get("featured") === "on",
+    collectionIds: formData.getAll("collectionIds").filter((v): v is string => typeof v === "string"),
   };
 }
 
@@ -60,7 +61,7 @@ export async function createProductAction(
       };
     }
 
-    await db.product.create({
+    const product = await db.product.create({
       data: {
         title: parsed.data.title,
         description: parsed.data.description,
@@ -70,6 +71,15 @@ export async function createProductAction(
         featured: parsed.data.featured,
       },
     });
+
+    if (parsed.data.collectionIds.length > 0) {
+      await db.productCollection.createMany({
+        data: parsed.data.collectionIds.map((collectionId) => ({
+          productId: product.id,
+          collectionId,
+        })),
+      });
+    }
   } catch (error: unknown) {
     if (isSlugConflict(error)) {
       return {

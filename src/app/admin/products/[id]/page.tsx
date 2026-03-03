@@ -11,7 +11,7 @@ type Props = {
 export default async function EditProductPage({ params }: Props) {
   const { id } = await params;
 
-  const [product, categories] = await Promise.all([
+  const [product, categories, collections] = await Promise.all([
     db.product.findUnique({
       where: { id },
       select: {
@@ -22,9 +22,14 @@ export default async function EditProductPage({ params }: Props) {
         categoryId: true,
         published: true,
         featured: true,
+        collections: { select: { collectionId: true } },
       },
     }),
     db.category.findMany({
+      orderBy: { name: "asc" },
+      select: { id: true, name: true },
+    }),
+    db.collection.findMany({
       orderBy: { name: "asc" },
       select: { id: true, name: true },
     }),
@@ -49,7 +54,12 @@ export default async function EditProductPage({ params }: Props) {
         </Link>
       </div>
 
-      <ProductForm categories={categories} product={product} />
+      <ProductForm
+        categories={categories}
+        collections={collections}
+        product={product}
+        selectedCollectionIds={product.collections.map((c) => c.collectionId)}
+      />
     </div>
   );
 }

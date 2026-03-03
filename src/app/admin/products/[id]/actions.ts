@@ -22,6 +22,7 @@ function extractValues(formData: FormData) {
     categoryId: str("categoryId"),
     published: formData.get("published") === "on",
     featured: formData.get("featured") === "on",
+    collectionIds: formData.getAll("collectionIds").filter((v): v is string => typeof v === "string"),
   };
 }
 
@@ -69,17 +70,30 @@ export async function updateProductAction(
       };
     }
 
-    await db.product.update({
-      where: { id },
-      data: {
-        title: parsed.data.title,
-        description: parsed.data.description,
-        slug: parsed.data.slug,
-        categoryId: parsed.data.categoryId,
-        published: parsed.data.published,
-        featured: parsed.data.featured,
-      },
-    });
+    await db.$transaction([
+      db.product.update({
+        where: { id },
+        data: {
+          title: parsed.data.title,
+          description: parsed.data.description,
+          slug: parsed.data.slug,
+          categoryId: parsed.data.categoryId,
+          published: parsed.data.published,
+          featured: parsed.data.featured,
+        },
+      }),
+      db.productCollection.deleteMany({ where: { productId: id } }),
+      ...(parsed.data.collectionIds.length > 0
+        ? [
+            db.productCollection.createMany({
+              data: parsed.data.collectionIds.map((collectionId) => ({
+                productId: id,
+                collectionId,
+              })),
+            }),
+          ]
+        : []),
+    ]);
   } catch (error: unknown) {
     if (isSlugConflict(error)) {
       return {
