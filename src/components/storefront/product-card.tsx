@@ -10,9 +10,10 @@ type ProductCardProps = {
 };
 
 function formatPrice(cents: number) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("uk-UA", {
     style: "currency",
-    currency: "USD",
+    currency: "UAH",
+    maximumFractionDigits: 0,
   }).format(cents / 100);
 }
 
@@ -45,7 +46,7 @@ export function ProductCard({
         </h3>
         {priceInCents != null && (
           <p className="mt-1 text-sm text-muted-foreground">
-            From {formatPrice(priceInCents)}
+            Від {formatPrice(priceInCents)}
           </p>
         )}
       </div>

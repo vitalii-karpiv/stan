@@ -1,19 +1,19 @@
-export const metadata = { title: "Contact" };
+export const metadata = { title: "Контакти" };
 
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light">
-        Contact Us
+        Зв&#39;яжіться з нами
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Have a question? We&apos;d love to hear from you.
+        Маєте запитання? Ми будемо раді вам допомогти.
       </p>
 
       <form className="mt-8 space-y-6">
         <div>
           <label htmlFor="name" className="block text-sm font-medium">
-            Name
+            Ім&#39;я
           </label>
           <input
             id="name"
@@ -23,7 +23,7 @@ export default function ContactPage() {
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium">
-            Email
+            Електронна пошта
           </label>
           <input
             id="email"
@@ -33,7 +33,7 @@ export default function ContactPage() {
         </div>
         <div>
           <label htmlFor="message" className="block text-sm font-medium">
-            Message
+            Повідомлення
           </label>
           <textarea
             id="message"
@@ -45,7 +45,7 @@ export default function ContactPage() {
           type="submit"
           className="bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          Send Message
+          Надіслати
         </button>
       </form>
     </div>

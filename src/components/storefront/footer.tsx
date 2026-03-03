@@ -10,37 +10,37 @@ export function Footer() {
               STAN
             </h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              Modern minimalist jewelry, crafted with care.
+              Сучасні мінімалістичні прикраси, створені з турботою.
             </p>
           </div>
 
           <div>
-            <h4 className="text-sm font-medium">Shop</h4>
+            <h4 className="text-sm font-medium">Магазин</h4>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
               <li>
                 <Link href="/shop" className="hover:text-foreground">
-                  All Jewelry
+                  Усі прикраси
                 </Link>
               </li>
               <li>
                 <Link href="/shop?category=necklaces" className="hover:text-foreground">
-                  Necklaces
+                  Намиста
                 </Link>
               </li>
               <li>
                 <Link href="/shop?category=bracelets" className="hover:text-foreground">
-                  Bracelets
+                  Браслети
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-sm font-medium">Help</h4>
+            <h4 className="text-sm font-medium">Допомога</h4>
             <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
               <li>
                 <Link href="/contact" className="hover:text-foreground">
-                  Contact Us
+                  Зв&#39;язатися з нами
                 </Link>
               </li>
             </ul>
@@ -48,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t border-border pt-8 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} Stan. All rights reserved.
+          &copy; {new Date().getFullYear()} Stan. Усі права захищені.
         </div>
       </div>
     </footer>

@@ -4,22 +4,22 @@ import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Stan — Jewelry",
+    default: "Stan — Ювелірні вироби",
     template: "%s | Stan",
   },
   description:
-    "Modern minimalist jewelry. Necklaces, bracelets, and curated collections crafted with care.",
+    "Сучасні мінімалістичні прикраси. Намиста, браслети та добірні колекції, створені з турботою.",
 };
 
 export default function RootLayout({
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="uk">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
         {children}
       </body>

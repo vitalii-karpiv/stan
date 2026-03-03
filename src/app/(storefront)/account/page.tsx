@@ -1,13 +1,13 @@
-export const metadata = { title: "Account" };
+export const metadata = { title: "Акаунт" };
 
 export default function AccountPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light">
-        My Account
+        Мій акаунт
       </h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Account settings and order history will be accessible here.
+        Налаштування акаунту та історія замовлень будуть доступні тут.
       </p>
     </div>
   );

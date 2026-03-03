@@ -25,23 +25,23 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
         <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light tracking-tight md:text-7xl">
-          Jewelry, Simplified
+          Прикраси, що надихають
         </h1>
         <p className="mt-4 max-w-md text-lg text-muted-foreground">
-          Minimalist pieces designed to complement your everyday.
+          Мінімалістичні вироби, створені доповнювати ваш щоденний стиль.
         </p>
         <a
           href="/shop"
           className="mt-8 inline-block bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          Shop Now
+          До магазину
         </a>
       </section>
 
-      {/* Collections */}
+      {/* Колекції */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
-          Collections
+          Колекції
         </h2>
         {collections.length > 0 ? (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -58,15 +58,15 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="mt-2 text-sm text-muted-foreground">
-            New collections coming soon.
+            Нові колекції незабаром.
           </p>
         )}
       </section>
 
-      {/* Featured */}
+      {/* Обране */}
       <section className="mx-auto max-w-7xl px-6 py-16">
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
-          Featured
+          Обране
         </h2>
         {featuredProducts.length > 0 ? (
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -83,7 +83,7 @@ export default async function HomePage() {
           </div>
         ) : (
           <p className="mt-2 text-sm text-muted-foreground">
-            Featured products coming soon.
+            Рекомендовані товари з&#39;являться незабаром.
           </p>
         )}
       </section>

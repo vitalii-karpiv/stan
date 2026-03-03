@@ -11,10 +11,10 @@ export function Header() {
 
         <nav className="hidden items-center gap-8 text-sm md:flex">
           <Link href="/shop" className="text-muted-foreground transition-colors hover:text-foreground">
-            Shop
+            Магазин
           </Link>
           <Link href="/contact" className="text-muted-foreground transition-colors hover:text-foreground">
-            Contact
+            Контакти
           </Link>
         </nav>
 

@@ -45,7 +45,12 @@ export function CollectionCard({
           {name}
         </h3>
         <p className="mt-1 text-sm text-white/70">
-          {productCount} {productCount === 1 ? "piece" : "pieces"}
+          {productCount}{" "}
+          {productCount === 1
+            ? "виріб"
+            : productCount >= 2 && productCount <= 4
+              ? "вироби"
+              : "виробів"}
         </p>
       </div>
     </Link>
