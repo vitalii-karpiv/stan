@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProductForm } from "@/components/admin/product-form";
+import { ProductImages } from "@/components/admin/product-images";
 import { db } from "@/lib/db";
 
 type Props = {
@@ -23,6 +24,7 @@ export default async function EditProductPage({ params }: Props) {
         published: true,
         featured: true,
         collections: { select: { collectionId: true } },
+        images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true, sortOrder: true } },
       },
     }),
     db.category.findMany({
@@ -60,6 +62,8 @@ export default async function EditProductPage({ params }: Props) {
         product={product}
         selectedCollectionIds={product.collections.map((c) => c.collectionId)}
       />
+
+      <ProductImages productId={product.id} images={product.images} />
     </div>
   );
 }
