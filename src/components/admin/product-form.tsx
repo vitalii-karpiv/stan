@@ -4,16 +4,41 @@ import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import { createProductAction } from "@/app/admin/products/new/actions";
+import { updateProductAction } from "@/app/admin/products/[id]/actions";
 import { slugify } from "@/lib/utils";
-import { initialFormState } from "@/lib/validations/product";
+import { initialFormState, type FormState } from "@/lib/validations/product";
 
 type Category = {
   id: string;
   name: string;
 };
 
-function SubmitButton({ disabled }: { disabled: boolean }) {
+export type ProductData = {
+  id: string;
+  title: string;
+  description: string | null;
+  slug: string;
+  categoryId: string;
+  published: boolean;
+  featured: boolean;
+};
+
+function SubmitButton({
+  disabled,
+  isEdit,
+}: {
+  disabled: boolean;
+  isEdit: boolean;
+}) {
   const { pending } = useFormStatus();
+
+  const label = isEdit
+    ? pending
+      ? "Saving..."
+      : "Save Changes"
+    : pending
+      ? "Creating..."
+      : "Create Product";
 
   return (
     <button
@@ -21,26 +46,53 @@ function SubmitButton({ disabled }: { disabled: boolean }) {
       disabled={disabled || pending}
       className="rounded bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
     >
-      {pending ? "Creating..." : "Create Product"}
+      {label}
     </button>
   );
 }
 
-export function ProductForm({ categories }: { categories: Category[] }) {
+function buildInitialState(product?: ProductData): FormState {
+  if (!product) return initialFormState;
+
+  return {
+    message: null,
+    fieldErrors: {},
+    values: {
+      title: product.title,
+      description: product.description ?? "",
+      slug: product.slug,
+      categoryId: product.categoryId,
+      published: product.published,
+      featured: product.featured,
+    },
+  };
+}
+
+export function ProductForm({
+  categories,
+  product,
+}: {
+  categories: Category[];
+  product?: ProductData;
+}) {
+  const isEdit = Boolean(product);
+  const action = isEdit ? updateProductAction : createProductAction;
   const [state, formAction] = useActionState(
-    createProductAction,
-    initialFormState,
+    action,
+    buildInitialState(product),
   );
 
   const defaultCategoryId = categories[0]?.id ?? "";
 
   const [slug, setSlug] = useState(state.values.slug);
-  const [slugEdited, setSlugEdited] = useState(Boolean(state.values.slug));
+  const [slugEdited, setSlugEdited] = useState(isEdit || Boolean(state.values.slug));
 
   const canSubmit = categories.length > 0;
 
   return (
     <form action={formAction} className="mt-8 space-y-6">
+      {product && <input type="hidden" name="id" value={product.id} />}
+
       {state.message && (
         <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
           {state.message}
@@ -48,7 +100,6 @@ export function ProductForm({ categories }: { categories: Category[] }) {
       )}
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Title */}
         <div className="space-y-1.5 md:col-span-2">
           <label htmlFor="title" className="block text-sm font-medium">
             Title
@@ -68,7 +119,6 @@ export function ProductForm({ categories }: { categories: Category[] }) {
           )}
         </div>
 
-        {/* Slug */}
         <div className="space-y-1.5 md:col-span-2">
           <label htmlFor="slug" className="block text-sm font-medium">
             Slug
@@ -89,7 +139,6 @@ export function ProductForm({ categories }: { categories: Category[] }) {
           )}
         </div>
 
-        {/* Description */}
         <div className="space-y-1.5 md:col-span-2">
           <label htmlFor="description" className="block text-sm font-medium">
             Description
@@ -108,7 +157,6 @@ export function ProductForm({ categories }: { categories: Category[] }) {
           )}
         </div>
 
-        {/* Category */}
         <div className="space-y-1.5">
           <label htmlFor="categoryId" className="block text-sm font-medium">
             Category
@@ -132,7 +180,6 @@ export function ProductForm({ categories }: { categories: Category[] }) {
           )}
         </div>
 
-        {/* Visibility toggles */}
         <div className="space-y-3">
           <p className="text-sm font-medium">Visibility</p>
           <label className="flex items-center gap-2 text-sm">
@@ -163,7 +210,7 @@ export function ProductForm({ categories }: { categories: Category[] }) {
       )}
 
       <div className="flex items-center gap-3">
-        <SubmitButton disabled={!canSubmit} />
+        <SubmitButton disabled={!canSubmit} isEdit={isEdit} />
       </div>
     </form>
   );

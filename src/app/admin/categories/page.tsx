@@ -43,7 +43,14 @@ export default async function CategoriesPage() {
             <tbody className="divide-y divide-border">
               {categories.map((category) => (
                 <tr key={category.id} className="hover:bg-muted/50">
-                  <td className="px-4 py-3 font-medium">{category.name}</td>
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/admin/categories/${category.id}`}
+                      className="font-medium hover:underline"
+                    >
+                      {category.name}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {category.slug}
                   </td>

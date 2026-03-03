@@ -3,18 +3,20 @@
 import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 
-import { createCategoryAction } from "@/app/admin/categories/new/actions";
-import { updateCategoryAction } from "@/app/admin/categories/[id]/actions";
+import { createCollectionAction } from "@/app/admin/collections/new/actions";
+import { updateCollectionAction } from "@/app/admin/collections/[id]/actions";
 import { slugify } from "@/lib/utils";
 import {
-  initialCategoryFormState,
-  type CategoryFormState,
-} from "@/lib/validations/category";
+  initialCollectionFormState,
+  type CollectionFormState,
+} from "@/lib/validations/collection";
 
-export type CategoryData = {
+export type CollectionData = {
   id: string;
   name: string;
   slug: string;
+  season: string | null;
+  imageUrl: string | null;
 };
 
 function SubmitButton({ isEdit }: { isEdit: boolean }) {
@@ -26,7 +28,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
       : "Save Changes"
     : pending
       ? "Creating..."
-      : "Create Category";
+      : "Create Collection";
 
   return (
     <button
@@ -39,25 +41,33 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
   );
 }
 
-function buildInitialState(category?: CategoryData): CategoryFormState {
-  if (!category) return initialCategoryFormState;
+function buildInitialState(
+  collection?: CollectionData,
+): CollectionFormState {
+  if (!collection) return initialCollectionFormState;
 
   return {
     message: null,
     fieldErrors: {},
     values: {
-      name: category.name,
-      slug: category.slug,
+      name: collection.name,
+      slug: collection.slug,
+      season: collection.season ?? "",
+      imageUrl: collection.imageUrl ?? "",
     },
   };
 }
 
-export function CategoryForm({ category }: { category?: CategoryData }) {
-  const isEdit = Boolean(category);
-  const action = isEdit ? updateCategoryAction : createCategoryAction;
+export function CollectionForm({
+  collection,
+}: {
+  collection?: CollectionData;
+}) {
+  const isEdit = Boolean(collection);
+  const action = isEdit ? updateCollectionAction : createCollectionAction;
   const [state, formAction] = useActionState(
     action,
-    buildInitialState(category),
+    buildInitialState(collection),
   );
 
   const [slug, setSlug] = useState(state.values.slug);
@@ -67,7 +77,9 @@ export function CategoryForm({ category }: { category?: CategoryData }) {
 
   return (
     <form action={formAction} className="mt-8 space-y-6">
-      {category && <input type="hidden" name="id" value={category.id} />}
+      {collection && (
+        <input type="hidden" name="id" value={collection.id} />
+      )}
 
       {state.message && (
         <div className="rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
@@ -112,6 +124,44 @@ export function CategoryForm({ category }: { category?: CategoryData }) {
           />
           {state.fieldErrors.slug && (
             <p className="text-sm text-red-600">{state.fieldErrors.slug}</p>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="season" className="block text-sm font-medium">
+            Season
+          </label>
+          <input
+            id="season"
+            name="season"
+            type="text"
+            defaultValue={state.values.season}
+            placeholder="e.g. Spring 2026"
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.season && (
+            <p className="text-sm text-red-600">
+              {state.fieldErrors.season}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="imageUrl" className="block text-sm font-medium">
+            Image URL
+          </label>
+          <input
+            id="imageUrl"
+            name="imageUrl"
+            type="text"
+            defaultValue={state.values.imageUrl}
+            placeholder="https://..."
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.imageUrl && (
+            <p className="text-sm text-red-600">
+              {state.fieldErrors.imageUrl}
+            </p>
           )}
         </div>
       </div>

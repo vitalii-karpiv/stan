@@ -2,41 +2,47 @@ import { z } from "zod";
 
 import { slugify } from "@/lib/utils";
 
-export const createProductSchema = z
-  .object({
-    title: z.string().trim().min(1, "Title is required").max(120),
-    description: z
-      .string()
-      .trim()
-      .max(5000, "Description is too long")
-      .optional()
-      .or(z.literal("")),
-    slug: z.string().trim().max(160).optional().or(z.literal("")),
-    categoryId: z.string().trim().min(1, "Category is required"),
-    published: z.boolean().default(false),
-    featured: z.boolean().default(false),
-  })
-  .transform((data, ctx) => {
-    const slug = slugify(data.slug || data.title);
+const productFields = z.object({
+  title: z.string().trim().min(1, "Title is required").max(120),
+  description: z
+    .string()
+    .trim()
+    .max(5000, "Description is too long")
+    .optional()
+    .or(z.literal("")),
+  slug: z.string().trim().max(160).optional().or(z.literal("")),
+  categoryId: z.string().trim().min(1, "Category is required"),
+  published: z.boolean().default(false),
+  featured: z.boolean().default(false),
+});
 
-    if (!slug) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Slug is required",
-        path: ["slug"],
-      });
-    }
+function normalizeProductData(
+  data: z.output<typeof productFields>,
+  ctx: z.RefinementCtx,
+) {
+  const slug = slugify(data.slug || data.title);
 
-    return {
-      ...data,
-      description: data.description || null,
-      slug,
-    };
-  });
+  if (!slug) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Slug is required",
+      path: ["slug"],
+    });
+  }
 
-export type CreateProductInput = z.input<typeof createProductSchema>;
+  return {
+    ...data,
+    description: data.description || null,
+    slug,
+  };
+}
 
-type FieldKey = keyof CreateProductInput;
+export const createProductSchema = productFields.transform(normalizeProductData);
+export const updateProductSchema = productFields.transform(normalizeProductData);
+
+export type ProductInput = z.input<typeof productFields>;
+
+type FieldKey = keyof ProductInput;
 
 export type FormValues = {
   title: string;

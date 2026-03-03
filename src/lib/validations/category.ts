@@ -2,28 +2,34 @@ import { z } from "zod";
 
 import { slugify } from "@/lib/utils";
 
-export const createCategorySchema = z
-  .object({
-    name: z.string().trim().min(1, "Name is required").max(100),
-    slug: z.string().trim().max(120).optional().or(z.literal("")),
-  })
-  .transform((data, ctx) => {
-    const slug = slugify(data.slug || data.name);
+const categoryFields = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  slug: z.string().trim().max(120).optional().or(z.literal("")),
+});
 
-    if (!slug) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Slug is required",
-        path: ["slug"],
-      });
-    }
+function normalizeCategoryData(
+  data: z.output<typeof categoryFields>,
+  ctx: z.RefinementCtx,
+) {
+  const slug = slugify(data.slug || data.name);
 
-    return { ...data, slug };
-  });
+  if (!slug) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Slug is required",
+      path: ["slug"],
+    });
+  }
 
-export type CreateCategoryInput = z.input<typeof createCategorySchema>;
+  return { ...data, slug };
+}
 
-type FieldKey = keyof CreateCategoryInput;
+export const createCategorySchema = categoryFields.transform(normalizeCategoryData);
+export const updateCategorySchema = categoryFields.transform(normalizeCategoryData);
+
+export type CategoryInput = z.input<typeof categoryFields>;
+
+type FieldKey = keyof CategoryInput;
 
 export type CategoryFormValues = {
   name: string;
