@@ -4,7 +4,6 @@ import Link from "next/link";
 type CollectionCardProps = {
   name: string;
   slug: string;
-  season: string | null;
   imageUrl: string | null;
   productCount: number;
 };
@@ -12,7 +11,6 @@ type CollectionCardProps = {
 export function CollectionCard({
   name,
   slug,
-  season,
   imageUrl,
   productCount,
 }: CollectionCardProps) {
@@ -36,11 +34,6 @@ export function CollectionCard({
       <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:bg-black/30" />
 
       <div className="absolute inset-x-0 bottom-0 p-6">
-        {season && (
-          <span className="mb-2 inline-block text-xs uppercase tracking-widest text-white/80">
-            {season}
-          </span>
-        )}
         <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-light text-white">
           {name}
         </h3>

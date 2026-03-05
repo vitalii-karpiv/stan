@@ -17,7 +17,6 @@ export default async function EditCollectionPage({ params }: Props) {
       id: true,
       name: true,
       slug: true,
-      season: true,
       imageUrl: true,
     },
   });

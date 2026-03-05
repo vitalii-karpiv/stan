@@ -16,7 +16,7 @@ export default async function CollectionsPage() {
         <div>
           <h1 className="text-2xl font-semibold">Collections</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Manage seasonal and special collections.
+            Manage collections.
           </p>
         </div>
         <Link
@@ -39,7 +39,6 @@ export default async function CollectionsPage() {
               <tr>
                 <th className="px-4 py-3 font-medium">Name</th>
                 <th className="px-4 py-3 font-medium">Slug</th>
-                <th className="px-4 py-3 font-medium">Season</th>
                 <th className="px-4 py-3 font-medium text-right">Products</th>
                 <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
@@ -57,9 +56,6 @@ export default async function CollectionsPage() {
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {collection.slug}
-                  </td>
-                  <td className="px-4 py-3 text-muted-foreground">
-                    {collection.season ?? "—"}
                   </td>
                   <td className="px-4 py-3 text-right text-muted-foreground">
                     {collection._count.products}

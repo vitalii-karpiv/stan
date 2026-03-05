@@ -50,7 +50,6 @@ export default async function HomePage() {
                 key={collection.id}
                 name={collection.name}
                 slug={collection.slug}
-                season={collection.season}
                 imageUrl={collection.imageUrl}
                 productCount={collection._count.products}
               />

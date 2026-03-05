@@ -5,7 +5,6 @@ import { slugify } from "@/lib/utils";
 const collectionFields = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   slug: z.string().trim().max(120).optional().or(z.literal("")),
-  season: z.string().trim().max(60).optional().or(z.literal("")),
   imageUrl: z
     .string()
     .trim()
@@ -32,7 +31,6 @@ function normalizeCollectionData(
   return {
     ...data,
     slug,
-    season: data.season || null,
     imageUrl: data.imageUrl || null,
   };
 }
@@ -49,7 +47,6 @@ type FieldKey = keyof CollectionInput;
 export type CollectionFormValues = {
   name: string;
   slug: string;
-  season: string;
   imageUrl: string;
 };
 
@@ -65,7 +62,6 @@ export const initialCollectionFormState: CollectionFormState = {
   values: {
     name: "",
     slug: "",
-    season: "",
     imageUrl: "",
   },
 };

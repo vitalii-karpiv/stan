@@ -9,7 +9,7 @@ export default function NewCollectionPage() {
         <div>
           <h1 className="text-2xl font-semibold">New Collection</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Create a new seasonal or special collection.
+            Create a new collection.
           </p>
         </div>
         <Link

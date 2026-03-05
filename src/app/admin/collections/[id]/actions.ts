@@ -18,7 +18,6 @@ function extractValues(formData: FormData) {
   return {
     name: str("name"),
     slug: str("slug"),
-    season: str("season"),
     imageUrl: str("imageUrl"),
   };
 }
@@ -46,7 +45,6 @@ export async function updateCollectionAction(
       fieldErrors: {
         name: flat.name?.[0],
         slug: flat.slug?.[0],
-        season: flat.season?.[0],
         imageUrl: flat.imageUrl?.[0],
       },
       values,
@@ -59,7 +57,6 @@ export async function updateCollectionAction(
       data: {
         name: parsed.data.name,
         slug: parsed.data.slug,
-        season: parsed.data.season,
         imageUrl: parsed.data.imageUrl,
       },
     });

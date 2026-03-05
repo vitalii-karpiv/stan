@@ -15,7 +15,6 @@ export type CollectionData = {
   id: string;
   name: string;
   slug: string;
-  season: string | null;
   imageUrl: string | null;
 };
 
@@ -52,7 +51,6 @@ function buildInitialState(
     values: {
       name: collection.name,
       slug: collection.slug,
-      season: collection.season ?? "",
       imageUrl: collection.imageUrl ?? "",
     },
   };
@@ -124,25 +122,6 @@ export function CollectionForm({
           />
           {state.fieldErrors.slug && (
             <p className="text-sm text-red-600">{state.fieldErrors.slug}</p>
-          )}
-        </div>
-
-        <div className="space-y-1.5">
-          <label htmlFor="season" className="block text-sm font-medium">
-            Season
-          </label>
-          <input
-            id="season"
-            name="season"
-            type="text"
-            defaultValue={state.values.season}
-            placeholder="e.g. Spring 2026"
-            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
-          />
-          {state.fieldErrors.season && (
-            <p className="text-sm text-red-600">
-              {state.fieldErrors.season}
-            </p>
           )}
         </div>
 

@@ -62,7 +62,6 @@ model Collection {
   id       String              @id @default(uuid())
   name     String              @unique
   slug     String              @unique
-  season   String?
   imageUrl String?
   products ProductCollection[]
 }
