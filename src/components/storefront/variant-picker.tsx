@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
 
 type Variant = {
@@ -15,13 +16,24 @@ type Variant = {
 
 type VariantPickerProps = {
   variants: Variant[];
+  productTitle: string;
+  productSlug: string;
+  imageUrl: string | null;
 };
 
 function uniqueNonNull(values: (string | null)[]): string[] {
   return [...new Set(values.filter((v): v is string => v != null))];
 }
 
-export function VariantPicker({ variants }: VariantPickerProps) {
+export function VariantPicker({
+  variants,
+  productTitle,
+  productSlug,
+  imageUrl,
+}: VariantPickerProps) {
+  const { addItem } = useCart();
+  const [added, setAdded] = useState(false);
+
   const dimensions = useMemo(() => {
     const materials = uniqueNonNull(variants.map((v) => v.material));
     const sizes = uniqueNonNull(variants.map((v) => v.size));
@@ -48,6 +60,21 @@ export function VariantPicker({ variants }: VariantPickerProps) {
   }, [variants, selectedMaterial, selectedSize, selectedGemstone]);
 
   const inStock = matchedVariant.stock > 0;
+
+  function handleAdd() {
+    addItem({
+      variantId: matchedVariant.id,
+      productTitle,
+      productSlug,
+      imageUrl,
+      material: matchedVariant.material,
+      size: matchedVariant.size,
+      gemstone: matchedVariant.gemstone,
+      priceInCents: matchedVariant.priceInCents,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  }
 
   return (
     <div className="space-y-6">
@@ -88,9 +115,10 @@ export function VariantPicker({ variants }: VariantPickerProps) {
 
       <button
         disabled={!inStock}
+        onClick={handleAdd}
         className="w-full bg-accent py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Додати до кошика
+        {added ? "Додано ✓" : "Додати до кошика"}
       </button>
     </div>
   );

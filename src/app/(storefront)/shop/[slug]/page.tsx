@@ -98,7 +98,12 @@ export default async function ProductPage({ params }: Props) {
           )}
 
           {product.variants.length > 0 ? (
-            <VariantPicker variants={product.variants} />
+            <VariantPicker
+              variants={product.variants}
+              productTitle={product.title}
+              productSlug={product.slug}
+              imageUrl={product.images[0]?.url ?? null}
+            />
           ) : (
             <p className="text-sm text-muted-foreground">
               Немає в наявності

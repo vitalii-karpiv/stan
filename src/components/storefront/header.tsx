@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+
+import { CartBadge } from "@/components/storefront/cart-badge";
 
 export function Header() {
   return (
@@ -20,9 +21,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-4">
-          <Link href="/cart" className="relative text-foreground">
-            <ShoppingBag className="h-5 w-5" />
-          </Link>
+          <CartBadge />
         </div>
       </div>
     </header>

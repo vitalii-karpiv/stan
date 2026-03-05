@@ -32,7 +32,7 @@ export default async function HomePage() {
         </p>
         <a
           href="/shop"
-          className="mt-8 inline-block bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+          className="mt-8 inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
         >
           До магазину
         </a>
