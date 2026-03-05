@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { formatPrice } from "@/lib/utils";
+
 type ProductCardProps = {
   title: string;
   slug: string;
@@ -8,14 +10,6 @@ type ProductCardProps = {
   imageAlt: string | null;
   priceInCents: number | null;
 };
-
-function formatPrice(cents: number) {
-  return new Intl.NumberFormat("uk-UA", {
-    style: "currency",
-    currency: "UAH",
-    maximumFractionDigits: 0,
-  }).format(cents / 100);
-}
 
 export function ProductCard({
   title,
