@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { db } from "@/lib/db";
+import { DeleteButton } from "@/components/admin/delete-button";
+import { deleteCollectionAction } from "./actions";
 
 export default async function CollectionsPage() {
   const collections = await db.collection.findMany({
@@ -39,6 +41,7 @@ export default async function CollectionsPage() {
                 <th className="px-4 py-3 font-medium">Slug</th>
                 <th className="px-4 py-3 font-medium">Season</th>
                 <th className="px-4 py-3 font-medium text-right">Products</th>
+                <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -60,6 +63,12 @@ export default async function CollectionsPage() {
                   </td>
                   <td className="px-4 py-3 text-right text-muted-foreground">
                     {collection._count.products}
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DeleteButton
+                      action={deleteCollectionAction.bind(null, collection.id)}
+                      confirmMessage={`Delete "${collection.name}"? Products in this collection will not be deleted.`}
+                    />
                   </td>
                 </tr>
               ))}

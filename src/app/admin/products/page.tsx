@@ -1,6 +1,8 @@
 import Link from "next/link";
 
 import { db } from "@/lib/db";
+import { DeleteButton } from "@/components/admin/delete-button";
+import { deleteProductAction } from "./actions";
 
 export default async function ProductsPage() {
   const products = await db.product.findMany({
@@ -39,6 +41,7 @@ export default async function ProductsPage() {
                 <th className="px-4 py-3 font-medium">Slug</th>
                 <th className="px-4 py-3 font-medium">Category</th>
                 <th className="px-4 py-3 font-medium">Status</th>
+                <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -68,6 +71,12 @@ export default async function ProductsPage() {
                     >
                       {product.published ? "Published" : "Draft"}
                     </span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <DeleteButton
+                      action={deleteProductAction.bind(null, product.id)}
+                      confirmMessage={`Delete "${product.title}"? This will also remove all its variants and images.`}
+                    />
                   </td>
                 </tr>
               ))}
