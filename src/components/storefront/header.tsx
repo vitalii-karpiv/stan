@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag } from "lucide-react";
 
@@ -5,8 +6,8 @@ export function Header() {
   return (
     <header className="border-b border-border">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="font-[family-name:var(--font-cormorant)] text-2xl font-semibold tracking-wide">
-          STAN
+        <Link href="/">
+          <Image src="/stan_logo.svg" alt="Stan" width={80} height={26} priority />
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm md:flex">
