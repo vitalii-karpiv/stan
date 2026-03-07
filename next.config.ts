@@ -1,10 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
   images: {
     remotePatterns: [
-      { hostname: "images.unsplash.com" },
-      { hostname: "plus.unsplash.com" },
+      { hostname: "stan-bijou.s3.eu-north-1.amazonaws.com" },
     ],
   },
 };
