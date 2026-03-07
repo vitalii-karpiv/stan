@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 import {
   updateCategorySchema,
   type CategoryFormState,
@@ -25,6 +26,7 @@ export async function updateCategoryAction(
   _prev: CategoryFormState,
   formData: FormData,
 ): Promise<CategoryFormState> {
+  await requireAdmin();
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
     return {

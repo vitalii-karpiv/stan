@@ -2,11 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 
 export async function addProductImageAction(
   productId: string,
   formData: FormData,
 ) {
+  await requireAdmin();
   const url = formData.get("url");
   if (typeof url !== "string" || !url.trim()) {
     return { error: "Image URL is required." };
@@ -35,6 +37,7 @@ export async function addProductImageAction(
 }
 
 export async function deleteProductImageAction(imageId: string) {
+  await requireAdmin();
   const image = await db.productImage.findUnique({
     where: { id: imageId },
     select: { productId: true },

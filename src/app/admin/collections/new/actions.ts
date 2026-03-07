@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 import {
   createCollectionSchema,
   type CollectionFormState,
@@ -26,6 +27,7 @@ export async function createCollectionAction(
   _prev: CollectionFormState,
   formData: FormData,
 ): Promise<CollectionFormState> {
+  await requireAdmin();
   const values = extractValues(formData);
   const parsed = createCollectionSchema.safeParse(values);
 

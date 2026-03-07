@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 import {
   updateCollectionSchema,
   type CollectionFormState,
@@ -26,6 +27,7 @@ export async function updateCollectionAction(
   _prev: CollectionFormState,
   formData: FormData,
 ): Promise<CollectionFormState> {
+  await requireAdmin();
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
     return {

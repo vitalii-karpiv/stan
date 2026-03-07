@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 import {
   updateProductSchema,
   type FormState,
@@ -31,6 +32,7 @@ export async function updateProductAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  await requireAdmin();
   const id = formData.get("id");
   if (typeof id !== "string" || !id) {
     return {

@@ -3,8 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { Prisma } from "@/generated/prisma/client";
+import { requireAdmin } from "@/lib/admin";
 
 export async function deleteProductAction(id: string) {
+  await requireAdmin();
   try {
     await db.product.delete({ where: { id } });
   } catch (e) {

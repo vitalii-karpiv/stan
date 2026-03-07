@@ -2,8 +2,10 @@
 
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 
 export async function deleteCollectionAction(id: string) {
+  await requireAdmin();
   try {
     await db.collection.delete({ where: { id } });
   } catch {

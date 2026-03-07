@@ -1,12 +1,19 @@
+import { auth } from "@/auth";
 import { AdminSidebar } from "@/components/admin/sidebar";
 
 export const metadata = { title: "Admin" };
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+
+  if (!session) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex h-screen overflow-hidden">
       <AdminSidebar />

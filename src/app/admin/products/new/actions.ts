@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/admin";
 import {
   createProductSchema,
   type FormState,
@@ -31,6 +32,7 @@ export async function createProductAction(
   _prev: FormState,
   formData: FormData,
 ): Promise<FormState> {
+  await requireAdmin();
   const values = extractValues(formData);
   const parsed = createProductSchema.safeParse(values);
 
