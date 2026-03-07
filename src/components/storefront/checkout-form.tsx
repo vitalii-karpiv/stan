@@ -84,7 +84,8 @@ export function CheckoutForm() {
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <label htmlFor="name" className="block text-sm font-medium">
-                  Ім&apos;я та прізвище
+                  Ім&apos;я та прізвище{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="name"
@@ -103,7 +104,7 @@ export function CheckoutForm() {
 
               <div className="space-y-1.5">
                 <label htmlFor="phone" className="block text-sm font-medium">
-                  Телефон
+                  Телефон <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="phone"
@@ -123,7 +124,7 @@ export function CheckoutForm() {
 
             <div className="space-y-1.5">
               <label htmlFor="email" className="block text-sm font-medium">
-                Email
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 id="email"
@@ -153,7 +154,7 @@ export function CheckoutForm() {
                   htmlFor="shippingCity"
                   className="block text-sm font-medium"
                 >
-                  Місто
+                  Місто <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="shippingCity"
@@ -175,7 +176,8 @@ export function CheckoutForm() {
                   htmlFor="shippingPostOffice"
                   className="block text-sm font-medium"
                 >
-                  Відділення Нової Пошти
+                  Відділення Нової Пошти{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="shippingPostOffice"

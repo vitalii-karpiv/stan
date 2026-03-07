@@ -7,7 +7,7 @@ export const checkoutSchema = z.object({
     .trim()
     .min(1, "Введіть email")
     .email("Невірний формат email"),
-  phone: z.string().trim().optional().or(z.literal("")),
+  phone: z.string().trim().min(1, "Введіть номер телефону"),
   shippingCity: z.string().trim().min(1, "Введіть місто"),
   shippingPostOffice: z
     .string()
