@@ -1,10 +1,22 @@
+import Link from "next/link";
+
 export default function AdminDashboard() {
   return (
     <div>
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Overview of your store&apos;s performance.
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Dashboard</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Overview of your store&apos;s performance.
+          </p>
+        </div>
+        <Link
+          href="/admin/users/new"
+          className="rounded bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90"
+        >
+          Register Admin
+        </Link>
+      </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
