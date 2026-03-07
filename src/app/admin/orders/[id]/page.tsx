@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
-import { StatusBadge, statusLabels } from "@/components/admin/order-status";
+import { statusLabels } from "@/components/admin/order-status";
 import { updateOrderStatus } from "./actions";
 import type { OrderStatus } from "@/generated/prisma/client";
 
@@ -82,12 +82,9 @@ export default async function OrderDetailPage({ params }: Props) {
           <h2 className="mt-5 text-sm font-medium text-muted-foreground">
             Статус
           </h2>
-          <div className="mt-2">
-            <StatusBadge status={order.status} />
-          </div>
-
-          <form action={updateStatus} className="mt-3 flex items-center gap-2">
+          <form action={updateStatus} className="mt-2 flex items-center gap-2">
             <select
+              key={order.status}
               name="status"
               defaultValue={order.status}
               className="rounded border border-border bg-background px-3 py-1.5 text-sm outline-none focus:border-foreground"
