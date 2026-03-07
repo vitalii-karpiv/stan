@@ -24,6 +24,7 @@ export type ProductData = {
   description: string | null;
   slug: string;
   categoryId: string;
+  price: number;
   published: boolean;
   featured: boolean;
 };
@@ -70,6 +71,7 @@ function buildInitialState(
       description: product.description ?? "",
       slug: product.slug,
       categoryId: product.categoryId,
+      price: product.price,
       published: product.published,
       featured: product.featured,
       collectionIds: selectedCollectionIds ?? [],
@@ -190,6 +192,25 @@ export function ProductForm({
             <p className="text-sm text-red-600">
               {state.fieldErrors.categoryId}
             </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="price" className="block text-sm font-medium">
+            Price (in kopiykas)
+          </label>
+          <input
+            id="price"
+            name="price"
+            type="number"
+            min="0"
+            required
+            defaultValue={state.values.price}
+            placeholder="e.g. 250000"
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.price && (
+            <p className="text-sm text-red-600">{state.fieldErrors.price}</p>
           )}
         </div>
 

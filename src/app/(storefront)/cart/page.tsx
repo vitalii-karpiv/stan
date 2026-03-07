@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
-import { useCart, type CartItem } from "@/lib/cart";
+import { useCart, cartItemKey, type CartItem } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
 
 export default function CartPage() {
@@ -40,7 +40,7 @@ export default function CartPage() {
       <div className="mt-8 divide-y divide-border border-y border-border">
         {items.map((item) => (
           <CartRow
-            key={item.variantId}
+            key={cartItemKey(item)}
             item={item}
             onUpdateQuantity={updateQuantity}
             onRemove={removeItem}
@@ -72,9 +72,10 @@ function CartRow({
   onRemove,
 }: {
   item: CartItem;
-  onUpdateQuantity: (variantId: string, quantity: number) => void;
-  onRemove: (variantId: string) => void;
+  onUpdateQuantity: (key: string, quantity: number) => void;
+  onRemove: (key: string) => void;
 }) {
+  const key = cartItemKey(item);
   const attrs = [item.material, item.size, item.gemstone]
     .filter(Boolean)
     .join(" / ");
@@ -114,9 +115,7 @@ function CartRow({
         <div className="flex items-center gap-4">
           <div className="flex items-center border border-border">
             <button
-              onClick={() =>
-                onUpdateQuantity(item.variantId, item.quantity - 1)
-              }
+              onClick={() => onUpdateQuantity(key, item.quantity - 1)}
               disabled={item.quantity <= 1}
               className="px-2 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
             >
@@ -126,9 +125,7 @@ function CartRow({
               {item.quantity}
             </span>
             <button
-              onClick={() =>
-                onUpdateQuantity(item.variantId, item.quantity + 1)
-              }
+              onClick={() => onUpdateQuantity(key, item.quantity + 1)}
               className="px-2 py-1 text-muted-foreground transition-colors hover:text-foreground"
             >
               <Plus className="h-3.5 w-3.5" />
@@ -136,7 +133,7 @@ function CartRow({
           </div>
 
           <button
-            onClick={() => onRemove(item.variantId)}
+            onClick={() => onRemove(key)}
             className="text-muted-foreground transition-colors hover:text-destructive"
           >
             <Trash2 className="h-4 w-4" />
@@ -146,11 +143,11 @@ function CartRow({
 
       <div className="flex flex-shrink-0 flex-col items-end justify-between">
         <span className="text-sm">
-          {formatPrice(item.priceInCents * item.quantity)}
+          {formatPrice(item.price * item.quantity)}
         </span>
         {item.quantity > 1 && (
           <span className="text-xs text-muted-foreground">
-            {formatPrice(item.priceInCents)} / шт
+            {formatPrice(item.price)} / шт
           </span>
         )}
       </div>

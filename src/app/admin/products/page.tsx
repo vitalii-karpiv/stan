@@ -75,7 +75,7 @@ export default async function ProductsPage() {
                   <td className="px-4 py-3 text-right">
                     <DeleteButton
                       action={deleteProductAction.bind(null, product.id)}
-                      confirmMessage={`Delete "${product.title}"? This will also remove all its variants and images.`}
+                      confirmMessage={`Delete "${product.title}"? This will also remove all its options and images.`}
                     />
                   </td>
                 </tr>

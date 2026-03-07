@@ -5,11 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatPrice(priceInCents: number): string {
+export function formatPrice(price: number): string {
   const formatted = new Intl.NumberFormat("uk-UA", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(Math.round(priceInCents / 100));
+  }).format(Math.round(price / 100));
   return `${formatted} грн`;
 }
 

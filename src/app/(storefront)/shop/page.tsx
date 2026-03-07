@@ -28,7 +28,6 @@ export default async function ShopPage({
       orderBy: { createdAt: "desc" },
       include: {
         images: { orderBy: { sortOrder: "asc" }, take: 1 },
-        variants: { orderBy: { priceInCents: "asc" }, take: 1 },
       },
     }),
     db.category.findMany({ orderBy: { name: "asc" } }),
@@ -77,7 +76,7 @@ export default async function ShopPage({
               slug={product.slug}
               imageUrl={product.images[0]?.url ?? null}
               imageAlt={product.images[0]?.alt ?? null}
-              priceInCents={product.variants[0]?.priceInCents ?? null}
+              price={product.price}
             />
           ))}
         </div>

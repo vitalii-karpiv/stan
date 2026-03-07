@@ -20,6 +20,7 @@ function extractValues(formData: FormData) {
     description: str("description"),
     slug: str("slug"),
     categoryId: str("categoryId"),
+    price: str("price"),
     published: formData.get("published") === "on",
     featured: formData.get("featured") === "on",
     collectionIds: formData.getAll("collectionIds").filter((v): v is string => typeof v === "string"),
@@ -51,6 +52,7 @@ export async function updateProductAction(
         description: flat.description?.[0],
         slug: flat.slug?.[0],
         categoryId: flat.categoryId?.[0],
+        price: flat.price?.[0],
       },
       values,
     };
@@ -78,6 +80,7 @@ export async function updateProductAction(
           description: parsed.data.description,
           slug: parsed.data.slug,
           categoryId: parsed.data.categoryId,
+          price: parsed.data.price,
           published: parsed.data.published,
           featured: parsed.data.featured,
         },

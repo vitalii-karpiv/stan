@@ -14,22 +14,31 @@ import {
 const STORAGE_KEY = "stan-cart";
 
 export type CartItem = {
-  variantId: string;
+  productId: string;
   productTitle: string;
   productSlug: string;
   imageUrl: string | null;
   material: string | null;
   size: string | null;
   gemstone: string | null;
-  priceInCents: number;
+  price: number;
   quantity: number;
 };
+
+export function cartItemKey(item: {
+  productId: string;
+  material: string | null;
+  size: string | null;
+  gemstone: string | null;
+}): string {
+  return [item.productId, item.material ?? "", item.size ?? "", item.gemstone ?? ""].join("|");
+}
 
 type CartContextValue = {
   items: CartItem[];
   addItem: (item: Omit<CartItem, "quantity">) => void;
-  removeItem: (variantId: string) => void;
-  updateQuantity: (variantId: string, quantity: number) => void;
+  removeItem: (key: string) => void;
+  updateQuantity: (key: string, quantity: number) => void;
   clearCart: () => void;
   totalItems: number;
   totalPrice: number;
@@ -70,7 +79,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = useCallback((incoming: Omit<CartItem, "quantity">) => {
     setItems((prev) => {
-      const idx = prev.findIndex((i) => i.variantId === incoming.variantId);
+      const key = cartItemKey(incoming);
+      const idx = prev.findIndex((i) => cartItemKey(i) === key);
       if (idx !== -1) {
         const updated = [...prev];
         updated[idx] = { ...updated[idx], quantity: updated[idx].quantity + 1 };
@@ -80,16 +90,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const removeItem = useCallback((variantId: string) => {
-    setItems((prev) => prev.filter((i) => i.variantId !== variantId));
+  const removeItem = useCallback((key: string) => {
+    setItems((prev) => prev.filter((i) => cartItemKey(i) !== key));
   }, []);
 
   const updateQuantity = useCallback(
-    (variantId: string, quantity: number) => {
+    (key: string, quantity: number) => {
       if (quantity < 1) return;
       setItems((prev) =>
         prev.map((i) =>
-          i.variantId === variantId ? { ...i, quantity } : i,
+          cartItemKey(i) === key ? { ...i, quantity } : i,
         ),
       );
     },
@@ -104,7 +114,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const totalPrice = useMemo(
-    () => items.reduce((sum, i) => sum + i.priceInCents * i.quantity, 0),
+    () => items.reduce((sum, i) => sum + i.price * i.quantity, 0),
     [items],
   );
 

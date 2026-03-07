@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { ProductImageGallery } from "@/components/storefront/product-image-gallery";
-import { VariantPicker } from "@/components/storefront/variant-picker";
+import { OptionPicker } from "@/components/storefront/option-picker";
 import { ProductCard } from "@/components/storefront/product-card";
 
 type Props = {
@@ -16,7 +16,7 @@ async function getProduct(slug: string) {
     where: { slug, published: true },
     include: {
       images: { orderBy: { sortOrder: "asc" } },
-      variants: { orderBy: { priceInCents: "asc" } },
+      options: { orderBy: { type: "asc" } },
       category: true,
       collections: {
         include: { collection: true },
@@ -53,7 +53,6 @@ export default async function ProductPage({ params }: Props) {
     orderBy: { createdAt: "desc" },
     include: {
       images: { orderBy: { sortOrder: "asc" }, take: 1 },
-      variants: { orderBy: { priceInCents: "asc" }, take: 1 },
     },
   });
 
@@ -97,18 +96,14 @@ export default async function ProductPage({ params }: Props) {
             </p>
           )}
 
-          {product.variants.length > 0 ? (
-            <VariantPicker
-              variants={product.variants}
-              productTitle={product.title}
-              productSlug={product.slug}
-              imageUrl={product.images[0]?.url ?? null}
-            />
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              Немає в наявності
-            </p>
-          )}
+          <OptionPicker
+            productId={product.id}
+            productTitle={product.title}
+            productSlug={product.slug}
+            imageUrl={product.images[0]?.url ?? null}
+            price={product.price}
+            options={product.options}
+          />
 
           {collections.length > 0 && (
             <div className="border-t border-border pt-6">
@@ -143,7 +138,7 @@ export default async function ProductPage({ params }: Props) {
                 slug={p.slug}
                 imageUrl={p.images[0]?.url ?? null}
                 imageAlt={p.images[0]?.alt ?? null}
-                priceInCents={p.variants[0]?.priceInCents ?? null}
+                price={p.price}
               />
             ))}
           </div>

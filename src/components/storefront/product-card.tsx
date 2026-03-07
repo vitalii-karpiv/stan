@@ -8,7 +8,7 @@ type ProductCardProps = {
   slug: string;
   imageUrl: string | null;
   imageAlt: string | null;
-  priceInCents: number | null;
+  price: number;
 };
 
 export function ProductCard({
@@ -16,7 +16,7 @@ export function ProductCard({
   slug,
   imageUrl,
   imageAlt,
-  priceInCents,
+  price,
 }: ProductCardProps) {
   return (
     <Link href={`/shop/${slug}`} className="group block">
@@ -38,9 +38,9 @@ export function ProductCard({
         <h3 className="font-[family-name:var(--font-cormorant)] text-lg font-light">
           {title}
         </h3>
-        {priceInCents != null && (
+        {price > 0 && (
           <p className="mt-1 text-sm text-muted-foreground">
-            Від {formatPrice(priceInCents)}
+            {formatPrice(price)}
           </p>
         )}
       </div>

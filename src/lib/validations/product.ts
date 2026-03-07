@@ -12,6 +12,7 @@ const productFields = z.object({
     .or(z.literal("")),
   slug: z.string().trim().max(160).optional().or(z.literal("")),
   categoryId: z.string().trim().min(1, "Category is required"),
+  price: z.coerce.number().int().min(0, "Price must be a positive number"),
   published: z.boolean().default(false),
   featured: z.boolean().default(false),
   collectionIds: z.array(z.string()).default([]),
@@ -50,6 +51,7 @@ export type FormValues = {
   description: string;
   slug: string;
   categoryId: string;
+  price: number;
   published: boolean;
   featured: boolean;
   collectionIds: string[];
@@ -69,6 +71,7 @@ export const initialFormState: FormState = {
     description: "",
     slug: "",
     categoryId: "",
+    price: 0,
     published: false,
     featured: false,
     collectionIds: [],

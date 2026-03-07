@@ -2,7 +2,7 @@
 
 ## 1. Project Overview
 
-**Stan** is a modern minimalist e-commerce website for a jewelry store. Customers can browse collections, view product details with variants, and purchase online. An admin panel allows store owners to manage inventory, pricing, and photos. Accounts are created automatically at checkout for marketing purposes.
+**Stan** is a modern minimalist e-commerce website for a jewelry store. Customers can browse collections, view product details with configurable options (size, material, gemstone), and purchase online. An admin panel allows store owners to manage pricing, options, and photos. Accounts are created automatically at checkout for marketing purposes.
 
 ---
 
@@ -19,7 +19,7 @@
 
 - **Framework:** Next.js 15 (App Router) + TypeScript — SSR/SSG for SEO, API routes for backend, single codebase
 - **Styling:** Tailwind CSS + shadcn/ui — rapid minimalist UI, accessible component primitives
-- **Database:** PostgreSQL — relational data (products, orders, users, variants)
+- **Database:** PostgreSQL — relational data (products, orders, users, options)
 - **ORM:** Prisma — type-safe queries, migrations, schema-as-code
 - **File storage:** Cloudinary or AWS S3 — product image hosting and optimization
 - **Auth:** NextAuth.js (Auth.js v5) — session management, auto-account creation at checkout
@@ -34,7 +34,7 @@
 
 - **Home** — Hero banner (rotating collections), featured products, "Shop by Collection" grid, brand statement
 - **Shop** — Filterable product grid; filter by category (Necklaces, Bracelets), collection (Summer, Winter, Special, etc.), price range, material; sort by price/newest
-- **Product Detail** — Image gallery, variant selector (size, material, gemstone), price, add-to-cart, related products
+- **Product Detail** — Image gallery, option selectors (size, material, gemstone), price, add-to-cart, related products
 - **Contact** — Contact form (name, email, message), store address / map embed, social links
 - **Cart** — Slide-out or dedicated cart page with line items, quantity controls, subtotal
 - **Checkout** — Shipping info, payment (TBD), order summary; auto-creates account with email + phone
@@ -47,7 +47,7 @@
 ### 4.3 Admin Panel (`/admin`)
 
 - **Dashboard** — Overview stats (total orders, revenue, low-stock alerts)
-- **Products** — CRUD for products: title, description, price, images (multi-upload), category, collection, variants
+- **Products** — CRUD for products: title, description, price, images (multi-upload), category, collection, options (size, material, gemstone)
 - **Collections** — CRUD for collections (Summer, Winter, Special, custom)
 - **Categories** — Manage categories (Necklaces, Bracelets, future additions)
 - **Orders** — View orders, update fulfillment status, customer details
@@ -64,6 +64,7 @@ erDiagram
         string title
         text description
         string slug
+        int price
         boolean published
         timestamp createdAt
     }
@@ -78,13 +79,10 @@ erDiagram
         string slug
         string season
     }
-    ProductVariant {
+    ProductOption {
         uuid id PK
-        string size
-        string material
-        string gemstone
-        int priceInCents
-        int stock
+        OptionType type
+        string value
     }
     ProductImage {
         uuid id PK
@@ -108,29 +106,32 @@ erDiagram
     OrderItem {
         uuid id PK
         int quantity
-        int priceInCents
+        int price
+        string size
+        string material
+        string gemstone
     }
 
-    Product ||--o{ ProductVariant : "has variants"
+    Product ||--o{ ProductOption : "has options"
     Product ||--o{ ProductImage : "has images"
     Product }o--|| Category : "belongs to"
     Product }o--o{ Collection : "in collections"
+    Product ||--o{ OrderItem : "referenced by"
     User ||--o{ Order : "places"
     Order ||--o{ OrderItem : "contains"
-    OrderItem }o--|| ProductVariant : "references"
 ```
 
 ---
 
-## 6. Product Variant Model
+## 6. Product Options Model
 
-Each product can have multiple variants defined by up to three axes:
+Each product has a single price and can have independently configurable options of three types:
 
 - **Size** (e.g., 6, 7, 8 for rings; 16in, 18in for necklaces)
 - **Material** (e.g., Gold, Silver, Rose Gold)
 - **Gemstone** (e.g., Diamond, Emerald, None)
 
-Each variant combination has its own price and stock count.
+Options are independent — they are not bundled into variant combinations. Price does not vary by option selection. If a product exists in the system it is considered in stock.
 
 ---
 
@@ -158,7 +159,7 @@ flowchart LR
 ## 8. Admin Panel Functionality
 
 - **Authentication:** Admin users log in with email + password; `role: "admin"` on User model
-- **Product management:** Create/edit/delete products, upload multiple images with drag-and-drop reordering, manage variants inline
+- **Product management:** Create/edit/delete products, upload multiple images with drag-and-drop reordering, manage options (size, material, gemstone) inline
 - **Collection management:** Create seasonal or thematic collections, assign products
 - **Order management:** View orders, filter by status (pending, shipped, delivered, cancelled), update status
 - **Customer list:** View registered customers, search by email/phone

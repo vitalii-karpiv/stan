@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ProductForm } from "@/components/admin/product-form";
 import { ProductImages } from "@/components/admin/product-images";
-import { ProductVariants } from "@/components/admin/product-variants";
+import { ProductOptions } from "@/components/admin/product-options";
 import { db } from "@/lib/db";
 
 type Props = {
@@ -22,13 +22,14 @@ export default async function EditProductPage({ params }: Props) {
         description: true,
         slug: true,
         categoryId: true,
+        price: true,
         published: true,
         featured: true,
         collections: { select: { collectionId: true } },
         images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true, sortOrder: true } },
-        variants: {
-          orderBy: { priceInCents: "asc" },
-          select: { id: true, size: true, material: true, gemstone: true, priceInCents: true, stock: true, sku: true },
+        options: {
+          orderBy: { type: "asc" },
+          select: { id: true, type: true, value: true },
         },
       },
     }),
@@ -68,7 +69,7 @@ export default async function EditProductPage({ params }: Props) {
         selectedCollectionIds={product.collections.map((c) => c.collectionId)}
       />
 
-      <ProductVariants productId={product.id} variants={product.variants} />
+      <ProductOptions productId={product.id} options={product.options} />
 
       <ProductImages productId={product.id} images={product.images} />
     </div>
