@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, useTransition, useCallback } from "react";
 
 import {
-  addProductImageAction,
+  addProductImagesAction,
   deleteProductImageAction,
 } from "@/app/admin/products/[id]/image-actions";
+import { ImageDropzone } from "@/components/admin/image-dropzone";
 
 type ProductImage = {
   id: string;
@@ -15,19 +15,6 @@ type ProductImage = {
   alt: string | null;
   sortOrder: number;
 };
-
-function AddButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="shrink-0 rounded bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-    >
-      {pending ? "Adding..." : "Add Image"}
-    </button>
-  );
-}
 
 function DeleteButton({ imageId }: { imageId: string }) {
   return (
@@ -49,14 +36,28 @@ export function ProductImages({
   productId: string;
   images: ProductImage[];
 }) {
-  const formRef = useRef<HTMLFormElement>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
-  async function handleAdd(formData: FormData) {
-    const result = await addProductImageAction(productId, formData);
-    if (!result.error) {
-      formRef.current?.reset();
-    }
-  }
+  const handleFiles = useCallback(
+    (files: File[]) => {
+      setError(null);
+      if (files.length === 0) return;
+
+      const formData = new FormData();
+      for (const file of files) {
+        formData.append("files", file);
+      }
+
+      startTransition(async () => {
+        const result = await addProductImagesAction(productId, formData);
+        if (result.error) {
+          setError(result.error);
+        }
+      });
+    },
+    [productId],
+  );
 
   return (
     <div className="mt-12">
@@ -92,38 +93,11 @@ export function ProductImages({
         </div>
       )}
 
-      <form
-        ref={formRef}
-        action={handleAdd}
-        className="mt-6 flex flex-wrap items-end gap-3"
-      >
-        <div className="min-w-0 flex-1 space-y-1.5">
-          <label htmlFor="image-file" className="block text-sm font-medium">
-            Image File
-          </label>
-          <input
-            id="image-file"
-            name="file"
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/avif"
-            required
-            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none file:mr-3 file:rounded file:border-0 file:bg-foreground file:px-3 file:py-1 file:text-sm file:font-medium file:text-background"
-          />
-        </div>
-        <div className="min-w-0 flex-1 space-y-1.5">
-          <label htmlFor="image-alt" className="block text-sm font-medium">
-            Alt Text
-          </label>
-          <input
-            id="image-alt"
-            name="alt"
-            type="text"
-            placeholder="Describe the image"
-            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
-          />
-        </div>
-        <AddButton />
-      </form>
+      {error && <p className="mt-4 text-sm text-red-600">{error}</p>}
+
+      <div className="mt-6">
+        <ImageDropzone onFiles={handleFiles} disabled={isPending} />
+      </div>
     </div>
   );
 }

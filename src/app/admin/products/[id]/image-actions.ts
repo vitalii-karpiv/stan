@@ -13,46 +13,50 @@ const ALLOWED_TYPES = [
 ];
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
-export async function addProductImageAction(
+export async function addProductImagesAction(
   productId: string,
   formData: FormData,
 ) {
   await requireAdmin();
 
-  const file = formData.get("file");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "An image file is required." };
+  const files = formData.getAll("files").filter(
+    (f): f is File => f instanceof File && f.size > 0,
+  );
+
+  if (files.length === 0) {
+    return { error: "At least one image file is required." };
   }
 
-  if (!ALLOWED_TYPES.includes(file.type)) {
-    return { error: "Only JPEG, PNG, WebP, and AVIF images are allowed." };
+  for (const file of files) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return { error: `"${file.name}" is not a supported format. Only JPEG, PNG, WebP, and AVIF are allowed.` };
+    }
+    if (file.size > MAX_SIZE) {
+      return { error: `"${file.name}" exceeds the 5 MB size limit.` };
+    }
   }
-
-  if (file.size > MAX_SIZE) {
-    return { error: "Image must be smaller than 5 MB." };
-  }
-
-  const ext = file.name.split(".").pop() ?? "jpg";
-  const key = `products/${productId}/${crypto.randomUUID()}.${ext}`;
-  const url = await uploadToS3(file, key);
-
-  const alt = formData.get("alt");
-  const altText = typeof alt === "string" && alt.trim() ? alt.trim() : null;
 
   const lastImage = await db.productImage.findFirst({
     where: { productId },
     orderBy: { sortOrder: "desc" },
     select: { sortOrder: true },
   });
+  let nextOrder = (lastImage?.sortOrder ?? -1) + 1;
 
-  await db.productImage.create({
-    data: {
-      productId,
-      url,
-      alt: altText,
-      sortOrder: (lastImage?.sortOrder ?? -1) + 1,
-    },
-  });
+  for (const file of files) {
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const key = `products/${productId}/${crypto.randomUUID()}.${ext}`;
+    const url = await uploadToS3(file, key);
+
+    await db.productImage.create({
+      data: {
+        productId,
+        url,
+        alt: null,
+        sortOrder: nextOrder++,
+      },
+    });
+  }
 
   revalidatePath(`/admin/products/${productId}`);
   return { error: null };
