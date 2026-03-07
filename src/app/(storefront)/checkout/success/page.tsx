@@ -54,7 +54,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Доставка</dt>
             <dd>
-              {order.shippingCity}, {order.shippingLine1}
+                м. {order.shippingCity}, відділення НП №{order.shippingPostOffice}
             </dd>
           </div>
         </dl>

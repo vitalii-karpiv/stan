@@ -26,12 +26,8 @@ function extractValues(formData: FormData) {
     name: str("name"),
     email: str("email"),
     phone: str("phone"),
-    shippingLine1: str("shippingLine1"),
-    shippingLine2: str("shippingLine2"),
     shippingCity: str("shippingCity"),
-    shippingState: str("shippingState"),
-    shippingPostal: str("shippingPostal"),
-    shippingCountry: str("shippingCountry"),
+    shippingPostOffice: str("shippingPostOffice"),
   };
 }
 
@@ -66,12 +62,8 @@ export async function placeOrderAction(
         name: flat.name?.[0],
         email: flat.email?.[0],
         phone: flat.phone?.[0],
-        shippingLine1: flat.shippingLine1?.[0],
-        shippingLine2: flat.shippingLine2?.[0],
         shippingCity: flat.shippingCity?.[0],
-        shippingState: flat.shippingState?.[0],
-        shippingPostal: flat.shippingPostal?.[0],
-        shippingCountry: flat.shippingCountry?.[0],
+        shippingPostOffice: flat.shippingPostOffice?.[0],
       },
       values,
     };
@@ -142,12 +134,8 @@ export async function placeOrderAction(
         userId: user.id,
         totalInCents,
         shippingName: parsed.data.name,
-        shippingLine1: parsed.data.shippingLine1,
-        shippingLine2: parsed.data.shippingLine2 || null,
         shippingCity: parsed.data.shippingCity,
-        shippingState: parsed.data.shippingState || null,
-        shippingPostal: parsed.data.shippingPostal,
-        shippingCountry: parsed.data.shippingCountry,
+        shippingPostOffice: parsed.data.shippingPostOffice,
         items: { create: orderItems },
       },
     });

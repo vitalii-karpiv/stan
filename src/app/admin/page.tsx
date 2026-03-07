@@ -1,6 +1,30 @@
 import Link from "next/link";
+import { db } from "@/lib/db";
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const [orderCount, revenueResult, productCount, customerCount] =
+    await Promise.all([
+      db.order.count(),
+      db.order.aggregate({ _sum: { totalInCents: true } }),
+      db.product.count(),
+      db.user.count({ where: { role: "CUSTOMER" } }),
+    ]);
+
+  const revenue = (revenueResult._sum.totalInCents ?? 0) / 100;
+
+  const stats = [
+    { label: "Total Orders", value: orderCount.toLocaleString() },
+    {
+      label: "Revenue",
+      value: revenue.toLocaleString("uk-UA", {
+        style: "currency",
+        currency: "UAH",
+      }),
+    },
+    { label: "Products", value: productCount.toLocaleString() },
+    { label: "Customers", value: customerCount.toLocaleString() },
+  ];
+
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3">
@@ -19,12 +43,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {[
-          { label: "Total Orders", value: "0" },
-          { label: "Revenue", value: "$0.00" },
-          { label: "Products", value: "0" },
-          { label: "Customers", value: "0" },
-        ].map((stat) => (
+        {stats.map((stat) => (
           <div
             key={stat.label}
             className="rounded-lg border border-border p-6"

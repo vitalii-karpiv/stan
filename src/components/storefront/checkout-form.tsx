@@ -144,47 +144,8 @@ export function CheckoutForm() {
           {/* Shipping */}
           <fieldset className="space-y-4">
             <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
-              Адреса доставки
+              Доставка Новою Поштою
             </legend>
-
-            <div className="space-y-1.5">
-              <label
-                htmlFor="shippingLine1"
-                className="block text-sm font-medium"
-              >
-                Адреса
-              </label>
-              <input
-                id="shippingLine1"
-                name="shippingLine1"
-                type="text"
-                autoComplete="address-line1"
-                defaultValue={state.values.shippingLine1}
-                className={inputClass}
-              />
-              {state.fieldErrors.shippingLine1 && (
-                <p className="text-sm text-red-600">
-                  {state.fieldErrors.shippingLine1}
-                </p>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              <label
-                htmlFor="shippingLine2"
-                className="block text-sm font-medium"
-              >
-                Квартира, поверх (необов&apos;язково)
-              </label>
-              <input
-                id="shippingLine2"
-                name="shippingLine2"
-                type="text"
-                autoComplete="address-line2"
-                defaultValue={state.values.shippingLine2}
-                className={inputClass}
-              />
-            </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-1.5">
@@ -211,63 +172,22 @@ export function CheckoutForm() {
 
               <div className="space-y-1.5">
                 <label
-                  htmlFor="shippingState"
+                  htmlFor="shippingPostOffice"
                   className="block text-sm font-medium"
                 >
-                  Область (необов&apos;язково)
+                  Відділення Нової Пошти
                 </label>
                 <input
-                  id="shippingState"
-                  name="shippingState"
+                  id="shippingPostOffice"
+                  name="shippingPostOffice"
                   type="text"
-                  autoComplete="address-level1"
-                  defaultValue={state.values.shippingState}
+                  placeholder="№"
+                  defaultValue={state.values.shippingPostOffice}
                   className={inputClass}
                 />
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="shippingPostal"
-                  className="block text-sm font-medium"
-                >
-                  Поштовий індекс
-                </label>
-                <input
-                  id="shippingPostal"
-                  name="shippingPostal"
-                  type="text"
-                  autoComplete="postal-code"
-                  defaultValue={state.values.shippingPostal}
-                  className={inputClass}
-                />
-                {state.fieldErrors.shippingPostal && (
+                {state.fieldErrors.shippingPostOffice && (
                   <p className="text-sm text-red-600">
-                    {state.fieldErrors.shippingPostal}
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-1.5">
-                <label
-                  htmlFor="shippingCountry"
-                  className="block text-sm font-medium"
-                >
-                  Країна
-                </label>
-                <input
-                  id="shippingCountry"
-                  name="shippingCountry"
-                  type="text"
-                  autoComplete="country-name"
-                  defaultValue={state.values.shippingCountry}
-                  className={inputClass}
-                />
-                {state.fieldErrors.shippingCountry && (
-                  <p className="text-sm text-red-600">
-                    {state.fieldErrors.shippingCountry}
+                    {state.fieldErrors.shippingPostOffice}
                   </p>
                 )}
               </div>

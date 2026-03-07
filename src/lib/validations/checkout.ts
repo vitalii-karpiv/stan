@@ -8,12 +8,11 @@ export const checkoutSchema = z.object({
     .min(1, "Введіть email")
     .email("Невірний формат email"),
   phone: z.string().trim().optional().or(z.literal("")),
-  shippingLine1: z.string().trim().min(1, "Введіть адресу доставки"),
-  shippingLine2: z.string().trim().optional().or(z.literal("")),
   shippingCity: z.string().trim().min(1, "Введіть місто"),
-  shippingState: z.string().trim().optional().or(z.literal("")),
-  shippingPostal: z.string().trim().min(1, "Введіть поштовий індекс"),
-  shippingCountry: z.string().trim().min(1, "Введіть країну"),
+  shippingPostOffice: z
+    .string()
+    .trim()
+    .min(1, "Введіть номер відділення Нової Пошти"),
 });
 
 export type CheckoutInput = z.input<typeof checkoutSchema>;
@@ -24,12 +23,8 @@ export type CheckoutFormValues = {
   name: string;
   email: string;
   phone: string;
-  shippingLine1: string;
-  shippingLine2: string;
   shippingCity: string;
-  shippingState: string;
-  shippingPostal: string;
-  shippingCountry: string;
+  shippingPostOffice: string;
 };
 
 export type CheckoutFormState = {
@@ -45,11 +40,7 @@ export const initialCheckoutFormState: CheckoutFormState = {
     name: "",
     email: "",
     phone: "",
-    shippingLine1: "",
-    shippingLine2: "",
     shippingCity: "",
-    shippingState: "",
-    shippingPostal: "",
-    shippingCountry: "Україна",
+    shippingPostOffice: "",
   },
 };
