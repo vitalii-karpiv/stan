@@ -60,18 +60,12 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         </dl>
       </div>
 
-      <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+      <div className="mt-8">
         <Link
           href="/shop"
-          className="bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+          className="inline-block bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
           Продовжити покупки
-        </Link>
-        <Link
-          href="/account/orders"
-          className="rounded border border-border px-8 py-3 text-sm font-medium transition-colors hover:bg-muted"
-        >
-          Мої замовлення
         </Link>
       </div>
     </div>

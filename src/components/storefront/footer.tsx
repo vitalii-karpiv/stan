@@ -1,6 +1,10 @@
 import Link from "next/link";
 
-export function Footer() {
+import { db } from "@/lib/db";
+
+export async function Footer() {
+  const categories = await db.category.findMany({ orderBy: { name: "asc" } });
+
   return (
     <footer className="border-t border-border bg-muted">
       <div className="mx-auto max-w-7xl px-6 py-12">
@@ -22,16 +26,16 @@ export function Footer() {
                   Усі прикраси
                 </Link>
               </li>
-              <li>
-                <Link href="/shop?category=necklaces" className="hover:text-foreground">
-                  Намиста
-                </Link>
-              </li>
-              <li>
-                <Link href="/shop?category=bracelets" className="hover:text-foreground">
-                  Браслети
-                </Link>
-              </li>
+              {categories.map((cat) => (
+                <li key={cat.id}>
+                  <Link
+                    href={`/shop?category=${cat.slug}`}
+                    className="hover:text-foreground"
+                  >
+                    {cat.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

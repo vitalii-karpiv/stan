@@ -295,7 +295,7 @@ function SummaryRow({ item }: { item: CartItem }) {
         )}
       </div>
 
-      <span className="flex-shrink-0 text-sm">
+      <span className="flex-shrink-0 font-[family-name:var(--font-cormorant)] text-base font-light">
         {formatPrice(item.price * item.quantity)}
       </span>
     </div>
