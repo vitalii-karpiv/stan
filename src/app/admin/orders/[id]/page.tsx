@@ -3,7 +3,11 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
-import { statusLabels } from "@/components/admin/order-status";
+import {
+  statusLabels,
+  PaymentMethodBadge,
+  PaymentStatusBadge,
+} from "@/components/admin/order-status";
 import { updateOrderStatus } from "./actions";
 import type { OrderStatus } from "@/generated/prisma/client";
 
@@ -78,6 +82,16 @@ export default async function OrderDetailPage({ params }: Props) {
           <p className="mt-2 text-xl font-semibold">
             {formatPrice(order.totalInCents)}
           </p>
+
+          <h2 className="mt-5 text-sm font-medium text-muted-foreground">
+            Оплата
+          </h2>
+          <div className="mt-2 flex items-center gap-2">
+            <PaymentMethodBadge method={order.paymentMethod} />
+            {order.paymentMethod === "ONLINE" && (
+              <PaymentStatusBadge status={order.paymentStatus} />
+            )}
+          </div>
 
           <h2 className="mt-5 text-sm font-medium text-muted-foreground">
             Статус

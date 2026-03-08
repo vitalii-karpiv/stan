@@ -2,7 +2,11 @@ import Link from "next/link";
 
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
-import { StatusBadge } from "@/components/admin/order-status";
+import {
+  StatusBadge,
+  PaymentMethodBadge,
+  PaymentStatusBadge,
+} from "@/components/admin/order-status";
 
 export default async function OrdersPage() {
   const orders = await db.order.findMany({
@@ -20,7 +24,7 @@ export default async function OrdersPage() {
         View and manage customer orders.
       </p>
 
-      <div className="mt-8 rounded-lg border border-border">
+      <div className="mt-8 overflow-x-auto rounded-lg border border-border">
         {orders.length === 0 ? (
           <div className="p-8 text-center text-sm text-muted-foreground">
             No orders yet.
@@ -34,6 +38,7 @@ export default async function OrdersPage() {
                 <th className="px-4 py-3 font-medium">Доставка</th>
                 <th className="px-4 py-3 font-medium">Товарів</th>
                 <th className="px-4 py-3 font-medium">Сума</th>
+                <th className="px-4 py-3 font-medium">Оплата</th>
                 <th className="px-4 py-3 font-medium">Статус</th>
                 <th className="px-4 py-3 font-medium">Дата</th>
               </tr>
@@ -65,6 +70,14 @@ export default async function OrdersPage() {
                   </td>
                   <td className="px-4 py-3">
                     {formatPrice(order.totalInCents)}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <PaymentMethodBadge method={order.paymentMethod} />
+                      {order.paymentMethod === "ONLINE" && (
+                        <PaymentStatusBadge status={order.paymentStatus} />
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3">
                     <StatusBadge status={order.status} />

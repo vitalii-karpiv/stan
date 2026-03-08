@@ -13,6 +13,7 @@ export const checkoutSchema = z.object({
     .string()
     .trim()
     .min(1, "Введіть номер відділення Нової Пошти"),
+  paymentMethod: z.enum(["cod", "online"]).default("cod"),
 });
 
 export type CheckoutInput = z.input<typeof checkoutSchema>;
@@ -25,6 +26,7 @@ export type CheckoutFormValues = {
   phone: string;
   shippingCity: string;
   shippingPostOffice: string;
+  paymentMethod: string;
 };
 
 export type CheckoutFormState = {
@@ -42,5 +44,6 @@ export const initialCheckoutFormState: CheckoutFormState = {
     phone: "",
     shippingCity: "",
     shippingPostOffice: "",
+    paymentMethod: "cod",
   },
 };

@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { createInvoice } from "@/lib/monobank";
 import {
   checkoutSchema,
   type CheckoutFormState,
@@ -28,6 +29,7 @@ function extractValues(formData: FormData) {
     phone: str("phone"),
     shippingCity: str("shippingCity"),
     shippingPostOffice: str("shippingPostOffice"),
+    paymentMethod: str("paymentMethod"),
   };
 }
 
@@ -83,13 +85,13 @@ export async function placeOrderAction(
   const productIds = cartItems.map((i) => i.productId);
   const products = await db.product.findMany({
     where: { id: { in: productIds } },
-    select: { id: true, price: true },
+    select: { id: true, price: true, title: true },
   });
 
-  const priceMap = new Map(products.map((p) => [p.id, p.price]));
+  const productMap = new Map(products.map((p) => [p.id, p]));
 
   for (const item of cartItems) {
-    if (!priceMap.has(item.productId)) {
+    if (!productMap.has(item.productId)) {
       return {
         message: "Деякі товари у кошику більше недоступні. Оновіть кошик.",
         fieldErrors: {},
@@ -101,7 +103,7 @@ export async function placeOrderAction(
   const orderItems = cartItems.map((item) => ({
     productId: item.productId,
     quantity: item.quantity,
-    price: priceMap.get(item.productId)!,
+    price: productMap.get(item.productId)!.price,
     size: item.size,
     material: item.material,
     gemstone: item.gemstone,
@@ -111,6 +113,8 @@ export async function placeOrderAction(
     (sum, i) => sum + i.price * i.quantity,
     0,
   );
+
+  const isOnline = parsed.data.paymentMethod === "online";
 
   let orderId: string;
 
@@ -133,6 +137,8 @@ export async function placeOrderAction(
       data: {
         userId: user.id,
         totalInCents,
+        paymentMethod: isOnline ? "ONLINE" : "COD",
+        paymentStatus: "UNPAID",
         shippingName: parsed.data.name,
         shippingCity: parsed.data.shippingCity,
         shippingPostOffice: parsed.data.shippingPostOffice,
@@ -147,6 +153,54 @@ export async function placeOrderAction(
       fieldErrors: {},
       values,
     };
+  }
+
+  if (isOnline) {
+    try {
+      const basketOrder = cartItems.map((item) => {
+        const product = productMap.get(item.productId)!;
+        return {
+          name: product.title,
+          qty: item.quantity,
+          sum: product.price,
+          total: product.price * item.quantity,
+          unit: "шт.",
+          code: item.productId,
+        };
+      });
+
+      const invoice = await createInvoice({
+        amount: totalInCents,
+        orderId,
+        basketOrder,
+      });
+
+      await db.order.update({
+        where: { id: orderId },
+        data: { monoInvoiceId: invoice.invoiceId },
+      });
+
+      redirect(invoice.pageUrl);
+    } catch (err) {
+      if (err instanceof Error && err.message === "NEXT_REDIRECT") throw err;
+      // redirect() throws a special error in Next.js — rethrow it
+      if (
+        err &&
+        typeof err === "object" &&
+        "digest" in err &&
+        typeof (err as { digest: unknown }).digest === "string" &&
+        (err as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+      ) {
+        throw err;
+      }
+
+      return {
+        message:
+          "Не вдалося створити платіж. Спробуйте ще раз або оберіть оплату при отриманні.",
+        fieldErrors: {},
+        values,
+      };
+    }
   }
 
   redirect(`/checkout/success?order=${orderId}`);

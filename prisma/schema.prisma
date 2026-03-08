@@ -27,6 +27,20 @@ enum OptionType {
   GEMSTONE
 }
 
+enum PaymentMethod {
+  COD
+  ONLINE
+}
+
+enum PaymentStatus {
+  UNPAID
+  PROCESSING
+  PAID
+  FAILED
+  EXPIRED
+  REVERSED
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
@@ -121,20 +135,24 @@ model ProductImage {
 }
 
 model Order {
-  id              String      @id @default(uuid())
-  userId          String
-  user            User        @relation(fields: [userId], references: [id])
-  status          OrderStatus @default(PENDING)
-  totalInCents    Int
+  id                 String        @id @default(uuid())
+  userId             String
+  user               User          @relation(fields: [userId], references: [id])
+  status             OrderStatus   @default(PENDING)
+  paymentMethod      PaymentMethod @default(COD)
+  paymentStatus      PaymentStatus @default(UNPAID)
+  monoInvoiceId      String?
+  totalInCents       Int
   shippingName       String
   shippingCity       String
   shippingPostOffice String
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
 
   items OrderItem[]
 
   @@index([userId])
+  @@index([monoInvoiceId])
 }
 
 model OrderItem {

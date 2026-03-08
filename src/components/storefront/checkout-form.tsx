@@ -213,15 +213,14 @@ export function CheckoutForm() {
               <span className="text-sm">Оплата при отриманні</span>
             </label>
 
-            <label className="flex cursor-not-allowed items-center gap-3 rounded border border-border bg-muted/50 px-4 py-3 opacity-60">
+            <label className="flex cursor-pointer items-center gap-3 rounded border border-border bg-background px-4 py-3">
               <input
                 type="radio"
                 name="paymentMethod"
                 value="online"
-                disabled
-                className="h-4 w-4"
+                className="h-4 w-4 accent-foreground"
               />
-              <span className="text-sm">Онлайн оплата (скоро)</span>
+              <span className="text-sm">Онлайн оплата</span>
             </label>
           </fieldset>
 
