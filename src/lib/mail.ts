@@ -59,3 +59,34 @@ export async function notifyAdminsNewOrder(order: NewOrderInfo) {
 
   await sendMail(emails, subject, html);
 }
+
+type ContactFormInfo = {
+  name: string;
+  phone: string;
+  message: string;
+};
+
+export async function notifyAdminsContactForm(info: ContactFormInfo) {
+  const admins = await db.user.findMany({
+    where: { role: "ADMIN" },
+    select: { email: true },
+  });
+
+  if (admins.length === 0) return;
+
+  const emails = admins.map((a) => a.email);
+
+  const subject = `Повідомлення з форми контактів від ${info.name}`;
+
+  const html = `
+    <h2>Нове повідомлення з форми контактів</h2>
+    <table style="border-collapse:collapse">
+      <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Ім'я</td><td>${info.name}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;font-weight:bold">Телефон</td><td>${info.phone}</td></tr>
+    </table>
+    <h3 style="margin-top:16px">Повідомлення</h3>
+    <p style="white-space:pre-wrap">${info.message}</p>
+  `;
+
+  await sendMail(emails, subject, html);
+}
