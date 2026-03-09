@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { notifyAdminsNewOrder } from "@/lib/mail";
 import {
   checkoutSchema,
   type CheckoutFormState,
@@ -141,6 +142,14 @@ export async function placeOrderAction(
     });
 
     orderId = order.id;
+
+    notifyAdminsNewOrder({
+      id: order.id,
+      customerName: parsed.data.name,
+      customerEmail: parsed.data.email,
+      totalInCents,
+      itemCount: orderItems.length,
+    }).catch(() => {});
   } catch {
     return {
       message: "Не вдалося створити замовлення. Спробуйте ще раз.",
