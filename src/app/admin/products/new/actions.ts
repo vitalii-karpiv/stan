@@ -21,7 +21,7 @@ function extractValues(formData: FormData) {
     description: str("description"),
     slug: str("slug"),
     categoryId: str("categoryId"),
-    price: str("price"),
+    price: Number(str("price")) || 0,
     published: formData.get("published") === "on",
     featured: formData.get("featured") === "on",
     collectionIds: formData.getAll("collectionIds").filter((v): v is string => typeof v === "string"),
