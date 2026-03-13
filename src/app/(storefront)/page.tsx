@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { CollectionCard } from "@/components/storefront/collection-card";
 import { ProductCard } from "@/components/storefront/product-card";
 
+export const revalidate = 60;
+
 export default async function HomePage() {
   const [collections, featuredProducts] = await Promise.all([
     db.collection.findMany({
