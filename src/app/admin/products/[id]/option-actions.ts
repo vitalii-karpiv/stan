@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
-import type { OptionType } from "@/generated/prisma/client";
+import type { OptionType } from "@/generated/prisma";
 
 const VALID_TYPES: OptionType[] = ["SIZE", "MATERIAL", "GEMSTONE"];
 

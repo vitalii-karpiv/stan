@@ -1,4 +1,4 @@
-import type { OrderStatus } from "@/generated/prisma/client";
+import type { OrderStatus } from "@/generated/prisma";
 
 export const statusLabels: Record<OrderStatus, string> = {
   PENDING: "Очікує",

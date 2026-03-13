@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import { statusLabels } from "@/components/admin/order-status";
 import { updateOrderStatus } from "./actions";
-import type { OrderStatus } from "@/generated/prisma/client";
+import type { OrderStatus } from "@/generated/prisma";
 
 type Props = {
   params: Promise<{ id: string }>;
