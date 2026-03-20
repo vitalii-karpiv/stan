@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="uk">
       <body className={`${inter.variable} ${cormorant.variable} antialiased`}>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
