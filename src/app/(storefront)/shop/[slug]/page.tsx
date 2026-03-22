@@ -57,6 +57,8 @@ export default async function ProductPage({ params }: Props) {
   });
 
   const collections = product.collections.map((pc) => pc.collection);
+  const material = product.material?.trim() ?? "";
+  const jewelryLength = product.jewelryLength?.trim() ?? "";
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -94,6 +96,25 @@ export default async function ProductPage({ params }: Props) {
             <p className="leading-relaxed text-muted-foreground">
               {product.description}
             </p>
+          )}
+
+          {(material || jewelryLength) && (
+            <div className="space-y-3 border-y border-border py-4">
+              {material && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground">Матеріал: </span>
+                  {material}
+                </p>
+              )}
+              {jewelryLength && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground">
+                    Довжина прикраси:{" "}
+                  </span>
+                  {jewelryLength}
+                </p>
+              )}
+            </div>
           )}
 
           <OptionPicker

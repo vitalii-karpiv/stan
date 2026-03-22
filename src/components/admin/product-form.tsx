@@ -22,6 +22,8 @@ export type ProductData = {
   id: string;
   title: string;
   description: string | null;
+  material: string | null;
+  jewelryLength: string | null;
   slug: string;
   categoryId: string;
   price: number;
@@ -69,6 +71,8 @@ function buildInitialState(
     values: {
       title: product.title,
       description: product.description ?? "",
+      material: product.material ?? "",
+      jewelryLength: product.jewelryLength ?? "",
       slug: product.slug,
       categoryId: product.categoryId,
       price: product.price,
@@ -168,6 +172,40 @@ export function ProductForm({
           {state.fieldErrors.description && (
             <p className="text-sm text-red-600">
               {state.fieldErrors.description}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5 md:col-span-2">
+          <label htmlFor="material" className="block text-sm font-medium">
+            Material
+          </label>
+          <textarea
+            id="material"
+            name="material"
+            defaultValue={state.values.material}
+            rows={2}
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.material && (
+            <p className="text-sm text-red-600">{state.fieldErrors.material}</p>
+          )}
+        </div>
+
+        <div className="space-y-1.5 md:col-span-2">
+          <label htmlFor="jewelryLength" className="block text-sm font-medium">
+            Jewelry Length
+          </label>
+          <textarea
+            id="jewelryLength"
+            name="jewelryLength"
+            defaultValue={state.values.jewelryLength}
+            rows={2}
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.jewelryLength && (
+            <p className="text-sm text-red-600">
+              {state.fieldErrors.jewelryLength}
             </p>
           )}
         </div>

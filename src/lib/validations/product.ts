@@ -10,6 +10,18 @@ const productFields = z.object({
     .max(5000, "Description is too long")
     .optional()
     .or(z.literal("")),
+  material: z
+    .string()
+    .trim()
+    .max(500, "Material is too long")
+    .optional()
+    .or(z.literal("")),
+  jewelryLength: z
+    .string()
+    .trim()
+    .max(500, "Jewelry length is too long")
+    .optional()
+    .or(z.literal("")),
   slug: z.string().trim().max(160).optional().or(z.literal("")),
   categoryId: z.string().trim().min(1, "Category is required"),
   price: z.coerce.number().int().min(0, "Price must be a positive number"),
@@ -35,6 +47,8 @@ function normalizeProductData(
   return {
     ...data,
     description: data.description || null,
+    material: data.material || null,
+    jewelryLength: data.jewelryLength || null,
     slug,
   };
 }
@@ -49,6 +63,8 @@ type FieldKey = keyof ProductInput | "collectionIds";
 export type FormValues = {
   title: string;
   description: string;
+  material: string;
+  jewelryLength: string;
   slug: string;
   categoryId: string;
   price: number;
@@ -69,6 +85,8 @@ export const initialFormState: FormState = {
   values: {
     title: "",
     description: "",
+    material: "",
+    jewelryLength: "",
     slug: "",
     categoryId: "",
     price: 0,

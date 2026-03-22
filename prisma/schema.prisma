@@ -73,6 +73,8 @@ model Product {
   id          String   @id @default(uuid())
   title       String
   description String?
+  material    String?
+  jewelryLength String?
   slug        String   @unique
   published   Boolean  @default(false)
   featured    Boolean  @default(false)

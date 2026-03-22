@@ -20,6 +20,8 @@ export default async function EditProductPage({ params }: Props) {
         id: true,
         title: true,
         description: true,
+        material: true,
+        jewelryLength: true,
         slug: true,
         categoryId: true,
         price: true,

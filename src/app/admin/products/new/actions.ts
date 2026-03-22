@@ -19,6 +19,8 @@ function extractValues(formData: FormData) {
   return {
     title: str("title"),
     description: str("description"),
+    material: str("material"),
+    jewelryLength: str("jewelryLength"),
     slug: str("slug"),
     categoryId: str("categoryId"),
     price: Number(str("price")) || 0,
@@ -43,6 +45,8 @@ export async function createProductAction(
       fieldErrors: {
         title: flat.title?.[0],
         description: flat.description?.[0],
+        material: flat.material?.[0],
+        jewelryLength: flat.jewelryLength?.[0],
         slug: flat.slug?.[0],
         categoryId: flat.categoryId?.[0],
         price: flat.price?.[0],
@@ -69,6 +73,8 @@ export async function createProductAction(
       data: {
         title: parsed.data.title,
         description: parsed.data.description,
+        material: parsed.data.material,
+        jewelryLength: parsed.data.jewelryLength,
         slug: parsed.data.slug,
         categoryId: parsed.data.categoryId,
         price: parsed.data.price,
