@@ -29,6 +29,7 @@ function extractValues(formData: FormData) {
     phone: str("phone"),
     shippingCity: str("shippingCity"),
     shippingPostOffice: str("shippingPostOffice"),
+    note: str("note"),
   };
 }
 
@@ -65,6 +66,7 @@ export async function placeOrderAction(
         phone: flat.phone?.[0],
         shippingCity: flat.shippingCity?.[0],
         shippingPostOffice: flat.shippingPostOffice?.[0],
+        note: flat.note?.[0],
       },
       values,
     };
@@ -137,6 +139,7 @@ export async function placeOrderAction(
         shippingName: parsed.data.name,
         shippingCity: parsed.data.shippingCity,
         shippingPostOffice: parsed.data.shippingPostOffice,
+        note: parsed.data.note || null,
         items: { create: orderItems },
       },
     });

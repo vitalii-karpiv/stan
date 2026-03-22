@@ -133,6 +133,7 @@ model Order {
   shippingName       String
   shippingCity       String
   shippingPostOffice String
+  note            String?
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 

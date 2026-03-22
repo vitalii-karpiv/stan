@@ -98,25 +98,6 @@ export default async function ProductPage({ params }: Props) {
             </p>
           )}
 
-          {(material || jewelryLength) && (
-            <div className="space-y-3 border-y border-border py-4">
-              {material && (
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">Матеріал: </span>
-                  {material}
-                </p>
-              )}
-              {jewelryLength && (
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">
-                    Довжина прикраси:{" "}
-                  </span>
-                  {jewelryLength}
-                </p>
-              )}
-            </div>
-          )}
-
           <OptionPicker
             productId={product.id}
             productTitle={product.title}
@@ -125,6 +106,29 @@ export default async function ProductPage({ params }: Props) {
             price={product.price}
             options={product.options}
           />
+
+          {(material || jewelryLength) && (
+            <div className="space-y-3 border-t border-border pt-4">
+              {material && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground">Матеріал: </span>
+                  <span className="whitespace-pre-line break-words">
+                    {material.replace(/\\n/g, "\n")}
+                  </span>
+                </p>
+              )}
+              {jewelryLength && (
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-medium text-foreground">
+                    Довжина прикраси:{" "}
+                  </span>
+                  <span className="whitespace-pre-line break-words">
+                    {jewelryLength.replace(/\\n/g, "\n")}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
 
           {collections.length > 0 && (
             <div className="border-t border-border pt-6">

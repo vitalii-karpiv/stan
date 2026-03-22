@@ -197,6 +197,28 @@ export function CheckoutForm() {
             </div>
           </fieldset>
 
+          <fieldset className="space-y-4">
+            <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+              Коментар до замовлення
+            </legend>
+            <div className="space-y-1.5">
+              <label htmlFor="note" className="block text-sm font-medium">
+                Примітка
+              </label>
+              <textarea
+                id="note"
+                name="note"
+                rows={4}
+                maxLength={500}
+                defaultValue={state.values.note}
+                className={inputClass}
+              />
+              {state.fieldErrors.note && (
+                <p className="text-sm text-red-600">{state.fieldErrors.note}</p>
+              )}
+            </div>
+          </fieldset>
+
           {/* Payment placeholder */}
           <fieldset className="space-y-4">
             <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">

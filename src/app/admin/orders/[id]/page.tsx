@@ -70,6 +70,13 @@ export default async function OrderDetailPage({ params }: Props) {
           <p className="mt-2 text-sm">
             м. {order.shippingCity}, відділення НП №{order.shippingPostOffice}
           </p>
+
+          <h2 className="mt-5 text-sm font-medium text-muted-foreground">
+            Примітка
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {order.note || "Без примітки"}
+          </p>
         </div>
 
         {/* Status & total */}

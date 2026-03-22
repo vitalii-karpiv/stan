@@ -26,16 +26,17 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
         <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light tracking-tight md:text-7xl">
-          Прикраси, що надихають
+          ПРИКРАСИ-КОНСТРУКТОРИ
         </h1>
         <p className="mt-4 max-w-md text-lg text-muted-foreground">
-          Мінімалістичні вироби, створені доповнювати ваш щоденний стиль.
+          Коли прикраса перестає бути просто аксесуаром і стає
+          маленьким ритуалом щоденного самовираження.
         </p>
         <a
           href="/shop"
           className="mt-8 inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
         >
-          До магазину
+          Каталог
         </a>
       </section>
 
