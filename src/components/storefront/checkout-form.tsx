@@ -4,8 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
+import { Minus, Plus, Trash2 } from "lucide-react";
 
-import { useCart, type CartItem } from "@/lib/cart";
+import { cartItemKey, useCart, type CartItem } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/(storefront)/checkout/actions";
 import { initialCheckoutFormState } from "@/lib/validations/checkout";
@@ -40,7 +41,7 @@ function cartPayload(items: CartItem[]) {
 }
 
 export function CheckoutForm() {
-  const { items, totalPrice } = useCart();
+  const { items, totalPrice, updateQuantity, removeItem } = useCart();
   const [state, formAction] = useActionState(
     placeOrderAction,
     initialCheckoutFormState,
@@ -239,8 +240,13 @@ export function CheckoutForm() {
             </h2>
 
             <div className="mt-4 divide-y divide-border">
-              {items.map((item, idx) => (
-                <SummaryRow key={idx} item={item} />
+              {items.map((item) => (
+                <SummaryRow
+                  key={cartItemKey(item)}
+                  item={item}
+                  onUpdateQuantity={updateQuantity}
+                  onRemove={removeItem}
+                />
               ))}
             </div>
 
@@ -262,7 +268,16 @@ export function CheckoutForm() {
   );
 }
 
-function SummaryRow({ item }: { item: CartItem }) {
+function SummaryRow({
+  item,
+  onUpdateQuantity,
+  onRemove,
+}: {
+  item: CartItem;
+  onUpdateQuantity: (key: string, quantity: number) => void;
+  onRemove: (key: string) => void;
+}) {
+  const key = cartItemKey(item);
   const attrs = [item.material, item.size, item.gemstone]
     .filter(Boolean)
     .join(" / ");
@@ -281,9 +296,6 @@ function SummaryRow({ item }: { item: CartItem }) {
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted-foreground/20" />
         )}
-        <span className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-[10px] font-medium text-background">
-          {item.quantity}
-        </span>
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col justify-center">
@@ -293,6 +305,38 @@ function SummaryRow({ item }: { item: CartItem }) {
         {attrs && (
           <span className="text-xs text-muted-foreground">{attrs}</span>
         )}
+
+        <div className="mt-2 flex items-center gap-2">
+          <div className="flex items-center border border-border">
+            <button
+              type="button"
+              onClick={() => onUpdateQuantity(key, item.quantity - 1)}
+              disabled={item.quantity <= 1}
+              className="px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+            >
+              <Minus className="h-3.5 w-3.5" />
+            </button>
+            <span className="min-w-[1.75rem] text-center text-xs">
+              {item.quantity}
+            </span>
+            <button
+              type="button"
+              onClick={() => onUpdateQuantity(key, item.quantity + 1)}
+              className="px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
+            >
+              <Plus className="h-3.5 w-3.5" />
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => onRemove(key)}
+            className="text-muted-foreground transition-colors hover:text-destructive"
+            aria-label="Видалити товар"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+          </button>
+        </div>
       </div>
 
       <span className="flex-shrink-0 font-[family-name:var(--font-cormorant)] text-base font-light">
