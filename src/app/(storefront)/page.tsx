@@ -96,6 +96,55 @@ export default async function HomePage() {
           </p>
         )}
       </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+          Про нас
+        </h2>
+        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+          Stan створює сучасні прикраси-конструктори, які легко адаптуються до
+          вашого стилю та настрою. Ми поєднуємо мінімалістичний дизайн,
+          продумані деталі та турботу про комфорт у щоденному носінні.
+        </p>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+          Як доглядати за прикрасами
+        </h2>
+        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+          Щоб прикраси довше зберігали блиск, уникайте контакту з водою,
+          парфумами та побутовою хімією. Зберігайте вироби окремо у сухому
+          місці, а після носіння протирайте м&#39;якою серветкою.
+        </p>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+          Як дізнатися розмір
+        </h2>
+        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+          Для визначення розміру виміряйте обхват пальця або зап&#39;ястя м&#39;якою
+          стрічкою без сильного натягу. Якщо сумніваєтеся між двома варіантами,
+          рекомендуємо обрати більший або написати нам за консультацією.
+        </p>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-8">
+        <div className="rounded-md border border-border bg-muted p-6 text-center">
+          <p className="text-sm text-muted-foreground sm:text-base">
+            Виникли запитання? Ми з радістю відповімо на них в Direct
+          </p>
+          <a
+            href="https://www.instagram.com/stan.jewels"
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
+          >
+            Написати нам
+          </a>
+        </div>
+      </section>
     </div>
   );
 }
