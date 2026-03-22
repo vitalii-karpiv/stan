@@ -40,20 +40,24 @@ export default async function HomePage() {
       </section>
 
       {/* Колекції */}
-      <section className="mx-auto max-w-7xl px-6 py-16">
+      <section className="mx-auto max-w-7xl px-6 py-8">
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Колекції
         </h2>
         {collections.length > 0 ? (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-3">
             {collections.map((collection) => (
-              <CollectionCard
+              <div
                 key={collection.id}
-                name={collection.name}
-                slug={collection.slug}
-                imageUrl={collection.imageUrl}
-                productCount={collection._count.products}
-              />
+                className="w-[78%] shrink-0 snap-start sm:w-auto sm:shrink"
+              >
+                <CollectionCard
+                  name={collection.name}
+                  slug={collection.slug}
+                  imageUrl={collection.imageUrl}
+                  productCount={collection._count.products}
+                />
+              </div>
             ))}
           </div>
         ) : (
@@ -64,21 +68,25 @@ export default async function HomePage() {
       </section>
 
       {/* Обране */}
-      <section className="mx-auto max-w-7xl px-6 py-16">
+      <section className="mx-auto max-w-7xl px-6 py-8">
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Обране
         </h2>
         {featuredProducts.length > 0 ? (
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:pb-0 lg:grid-cols-4">
             {featuredProducts.map((product) => (
-              <ProductCard
+              <div
                 key={product.id}
-                title={product.title}
-                slug={product.slug}
-                imageUrl={product.images[0]?.url ?? null}
-                imageAlt={product.images[0]?.alt ?? null}
-                price={product.price}
-              />
+                className="w-[62%] shrink-0 snap-start sm:w-auto sm:shrink"
+              >
+                <ProductCard
+                  title={product.title}
+                  slug={product.slug}
+                  imageUrl={product.images[0]?.url ?? null}
+                  imageAlt={product.images[0]?.alt ?? null}
+                  price={product.price}
+                />
+              </div>
             ))}
           </div>
         ) : (
