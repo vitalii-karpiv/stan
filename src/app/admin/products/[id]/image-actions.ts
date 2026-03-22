@@ -79,3 +79,47 @@ export async function deleteProductImageAction(imageId: string) {
   await db.productImage.delete({ where: { id: imageId } });
   revalidatePath(`/admin/products/${image.productId}`);
 }
+
+export async function reorderProductImagesAction(
+  productId: string,
+  orderedImageIds: string[],
+) {
+  await requireAdmin();
+
+  if (orderedImageIds.length === 0) {
+    return { error: "No images were provided for reordering." };
+  }
+
+  const uniqueIds = new Set(orderedImageIds);
+  if (uniqueIds.size !== orderedImageIds.length) {
+    return { error: "Invalid reorder request." };
+  }
+
+  const productImages = await db.productImage.findMany({
+    where: { productId },
+    select: { id: true },
+  });
+
+  if (productImages.length !== orderedImageIds.length) {
+    return { error: "Image list is out of date. Please refresh and try again." };
+  }
+
+  const productImageIds = new Set(productImages.map((image) => image.id));
+  const allBelongToProduct = orderedImageIds.every((id) => productImageIds.has(id));
+
+  if (!allBelongToProduct) {
+    return { error: "Invalid image selection for this product." };
+  }
+
+  await db.$transaction(
+    orderedImageIds.map((id, index) =>
+      db.productImage.update({
+        where: { id },
+        data: { sortOrder: index },
+      }),
+    ),
+  );
+
+  revalidatePath(`/admin/products/${productId}`);
+  return { error: null };
+}
