@@ -63,7 +63,7 @@ export default async function ProductPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
       {/* Breadcrumb */}
-      <nav className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+      <nav className="mb-8 flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
         <Link href="/shop" className="transition-colors hover:text-foreground">
           Магазин
         </Link>
@@ -151,20 +151,24 @@ export default async function ProductPage({ params }: Props) {
 
       {/* Related products */}
       {relatedProducts.length > 0 && (
-        <section className="mt-20">
+        <section className="mt-12">
           <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-light">
             Вам також може сподобатись
           </h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
             {relatedProducts.map((p) => (
-              <ProductCard
+              <div
                 key={p.id}
-                title={p.title}
-                slug={p.slug}
-                imageUrl={p.images[0]?.url ?? null}
-                imageAlt={p.images[0]?.alt ?? null}
-                price={p.price}
-              />
+                className="w-[62%] shrink-0 snap-start sm:w-[38%] lg:w-[24%]"
+              >
+                <ProductCard
+                  title={p.title}
+                  slug={p.slug}
+                  imageUrl={p.images[0]?.url ?? null}
+                  imageAlt={p.images[0]?.alt ?? null}
+                  price={p.price}
+                />
+              </div>
             ))}
           </div>
         </section>

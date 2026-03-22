@@ -25,10 +25,10 @@ export default async function HomePage() {
     <div>
       {/* Hero */}
       <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-        <h1 className="font-[family-name:var(--font-cormorant)] text-5xl font-light tracking-tight md:text-7xl">
+        <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light tracking-tight md:text-6xl">
           ПРИКРАСИ-КОНСТРУКТОРИ
         </h1>
-        <p className="mt-4 max-w-md text-lg text-muted-foreground">
+        <p className="mt-4 max-w-md text-sm text-muted-foreground sm:text-base md:text-lg">
           Коли прикраса перестає бути просто аксесуаром і стає
           маленьким ритуалом щоденного самовираження.
         </p>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type ProductImageGalleryProps = {
@@ -15,8 +15,16 @@ export function ProductImageGallery({
 }: ProductImageGalleryProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const mainStripRef = useRef<HTMLDivElement | null>(null);
+  const prevLightboxOpenRef = useRef(false);
 
   const closeLightbox = useCallback(() => setLightboxOpen(false), []);
+
+  const scrollToIndex = useCallback((index: number, behavior: ScrollBehavior) => {
+    const el = mainStripRef.current;
+    if (!el) return;
+    el.scrollTo({ left: index * el.clientWidth, behavior });
+  }, []);
 
   const goNext = useCallback(
     () => setSelectedIndex((i) => (i + 1) % images.length),
@@ -27,6 +35,32 @@ export function ProductImageGallery({
     () => setSelectedIndex((i) => (i - 1 + images.length) % images.length),
     [images.length],
   );
+
+  const selectImage = useCallback(
+    (index: number) => {
+      setSelectedIndex(index);
+      scrollToIndex(index, "smooth");
+    },
+    [scrollToIndex],
+  );
+
+  const handleMainScroll = useCallback(() => {
+    if (lightboxOpen) return;
+    const el = mainStripRef.current;
+    if (!el) return;
+    const next = Math.round(el.scrollLeft / el.clientWidth);
+    const clamped = Math.max(0, Math.min(next, images.length - 1));
+    setSelectedIndex((prev) => (prev === clamped ? prev : clamped));
+  }, [images.length, lightboxOpen]);
+
+  useEffect(() => {
+    const wasOpen = prevLightboxOpenRef.current;
+    prevLightboxOpenRef.current = lightboxOpen;
+
+    if (wasOpen && !lightboxOpen && images.length > 1) {
+      scrollToIndex(selectedIndex, "auto");
+    }
+  }, [lightboxOpen, images.length, selectedIndex, scrollToIndex]);
 
   useEffect(() => {
     if (!lightboxOpen) return;
@@ -55,27 +89,56 @@ export function ProductImageGallery({
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setLightboxOpen(true)}
-        className="relative block w-full cursor-zoom-in overflow-hidden aspect-[3/4]"
-      >
-        <Image
-          src={current.url}
-          alt={current.alt ?? productTitle}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority={selectedIndex === 0}
-          className="object-cover"
-        />
-      </button>
+      {images.length > 1 ? (
+        <div
+          ref={mainStripRef}
+          onScroll={handleMainScroll}
+          className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto scroll-smooth"
+        >
+          {images.map((img, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                setSelectedIndex(i);
+                setLightboxOpen(true);
+              }}
+              className="relative block h-full w-full flex-shrink-0 snap-start cursor-zoom-in overflow-hidden"
+            >
+              <Image
+                src={img.url}
+                alt={img.alt ?? `${productTitle} — ${i + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority={i === 0}
+                className="object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          className="relative block w-full cursor-zoom-in overflow-hidden aspect-[3/4]"
+        >
+          <Image
+            src={current.url}
+            alt={current.alt ?? productTitle}
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            priority={selectedIndex === 0}
+            className="object-cover"
+          />
+        </button>
+      )}
 
       {images.length > 1 && (
         <div className="mt-3 flex gap-2 overflow-x-auto">
           {images.map((img, i) => (
             <button
               key={i}
-              onClick={() => setSelectedIndex(i)}
+              onClick={() => selectImage(i)}
               className={`relative h-20 w-16 flex-shrink-0 overflow-hidden border-2 transition-colors ${
                 i === selectedIndex
                   ? "border-foreground"
