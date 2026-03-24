@@ -21,6 +21,7 @@ export type CartItem = {
   material: string | null;
   size: string | null;
   gemstone: string | null;
+  pendant: string | null;
   price: number;
   quantity: number;
 };
@@ -30,8 +31,15 @@ export function cartItemKey(item: {
   material: string | null;
   size: string | null;
   gemstone: string | null;
+  pendant: string | null;
 }): string {
-  return [item.productId, item.material ?? "", item.size ?? "", item.gemstone ?? ""].join("|");
+  return [
+    item.productId,
+    item.material ?? "",
+    item.size ?? "",
+    item.gemstone ?? "",
+    item.pendant ?? "",
+  ].join("|");
 }
 
 type CartContextValue = {

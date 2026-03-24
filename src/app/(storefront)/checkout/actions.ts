@@ -15,6 +15,7 @@ type CartItemPayload = {
   size: string | null;
   material: string | null;
   gemstone: string | null;
+  pendant: string | null;
 };
 
 function extractValues(formData: FormData) {
@@ -43,6 +44,7 @@ function parseCartItems(raw: string): CartItemPayload[] | null {
       size: item.size ? String(item.size) : null,
       material: item.material ? String(item.material) : null,
       gemstone: item.gemstone ? String(item.gemstone) : null,
+      pendant: item.pendant ? String(item.pendant) : null,
     }));
   } catch {
     return null;
@@ -108,6 +110,7 @@ export async function placeOrderAction(
     size: item.size,
     material: item.material,
     gemstone: item.gemstone,
+    pendant: item.pendant,
   }));
 
   const totalInCents = orderItems.reduce(

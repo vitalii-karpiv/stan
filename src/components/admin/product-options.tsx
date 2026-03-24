@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 
@@ -16,8 +17,9 @@ type Option = {
 
 const TYPE_LABELS: Record<string, string> = {
   SIZE: "Size",
-  MATERIAL: "Material",
+  COLOR: "Color",
   GEMSTONE: "Gemstone",
+  PENDANT: "Pendant",
 };
 
 function AddButton() {
@@ -35,6 +37,7 @@ function AddButton() {
 
 function OptionRow({ option }: { option: Option }) {
   const [deleting, setDeleting] = useState(false);
+  const isPendant = option.type === "PENDANT";
 
   async function handleDelete() {
     setDeleting(true);
@@ -46,9 +49,24 @@ function OptionRow({ option }: { option: Option }) {
       <td className="px-4 py-3 text-sm">
         {TYPE_LABELS[option.type] ?? option.type}
       </td>
-      <td className="px-4 py-3 text-sm">{option.value}</td>
+      <td className="px-4 py-3 text-sm">
+        {isPendant ? (
+          <div className="relative h-10 w-10 overflow-hidden rounded border border-border">
+            <Image
+              src={option.value}
+              alt="Pendant option"
+              fill
+              sizes="40px"
+              className="object-cover"
+            />
+          </div>
+        ) : (
+          option.value
+        )}
+      </td>
       <td className="px-4 py-3 text-right">
         <button
+          type="button"
           onClick={handleDelete}
           disabled={deleting}
           className="rounded bg-red-600 px-2 py-1 text-xs font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
@@ -69,6 +87,7 @@ export function ProductOptions({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [selectedType, setSelectedType] = useState("");
 
   async function handleAdd(formData: FormData) {
     setError(null);
@@ -77,6 +96,7 @@ export function ProductOptions({
       setError(result.error);
     } else {
       formRef.current?.reset();
+      setSelectedType("");
     }
   }
 
@@ -84,7 +104,7 @@ export function ProductOptions({
     <div className="mt-12">
       <h2 className="text-lg font-semibold">Options</h2>
       <p className="mt-1 text-sm text-muted-foreground">
-        Configure available sizes, materials, and gemstones independently.
+        Configure available sizes, colors, gemstones, and pendant images.
       </p>
 
       {options.length > 0 && (
@@ -128,28 +148,50 @@ export function ProductOptions({
               id="opt-type"
               name="type"
               required
+              value={selectedType}
+              onChange={(event) => setSelectedType(event.target.value)}
               className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
             >
               <option value="">Select type...</option>
               <option value="SIZE">Size</option>
-              <option value="MATERIAL">Material</option>
+              <option value="COLOR">Color</option>
               <option value="GEMSTONE">Gemstone</option>
+              <option value="PENDANT">Pendant</option>
             </select>
           </div>
 
-          <div className="space-y-1.5">
-            <label htmlFor="opt-value" className="block text-sm font-medium">
-              Value
-            </label>
-            <input
-              id="opt-value"
-              name="value"
-              type="text"
-              required
-              placeholder="e.g. Gold, 18cm, Ruby"
-              className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
-            />
-          </div>
+          {selectedType === "PENDANT" ? (
+            <div className="space-y-1.5">
+              <label htmlFor="opt-pendant-image" className="block text-sm font-medium">
+                Pendant image
+              </label>
+              <input
+                id="opt-pendant-image"
+                name="pendantImage"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/avif"
+                required
+                className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+              />
+              <p className="text-xs text-muted-foreground">
+                Upload JPEG, PNG, WebP, or AVIF up to 5 MB.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-1.5">
+              <label htmlFor="opt-value" className="block text-sm font-medium">
+                Value
+              </label>
+              <input
+                id="opt-value"
+                name="value"
+                type="text"
+                required={selectedType !== "PENDANT"}
+                placeholder="e.g. Gold, 18cm, Ruby"
+                className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+              />
+            </div>
+          )}
         </div>
 
         <AddButton />

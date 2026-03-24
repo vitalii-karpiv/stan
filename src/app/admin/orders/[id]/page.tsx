@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
+import { ImageLightbox } from "@/components/admin/image-lightbox";
 import { statusLabels } from "@/components/admin/order-status";
 import { updateOrderStatus } from "./actions";
 import type { OrderStatus } from "@/generated/prisma";
@@ -129,6 +130,7 @@ export default async function OrderDetailPage({ params }: Props) {
               const attrs = [item.size, item.material, item.gemstone]
                 .filter(Boolean)
                 .join(" / ");
+              const pendantImage = item.pendant?.trim() || null;
 
               return (
                 <tr key={item.id} className="hover:bg-muted/50">
@@ -141,7 +143,17 @@ export default async function OrderDetailPage({ params }: Props) {
                     </Link>
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    {attrs || "—"}
+                    <div className="flex items-center gap-2">
+                      <span>{attrs || "—"}</span>
+                      {pendantImage && (
+                        <ImageLightbox
+                          src={pendantImage}
+                          alt="Pendant"
+                          thumbClassName="h-7 w-7"
+                          thumbSizes="28px"
+                        />
+                      )}
+                    </div>
                   </td>
                   <td className="px-4 py-3 text-right">
                     {formatPrice(item.price)}

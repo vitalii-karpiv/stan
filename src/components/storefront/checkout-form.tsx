@@ -36,6 +36,7 @@ function cartPayload(items: CartItem[]) {
       size: i.size,
       material: i.material,
       gemstone: i.gemstone,
+      pendant: i.pendant,
     })),
   );
 }
@@ -303,6 +304,7 @@ function SummaryRow({
   const attrs = [item.material, item.size, item.gemstone]
     .filter(Boolean)
     .join(" / ");
+  const pendantImage = item.pendant?.trim() || null;
 
   return (
     <div className="flex gap-3 py-3">
@@ -326,6 +328,20 @@ function SummaryRow({
         </span>
         {attrs && (
           <span className="text-xs text-muted-foreground">{attrs}</span>
+        )}
+        {pendantImage && (
+          <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <span>Підвіска:</span>
+            <div className="relative h-5 w-5 overflow-hidden rounded border border-border">
+              <Image
+                src={pendantImage}
+                alt="Підвіска"
+                fill
+                sizes="20px"
+                className="object-cover"
+              />
+            </div>
+          </div>
         )}
 
         <div className="mt-2 flex items-center gap-2">

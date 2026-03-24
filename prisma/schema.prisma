@@ -25,8 +25,9 @@ enum OrderStatus {
 
 enum OptionType {
   SIZE
-  MATERIAL
+  COLOR
   GEMSTONE
+  PENDANT
 }
 
 model User {
@@ -153,6 +154,7 @@ model OrderItem {
   size      String?
   material  String?
   gemstone  String?
+  pendant   String?
 
   @@index([orderId])
 }
