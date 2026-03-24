@@ -15,9 +15,6 @@ export function Header() {
           <Link href="/shop" className="text-muted-foreground transition-colors hover:text-foreground">
             Магазин
           </Link>
-          <Link href="/contact" className="text-muted-foreground transition-colors hover:text-foreground">
-            Контакти
-          </Link>
         </nav>
 
         <div className="flex items-center gap-4">

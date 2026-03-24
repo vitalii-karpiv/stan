@@ -42,12 +42,20 @@ export async function Footer() {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium">Допомога</h4>
+              <h4 className="text-sm font-medium">Контакти</h4>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 <li>
-                  <Link href="/contact" className="hover:text-foreground">
-                    Зв&#39;язатися з нами
-                  </Link>
+                  <a href="tel:+380684242786" className="hover:text-foreground">
+                    +38 (068) 424-27-86
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="mailto:stan.bijou@gmail.com"
+                    className="hover:text-foreground"
+                  >
+                    stan.bijou@gmail.com
+                  </a>
                 </li>
                 <li>
                   <a
@@ -73,22 +81,9 @@ export async function Footer() {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium">Контакти та інформація</h4>
+              <h4 className="text-sm font-medium">Додаткова інформація</h4>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 <li>
-                  <a href="tel:+380684242786" className="hover:text-foreground">
-                    +38 (068) 424-27-86
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="mailto:stan.bijou@gmail.com"
-                    className="hover:text-foreground"
-                  >
-                    stan.bijou@gmail.com
-                  </a>
-                </li>
-                <li className="pt-2">
                   <Link href="/delivery-payment" className="hover:text-foreground">
                     Доставка і оплата
                   </Link>
