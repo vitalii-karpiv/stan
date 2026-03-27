@@ -26,6 +26,14 @@ export function ProductImageGallery({
     el.scrollTo({ left: index * el.clientWidth, behavior });
   }, []);
 
+  const goToRegularIndex = useCallback(
+    (index: number) => {
+      setSelectedIndex(index);
+      scrollToIndex(index, "smooth");
+    },
+    [scrollToIndex],
+  );
+
   const goNext = useCallback(
     () => setSelectedIndex((i) => (i + 1) % images.length),
     [images.length],
@@ -38,11 +46,20 @@ export function ProductImageGallery({
 
   const selectImage = useCallback(
     (index: number) => {
-      setSelectedIndex(index);
-      scrollToIndex(index, "smooth");
+      goToRegularIndex(index);
     },
-    [scrollToIndex],
+    [goToRegularIndex],
   );
+
+  const goToRegularNext = useCallback(() => {
+    const nextIndex = (selectedIndex + 1) % images.length;
+    goToRegularIndex(nextIndex);
+  }, [goToRegularIndex, images.length, selectedIndex]);
+
+  const goToRegularPrev = useCallback(() => {
+    const prevIndex = (selectedIndex - 1 + images.length) % images.length;
+    goToRegularIndex(prevIndex);
+  }, [goToRegularIndex, images.length, selectedIndex]);
 
   const handleMainScroll = useCallback(() => {
     if (lightboxOpen) return;
@@ -90,31 +107,81 @@ export function ProductImageGallery({
   return (
     <div>
       {images.length > 1 ? (
-        <div
-          ref={mainStripRef}
-          onScroll={handleMainScroll}
-          className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto scroll-smooth"
-        >
-          {images.map((img, i) => (
-            <button
-              key={i}
-              type="button"
-              onClick={() => {
-                setSelectedIndex(i);
-                setLightboxOpen(true);
-              }}
-              className="relative block h-full w-full flex-shrink-0 snap-start cursor-zoom-in overflow-hidden"
+        <div className="group relative">
+          <div
+            ref={mainStripRef}
+            onScroll={handleMainScroll}
+            className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto scroll-smooth"
+          >
+            {images.map((img, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => {
+                  setSelectedIndex(i);
+                  setLightboxOpen(true);
+                }}
+                className="relative block h-full w-full flex-shrink-0 snap-start cursor-zoom-in overflow-hidden"
+              >
+                <Image
+                  src={img.url}
+                  alt={img.alt ?? `${productTitle} — ${i + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority={i === 0}
+                  className="object-cover"
+                />
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToRegularPrev();
+            }}
+            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/70 p-1.5 text-foreground/70 backdrop-blur-sm transition-all hover:bg-background/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+            aria-label="Попереднє фото"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <Image
-                src={img.url}
-                alt={img.alt ?? `${productTitle} — ${i + 1}`}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority={i === 0}
-                className="object-cover"
-              />
-            </button>
-          ))}
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToRegularNext();
+            }}
+            className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/70 p-1.5 text-foreground/70 backdrop-blur-sm transition-all hover:bg-background/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+            aria-label="Наступне фото"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="9 6 15 12 9 18" />
+            </svg>
+          </button>
         </div>
       ) : (
         <button
@@ -221,20 +288,20 @@ function Lightbox({
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onPrev(); }}
-            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:text-white"
+            className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/70 p-1.5 text-foreground/70 backdrop-blur-sm transition-all hover:bg-background/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
             aria-label="Попереднє фото"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
             </svg>
           </button>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); onNext(); }}
-            className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white/80 backdrop-blur-sm transition-colors hover:text-white"
+            className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-background/70 p-1.5 text-foreground/70 backdrop-blur-sm transition-all hover:bg-background/90 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
             aria-label="Наступне фото"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="9 6 15 12 9 18" />
             </svg>
           </button>
