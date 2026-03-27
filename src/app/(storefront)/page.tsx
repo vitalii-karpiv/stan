@@ -1,5 +1,8 @@
+import Link from "next/link";
+
 import { db } from "@/lib/db";
 import { CollectionCard } from "@/components/storefront/collection-card";
+import { JewelryCareTabs } from "@/components/storefront/jewelry-care-tabs";
 import { ProductCard } from "@/components/storefront/product-card";
 
 export const revalidate = 60;
@@ -32,12 +35,12 @@ export default async function HomePage() {
           Коли прикраса перестає бути просто аксесуаром і стає
           маленьким ритуалом щоденного самовираження.
         </p>
-        <a
+        <Link
           href="/shop"
           className="mt-8 inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
         >
           Каталог
-        </a>
+        </Link>
       </section>
 
       {/* Колекції */}
@@ -108,18 +111,20 @@ export default async function HomePage() {
         </p>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-8">
+      <section
+        id="jewelry-care"
+        className="mx-auto max-w-7xl scroll-mt-24 px-6 py-8"
+      >
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Як доглядати за прикрасами
         </h2>
-        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
-          Щоб прикраси довше зберігали блиск, уникайте контакту з водою,
-          парфумами та побутовою хімією. Зберігайте вироби окремо у сухому
-          місці, а після носіння протирайте м&#39;якою серветкою.
-        </p>
+        <JewelryCareTabs />
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-8">
+      <section
+        id="size-guide"
+        className="mx-auto max-w-7xl scroll-mt-24 px-6 py-8"
+      >
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Як дізнатися розмір
         </h2>

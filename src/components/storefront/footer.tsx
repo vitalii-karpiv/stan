@@ -84,6 +84,16 @@ export async function Footer() {
               <h4 className="text-sm font-medium">Додаткова інформація</h4>
               <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                 <li>
+                  <Link href="/#size-guide" className="hover:text-foreground">
+                    Як дізнатися розмір
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/#jewelry-care" className="hover:text-foreground">
+                    Як доглядати за прикрасами
+                  </Link>
+                </li>
+                <li>
                   <Link href="/delivery-payment" className="hover:text-foreground">
                     Доставка і оплата
                   </Link>
