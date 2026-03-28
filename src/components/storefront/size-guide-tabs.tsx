@@ -4,12 +4,12 @@ import { useId, useState } from "react";
 
 const sizeCategories = [
   {
-    label: "Анклети",
+    label: "Анклет",
     content:
       "Тут буде інструкція з вимірювання розміру кільця: обхват пальця стрічкою, відповідність до таблиці розмірів та поради, якщо розмір між двома значеннями.",
   },
   {
-    label: "Браслети",
+    label: "Браслет",
     content:
       "Тут буде опис, як виміряти зап’ястя для браслета, з урахуванням комфорту та типу застібки.",
   },
@@ -17,6 +17,11 @@ const sizeCategories = [
     label: "Намисто",
     content:
       "Тут буде короткий гайд з довжин намиста та як обрати оптимальну довжину під виріз одягу.",
+  },
+  {
+    label: "Каблучка",
+    content:
+      "Тут буде інструкція з вимірювання розміру каблучки: обхват пальця стрічкою, відповідність до таблиці розмірів та поради, якщо розмір між двома значеннями.",
   },
 ] as const;
 
@@ -37,7 +42,7 @@ export function SizeGuideTabs() {
       <div
         role="tablist"
         aria-label="Як дізнатися розмір за типом прикраси"
-        className="mx-auto flex w-full max-w-3xl flex-wrap justify-between gap-x-6 gap-y-3"
+        className="mx-auto flex w-full max-w-3xl flex-wrap justify-between gap-x-2 gap-y-3"
       >
         {sizeCategories.map((category) => {
           const isActive = category.label === activeCategory.label;
