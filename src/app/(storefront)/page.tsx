@@ -7,6 +7,9 @@ import { ProductCard } from "@/components/storefront/product-card";
 
 export const revalidate = 60;
 
+const heroCtaClassName =
+  "inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90";
+
 export default async function HomePage() {
   const [collections, featuredProducts] = await Promise.all([
     db.collection.findMany({
@@ -35,12 +38,14 @@ export default async function HomePage() {
           Коли прикраса перестає бути просто аксесуаром і стає
           маленьким ритуалом щоденного самовираження.
         </p>
-        <Link
-          href="/shop"
-          className="mt-8 inline-block bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
-        >
-          Каталог
-        </Link>
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
+          <Link href="/shop" className={heroCtaClassName}>
+            Каталог
+          </Link>
+          <Link href="/builder" className={heroCtaClassName}>
+            Конструктор
+          </Link>
+        </div>
       </section>
 
       {/* Колекції */}

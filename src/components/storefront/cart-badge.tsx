@@ -14,13 +14,6 @@ type CartBadgeProps = {
 export function CartBadge({ className, size = "default" }: CartBadgeProps) {
   const { totalItems } = useCart();
 
-  const badgeBaseClass =
-    "absolute flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-foreground";
-  const badgeClass = cn(
-    badgeBaseClass,
-    size === "sm" ? "-right-1 -top-1" : "-right-2 -top-2",
-  );
-
   const ariaLabel =
     totalItems > 0 ? `Кошик, ${totalItems} товарів` : "Кошик";
 
@@ -32,7 +25,7 @@ export function CartBadge({ className, size = "default" }: CartBadgeProps) {
     >
       <ShoppingBag className={"h-5 w-5"} aria-hidden />
       {totalItems > 0 && (
-        <span className={badgeClass}>
+        <span className={"absolute flex h-4 w-4 items-center justify-center rounded-full bg-accent text-[10px] font-medium text-accent-foreground -right-2 -top-2"}>
           {totalItems > 99 ? "99" : totalItems}
         </span>
       )}
