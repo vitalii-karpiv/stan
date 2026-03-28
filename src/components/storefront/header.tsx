@@ -9,7 +9,6 @@ import { CartBadge } from "@/components/storefront/cart-badge";
 const mobileLinks = [
   { href: "/shop", label: "Каталог" },
   { href: "/builder", label: "Конструктор" },
-  { href: "/checkout", label: "Кошик" },
 ] as const;
 
 export function Header() {
@@ -111,6 +110,13 @@ export function Header() {
             </div>
           </nav>
         )}
+      </div>
+
+      <div className="fixed bottom-4 right-4 z-40 md:hidden">
+        <CartBadge
+          size="sm"
+          className="rounded-full border border-border bg-background/80 p-2 shadow-sm backdrop-blur-sm transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+        />
       </div>
     </header>
   );
