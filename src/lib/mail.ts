@@ -101,3 +101,29 @@ export async function notifyCustomerOrderConfirmation(
 
   await sendMail(order.customerEmail, subject, html);
 }
+
+type CustomerOrderShipping = {
+  customerEmail: string;
+  customerName: string;
+  orderId: string;
+  trackingNumber: string;
+};
+
+export async function notifyCustomerOrderShipping(
+  order: CustomerOrderShipping,
+) {
+  const shortId = order.orderId.slice(0, 8);
+  const subject = `Замовлення #${shortId} — відправлено`;
+  const name = escapeHtml(order.customerName);
+  const ttn = escapeHtml(order.trackingNumber);
+
+  const html = `
+    <p>Вітаємо, ${name}!</p>
+    <p>Ваше замовлення передано на доставку Новою Поштою.</p>
+    <p style="margin:20px 0;font-size:15px"><strong>ТТН:</strong> <span style="font-family:monospace;letter-spacing:0.02em">${ttn}</span></p>
+    <p style="color:#666;font-size:14px">Номер замовлення: <span style="font-family:monospace;font-size:12px">${shortId}</span></p>
+    <p>Відстежити посилку можна на сайті Нової Пошти за цим номером.</p>
+  `;
+
+  await sendMail(order.customerEmail, subject, html);
+}

@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import { ImageLightbox } from "@/components/admin/image-lightbox";
 import { statusLabels } from "@/components/admin/order-status";
+import { OrderShipmentNotifyForm } from "@/components/admin/order-shipment-notify-form";
 import { updateOrderStatus } from "./actions";
 import type { OrderStatus } from "@/generated/prisma";
 
@@ -110,6 +111,17 @@ export default async function OrderDetailPage({ params }: Props) {
               Оновити
             </button>
           </form>
+
+          <h2 className="mt-5 text-sm font-medium text-muted-foreground">
+            ТТН (Нова Пошта)
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Збережіть номер і надішліть клієнту лист про відправлення.
+          </p>
+          <OrderShipmentNotifyForm
+            orderId={order.id}
+            trackingNumber={order.trackingNumber}
+          />
         </div>
       </div>
 
