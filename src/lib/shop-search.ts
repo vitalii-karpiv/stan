@@ -9,20 +9,58 @@ const PRODUCT_TYPE_SET = new Set<string>(PRODUCT_TYPE_VALUES);
 export type ShopSortOrder = "asc" | "desc";
 
 export type ParsedShopFilters = {
-  category?: string;
+  categories: string[];
   collection?: string;
-  material?: Material;
-  productType?: ProductType;
+  materials: Material[];
+  productTypes: ProductType[];
   sort: ShopSortOrder;
 };
 
 export type ShopHrefPatch = Partial<{
-  category: string | null;
   collection: string | null;
-  material: Material | null;
-  productType: ProductType | null;
   sort: ShopSortOrder | null;
+  categories: string[] | null;
+  toggleCategory: string;
+  materials: Material[] | null;
+  toggleMaterial: Material;
+  productTypes: ProductType[] | null;
+  toggleProductType: ProductType;
 }>;
+
+function allStrings(
+  v: string | string[] | undefined,
+): string[] {
+  if (v === undefined) return [];
+  const arr = Array.isArray(v) ? v : [v];
+  return [...new Set(arr.filter((s): s is string => typeof s === "string" && s.length > 0))];
+}
+
+export function parseShopSearchParams(
+  raw: Record<string, string | string[] | undefined>,
+): ParsedShopFilters {
+  const categorySlugs = allStrings(raw.category);
+  const collection = firstString(raw.collection);
+  const materialStrs = allStrings(raw.material);
+  const typeStrs = allStrings(raw.type);
+  const sortRaw = firstString(raw.sort);
+
+  const materials = materialStrs.filter((s): s is Material =>
+    MATERIAL_SET.has(s),
+  ) as Material[];
+  const productTypes = typeStrs.filter((s): s is ProductType =>
+    PRODUCT_TYPE_SET.has(s),
+  ) as ProductType[];
+
+  const sort: ShopSortOrder = sortRaw === "desc" ? "desc" : "asc";
+
+  return {
+    categories: categorySlugs,
+    ...(collection ? { collection } : {}),
+    materials: [...new Set(materials)],
+    productTypes: [...new Set(productTypes)],
+    sort,
+  };
+}
 
 function firstString(
   v: string | string[] | undefined,
@@ -31,66 +69,61 @@ function firstString(
   return Array.isArray(v) ? v[0] : v;
 }
 
-export function parseShopSearchParams(
-  raw: Record<string, string | string[] | undefined>,
-): ParsedShopFilters {
-  const category = firstString(raw.category);
-  const collection = firstString(raw.collection);
-  const materialRaw = firstString(raw.material);
-  const typeRaw = firstString(raw.type);
-  const sortRaw = firstString(raw.sort);
-
-  const material =
-    materialRaw && MATERIAL_SET.has(materialRaw)
-      ? (materialRaw as Material)
-      : undefined;
-  const productType =
-    typeRaw && PRODUCT_TYPE_SET.has(typeRaw)
-      ? (typeRaw as ProductType)
-      : undefined;
-  const sort: ShopSortOrder = sortRaw === "desc" ? "desc" : "asc";
-
-  return {
-    ...(category ? { category } : {}),
-    ...(collection ? { collection } : {}),
-    ...(material ? { material } : {}),
-    ...(productType ? { productType } : {}),
-    sort,
-  };
-}
-
 export function shopHref(
   current: ParsedShopFilters,
   patch: ShopHrefPatch,
 ): string {
-  let category = current.category;
+  let categories = [...current.categories];
   let collection = current.collection;
-  let material = current.material;
-  let productType = current.productType;
+  let materials = [...current.materials];
+  let productTypes = [...current.productTypes];
   let sort = current.sort;
 
-  if (patch.category !== undefined) {
-    category = patch.category === null ? undefined : patch.category;
-  }
   if (patch.collection !== undefined) {
     collection = patch.collection === null ? undefined : patch.collection;
-  }
-  if (patch.material !== undefined) {
-    material = patch.material === null ? undefined : patch.material;
-  }
-  if (patch.productType !== undefined) {
-    productType =
-      patch.productType === null ? undefined : patch.productType;
   }
   if (patch.sort !== undefined) {
     sort = patch.sort === null ? "asc" : patch.sort;
   }
 
+  if (patch.categories !== undefined) {
+    categories =
+      patch.categories === null ? [] : [...new Set(patch.categories)];
+  }
+  if (patch.toggleCategory !== undefined) {
+    const slug = patch.toggleCategory;
+    const i = categories.indexOf(slug);
+    if (i >= 0) categories.splice(i, 1);
+    else categories.push(slug);
+  }
+
+  if (patch.materials !== undefined) {
+    materials =
+      patch.materials === null ? [] : [...new Set(patch.materials)];
+  }
+  if (patch.toggleMaterial !== undefined) {
+    const m = patch.toggleMaterial;
+    const i = materials.indexOf(m);
+    if (i >= 0) materials.splice(i, 1);
+    else materials.push(m);
+  }
+
+  if (patch.productTypes !== undefined) {
+    productTypes =
+      patch.productTypes === null ? [] : [...new Set(patch.productTypes)];
+  }
+  if (patch.toggleProductType !== undefined) {
+    const t = patch.toggleProductType;
+    const i = productTypes.indexOf(t);
+    if (i >= 0) productTypes.splice(i, 1);
+    else productTypes.push(t);
+  }
+
   const qs = new URLSearchParams();
-  if (category) qs.set("category", category);
+  for (const c of categories) qs.append("category", c);
   if (collection) qs.set("collection", collection);
-  if (material) qs.set("material", material);
-  if (productType) qs.set("type", productType);
+  for (const m of materials) qs.append("material", m);
+  for (const t of productTypes) qs.append("type", t);
   if (sort === "desc") qs.set("sort", "desc");
 
   const s = qs.toString();

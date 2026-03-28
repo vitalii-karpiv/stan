@@ -20,21 +20,35 @@ export default async function ShopPage({
   const raw = await searchParams;
   const filters = parseShopSearchParams(raw);
 
-  const where: Prisma.ProductWhereInput = { published: true };
-  if (filters.category) {
-    where.category = { slug: filters.category };
+  const andParts: Prisma.ProductWhereInput[] = [{ published: true }];
+
+  if (filters.categories.length > 0) {
+    andParts.push({
+      category: { slug: { in: filters.categories } },
+    });
   }
   if (filters.collection) {
-    where.collections = {
-      some: { collection: { slug: filters.collection } },
-    };
+    andParts.push({
+      collections: {
+        some: { collection: { slug: filters.collection } },
+      },
+    });
   }
-  if (filters.material) {
-    where.materials = { has: filters.material };
+  if (filters.materials.length > 0) {
+    andParts.push({
+      OR: filters.materials.map((m) => ({
+        materials: { has: m },
+      })),
+    });
   }
-  if (filters.productType) {
-    where.productType = filters.productType;
+  if (filters.productTypes.length > 0) {
+    andParts.push({
+      productType: { in: filters.productTypes },
+    });
   }
+
+  const where: Prisma.ProductWhereInput =
+    andParts.length === 1 ? andParts[0]! : { AND: andParts };
 
   const [products, categories, activeCollection] = await Promise.all([
     db.product.findMany({
@@ -64,9 +78,9 @@ export default async function ShopPage({
       <ShopFiltersDisclosure>
         <CollapsibleFilterBlock label="Категорія">
           <Link
-            href={shopHref(filters, { category: null })}
+            href={shopHref(filters, { categories: [] })}
             className={filterClass(
-              !filters.category && !filters.collection,
+              filters.categories.length === 0 && !filters.collection,
             )}
           >
             Усі
@@ -74,8 +88,10 @@ export default async function ShopPage({
           {categories.map((cat) => (
             <Link
               key={cat.id}
-              href={shopHref(filters, { category: cat.slug })}
-              className={filterClass(filters.category === cat.slug)}
+              href={shopHref(filters, { toggleCategory: cat.slug })}
+              className={filterClass(
+                filters.categories.includes(cat.slug),
+              )}
             >
               {cat.name}
             </Link>
@@ -84,16 +100,18 @@ export default async function ShopPage({
 
         <CollapsibleFilterBlock label="Матеріал">
           <Link
-            href={shopHref(filters, { material: null })}
-            className={filterClass(!filters.material)}
+            href={shopHref(filters, { materials: [] })}
+            className={filterClass(filters.materials.length === 0)}
           >
             Усі
           </Link>
           {MATERIAL_OPTIONS.map((opt) => (
             <Link
               key={opt.value}
-              href={shopHref(filters, { material: opt.value })}
-              className={filterClass(filters.material === opt.value)}
+              href={shopHref(filters, { toggleMaterial: opt.value })}
+              className={filterClass(
+                filters.materials.includes(opt.value),
+              )}
             >
               {opt.label}
             </Link>
@@ -102,16 +120,18 @@ export default async function ShopPage({
 
         <CollapsibleFilterBlock label="Тип">
           <Link
-            href={shopHref(filters, { productType: null })}
-            className={filterClass(!filters.productType)}
+            href={shopHref(filters, { productTypes: [] })}
+            className={filterClass(filters.productTypes.length === 0)}
           >
             Усі
           </Link>
           {PRODUCT_TYPE_OPTIONS.map((opt) => (
             <Link
               key={opt.value}
-              href={shopHref(filters, { productType: opt.value })}
-              className={filterClass(filters.productType === opt.value)}
+              href={shopHref(filters, { toggleProductType: opt.value })}
+              className={filterClass(
+                filters.productTypes.includes(opt.value),
+              )}
             >
               {opt.label}
             </Link>
