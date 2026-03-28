@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { db } from "@/lib/db";
 import { CollectionCard } from "@/components/storefront/collection-card";
-import { JewelryCareTabs } from "@/components/storefront/jewelry-care-tabs";
+import { SizeGuideTabs } from "@/components/storefront/size-guide-tabs";
 import { ProductCard } from "@/components/storefront/product-card";
 
 export const revalidate = 60;
@@ -118,7 +118,11 @@ export default async function HomePage() {
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Як доглядати за прикрасами
         </h2>
-        <JewelryCareTabs />
+        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
+          Тут з’явиться короткий гайд з догляду: зберігання, контакт з водою та
+          косметикою, чищення та коли краще знімати прикраси. Наразі розділ у
+          підготовці.
+        </p>
       </section>
 
       <section
@@ -128,11 +132,7 @@ export default async function HomePage() {
         <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
           Як дізнатися розмір
         </h2>
-        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
-          Для визначення розміру виміряйте обхват пальця або зап&#39;ястя м&#39;якою
-          стрічкою без сильного натягу. Якщо сумніваєтеся між двома варіантами,
-          рекомендуємо обрати більший або написати нам за консультацією.
-        </p>
+        <SizeGuideTabs />
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-8">

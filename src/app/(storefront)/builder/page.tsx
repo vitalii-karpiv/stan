@@ -1,6 +1,6 @@
 export const metadata = { title: "Конструктор" };
 
-export default function ConstructorPage() {
+export default function BuilderPage() {
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
       <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light">

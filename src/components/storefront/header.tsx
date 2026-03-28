@@ -8,7 +8,7 @@ import { CartBadge } from "@/components/storefront/cart-badge";
 
 const mobileLinks = [
   { href: "/shop", label: "Каталог" },
-  { href: "/constructor", label: "Конструктор" },
+  { href: "/builder", label: "Конструктор" },
   { href: "/checkout", label: "Кошик" },
 ] as const;
 
@@ -35,10 +35,10 @@ export function Header() {
               href="/shop"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
-              Магазин
+              Каталог
             </Link>
             <Link
-              href="/constructor"
+              href="/builder"
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               Конструктор

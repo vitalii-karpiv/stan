@@ -2,44 +2,44 @@
 
 import { useId, useState } from "react";
 
-const careCategories = [
+const sizeCategories = [
   {
     label: "Анклети",
     content:
-      "Анклети найкраще зберігають вигляд, коли ви знімаєте їх перед душем, морем або тренуванням. Після носіння протирайте прикрасу м'якою сухою серветкою та зберігайте окремо, щоб ланцюжок не перекручувався.",
+      "Тут буде інструкція з вимірювання розміру кільця: обхват пальця стрічкою, відповідність до таблиці розмірів та поради, якщо розмір між двома значеннями.",
   },
   {
     label: "Браслети",
     content:
-      "Браслети варто берегти від різких ударів, води та косметичних засобів для рук. Щоб фурнітура довше залишалася охайною, знімайте прикрасу перед сном і зберігайте її в сухому мішечку або коробці.",
+      "Тут буде опис, як виміряти зап’ястя для браслета, з урахуванням комфорту та типу застібки.",
   },
   {
     label: "Намисто",
     content:
-      "Намисто рекомендуємо надягати після парфумів і доглядових засобів, щоб покриття довше зберігало блиск. Після носіння акуратно розкладіть прикрасу без вузлів і протріть серветкою перед зберіганням.",
+      "Тут буде короткий гайд з довжин намиста та як обрати оптимальну довжину під виріз одягу.",
   },
 ] as const;
 
-type CareCategory = (typeof careCategories)[number];
+type SizeCategory = (typeof sizeCategories)[number];
 
-export function JewelryCareTabs() {
-  const [activeTab, setActiveTab] = useState<CareCategory["label"]>(
-    careCategories[0].label,
+export function SizeGuideTabs() {
+  const [activeTab, setActiveTab] = useState<SizeCategory["label"]>(
+    sizeCategories[0].label,
   );
   const panelId = useId();
 
   const activeCategory =
-    careCategories.find((category) => category.label === activeTab) ??
-    careCategories[0];
+    sizeCategories.find((category) => category.label === activeTab) ??
+    sizeCategories[0];
 
   return (
     <div className="mt-6">
       <div
         role="tablist"
-        aria-label="Категорії догляду за прикрасами"
+        aria-label="Як дізнатися розмір за типом прикраси"
         className="mx-auto flex w-full max-w-3xl flex-wrap justify-between gap-x-6 gap-y-3"
       >
-        {careCategories.map((category) => {
+        {sizeCategories.map((category) => {
           const isActive = category.label === activeCategory.label;
           const tabId = `${panelId}-${category.label}`;
 
