@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { notifyAdminsNewOrder } from "@/lib/mail";
+import {
+  notifyAdminsNewOrder,
+  notifyCustomerOrderConfirmation,
+} from "@/lib/mail";
 import {
   checkoutSchema,
   type CheckoutFormState,
@@ -155,6 +158,16 @@ export async function placeOrderAction(
       customerEmail: parsed.data.email,
       totalInCents,
       itemCount: orderItems.length,
+    }).catch(() => {});
+
+    notifyCustomerOrderConfirmation({
+      orderId: order.id,
+      customerName: parsed.data.name,
+      customerEmail: parsed.data.email,
+      totalInCents,
+      itemCount: orderItems.reduce((sum, i) => sum + i.quantity, 0),
+      shippingCity: parsed.data.shippingCity,
+      shippingPostOffice: parsed.data.shippingPostOffice,
     }).catch(() => {});
   } catch {
     return {

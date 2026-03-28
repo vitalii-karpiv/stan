@@ -58,7 +58,7 @@ export function SizeGuideTabs() {
               aria-controls={panelId}
               tabIndex={isActive ? 0 : -1}
               onClick={() => setActiveTab(category.label)}
-              className={`relative pb-3 text-xs uppercase tracking-[0.28em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 ${
+              className={`relative pb-3 text-xs uppercase tracking-[0.12em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 focus-visible:ring-offset-2 ${
                 isActive
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground"
