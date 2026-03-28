@@ -178,8 +178,8 @@ export default async function ShopPage({
 
 function filterClass(active: boolean) {
   return active
-    ? "border border-foreground bg-foreground px-4 py-1.5 text-sm text-background transition-colors"
-    : "border border-border px-4 py-1.5 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground";
+    ? "border border-foreground bg-foreground px-2.5 py-1 text-xs leading-tight text-background transition-colors"
+    : "border border-border px-2.5 py-1 text-xs leading-tight text-muted-foreground transition-colors hover:border-foreground hover:text-foreground";
 }
 
 function pluralProducts(count: number) {

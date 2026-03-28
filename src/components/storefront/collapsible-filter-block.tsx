@@ -27,14 +27,14 @@ export function CollapsibleFilterBlock({
       >
         <span>{label}</span>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>
       {open ? (
         <nav
           id={panelId}
-          className="mt-2 flex flex-wrap gap-2"
+          className="mt-1.5 flex flex-wrap gap-1.5"
           aria-labelledby={triggerId}
         >
           {children}

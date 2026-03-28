@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useState } from "react";
-import { Minus, Plus } from "lucide-react";
+import { Settings2 } from "lucide-react";
 
 export function ShopFiltersDisclosure({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -16,19 +16,15 @@ export function ShopFiltersDisclosure({ children }: { children: ReactNode }) {
         aria-expanded={open}
         id="shop-filters-trigger"
       >
+        <Settings2 className="h-4 w-4 shrink-0" aria-hidden />
         <span>Фільтри</span>
-        {open ? (
-          <Minus className="h-4 w-4 shrink-0" aria-hidden />
-        ) : (
-          <Plus className="h-4 w-4 shrink-0" aria-hidden />
-        )}
       </button>
       {open ? (
         <div
           id="shop-filters-panel"
           role="region"
           aria-labelledby="shop-filters-trigger"
-          className="mt-4 space-y-5 border-t border-border pt-4"
+          className="mt-3 space-y-3 border-t border-border pt-3"
         >
           {children}
         </div>
