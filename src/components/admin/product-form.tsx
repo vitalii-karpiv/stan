@@ -5,6 +5,9 @@ import { useFormStatus } from "react-dom";
 
 import { createProductAction } from "@/app/admin/products/new/actions";
 import { updateProductAction } from "@/app/admin/products/[id]/actions";
+import type { Material, ProductType } from "@/generated/prisma";
+import { MATERIAL_OPTIONS } from "@/lib/materials";
+import { PRODUCT_TYPE_OPTIONS } from "@/lib/product-types";
 import { slugify } from "@/lib/utils";
 import { initialFormState, type FormState } from "@/lib/validations/product";
 
@@ -22,8 +25,10 @@ export type ProductData = {
   id: string;
   title: string;
   description: string | null;
-  material: string | null;
-  jewelryLength: string | null;
+  productType: ProductType | null;
+  materials: Material[];
+  materialText: string | null;
+  jewelryLengthText: string | null;
   slug: string;
   categoryId: string;
   price: number;
@@ -71,8 +76,10 @@ function buildInitialState(
     values: {
       title: product.title,
       description: product.description ?? "",
-      material: product.material ?? "",
-      jewelryLength: product.jewelryLength ?? "",
+      productType: product.productType ?? "",
+      materials: [...product.materials],
+      materialText: product.materialText ?? "",
+      jewelryLengthText: product.jewelryLengthText ?? "",
       slug: product.slug,
       categoryId: product.categoryId,
       price: product.price,
@@ -176,36 +183,60 @@ export function ProductForm({
           )}
         </div>
 
-        <div className="space-y-1.5 md:col-span-2">
-          <label htmlFor="material" className="block text-sm font-medium">
-            Material
-          </label>
-          <textarea
-            id="material"
-            name="material"
-            defaultValue={state.values.material}
-            rows={2}
-            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
-          />
-          {state.fieldErrors.material && (
-            <p className="text-sm text-red-600">{state.fieldErrors.material}</p>
+        <div className="space-y-3 md:col-span-2">
+          <p className="text-sm font-medium">Матеріали</p>
+          {MATERIAL_OPTIONS.map((m) => (
+            <label key={m.value} className="flex items-center gap-2 text-sm">
+              <input
+                name="materials"
+                type="checkbox"
+                value={m.value}
+                defaultChecked={state.values.materials.includes(m.value)}
+                className="h-4 w-4 rounded border-border"
+              />
+              {m.label}
+            </label>
+          ))}
+          {state.fieldErrors.materials && (
+            <p className="text-sm text-red-600">{state.fieldErrors.materials}</p>
           )}
         </div>
 
         <div className="space-y-1.5 md:col-span-2">
-          <label htmlFor="jewelryLength" className="block text-sm font-medium">
-            Jewelry Length
+          <label htmlFor="materialText" className="block text-sm font-medium">
+            Матеріал (додатковий текст)
           </label>
           <textarea
-            id="jewelryLength"
-            name="jewelryLength"
-            defaultValue={state.values.jewelryLength}
+            id="materialText"
+            name="materialText"
+            defaultValue={state.values.materialText}
             rows={2}
             className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
           />
-          {state.fieldErrors.jewelryLength && (
+          {state.fieldErrors.materialText && (
             <p className="text-sm text-red-600">
-              {state.fieldErrors.jewelryLength}
+              {state.fieldErrors.materialText}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5 md:col-span-2">
+          <label
+            htmlFor="jewelryLengthText"
+            className="block text-sm font-medium"
+          >
+            Довжина прикраси
+          </label>
+          <textarea
+            id="jewelryLengthText"
+            name="jewelryLengthText"
+            defaultValue={state.values.jewelryLengthText}
+            rows={2}
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          />
+          {state.fieldErrors.jewelryLengthText && (
+            <p className="text-sm text-red-600">
+              {state.fieldErrors.jewelryLengthText}
             </p>
           )}
         </div>
@@ -229,6 +260,30 @@ export function ProductForm({
           {state.fieldErrors.categoryId && (
             <p className="text-sm text-red-600">
               {state.fieldErrors.categoryId}
+            </p>
+          )}
+        </div>
+
+        <div className="space-y-1.5">
+          <label htmlFor="productType" className="block text-sm font-medium">
+            Тип продукту
+          </label>
+          <select
+            id="productType"
+            name="productType"
+            defaultValue={state.values.productType}
+            className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
+          >
+            <option value="">Не обрано</option>
+            {PRODUCT_TYPE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+          {state.fieldErrors.productType && (
+            <p className="text-sm text-red-600">
+              {state.fieldErrors.productType}
             </p>
           )}
         </div>

@@ -30,6 +30,27 @@ enum OptionType {
   PENDANT
 }
 
+enum Material {
+  NATURAL_PEARLS    @map("натуральні перли")
+  AMAZONITE         @map("амазоніт")
+  MOUNTAIN_CRYSTAL  @map("гірський кришталь")
+  ROSE_QUARTZ       @map("рожевий кварц")
+  STRAWBERRY_QUARTZ @map("полуничний кварц")
+  YELLOW_JADE       @map("жовтий нефрит")
+  GREEN_CHALCEDONY  @map("зелений халцедон")
+  CORAL_JADE        @map("кораловий нефрит")
+  LILAC_CHALCEDONY  @map("бузковий халцедон")
+  METAL_CHAIN       @map("металевий ланцюг")
+  MINT_JADE         @map("мʼятний нефрит")
+  CAIRO_NIGHT       @map("ніч каїра")
+}
+
+enum ProductType {
+  HALVES               @map("Половинки")
+  READY_COMBINATIONS   @map("Готові поєднання")
+  CAPSULES             @map("Капсули")
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
@@ -59,12 +80,14 @@ model Collection {
 }
 
 model Product {
-  id          String   @id @default(uuid())
-  title       String
-  description String?
-  material    String?
-  jewelryLength String?
-  slug        String   @unique
+  id                String       @id @default(uuid())
+  title             String
+  description       String?
+  productType       ProductType?
+  materials         Material[]   @default([])
+  materialText      String?    @map("material")
+  jewelryLengthText String?    @map("jewelryLength")
+  slug              String     @unique
   published   Boolean  @default(false)
   featured    Boolean  @default(false)
   price       Int      @default(0)

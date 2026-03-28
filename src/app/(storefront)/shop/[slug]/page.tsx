@@ -57,8 +57,9 @@ export default async function ProductPage({ params }: Props) {
   });
 
   const collections = product.collections.map((pc) => pc.collection);
-  const material = product.material?.trim() ?? "";
-  const jewelryLength = product.jewelryLength?.trim() ?? "";
+  const materialText = product.materialText?.trim() ?? "";
+  const jewelryLengthText = product.jewelryLengthText?.trim() ?? "";
+  const showMaterialBlock = Boolean(materialText || jewelryLengthText);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -107,23 +108,23 @@ export default async function ProductPage({ params }: Props) {
             options={product.options}
           />
 
-          {(material || jewelryLength) && (
+          {showMaterialBlock && (
             <div className="space-y-3 border-t border-border pt-4">
-              {material && (
+              {materialText && (
                 <p className="text-sm text-muted-foreground">
                   <span className="font-medium text-foreground">Матеріал: </span>
                   <span className="whitespace-pre-line break-words">
-                    {material.replace(/\\n/g, "\n")}
+                    {materialText.replace(/\\n/g, "\n")}
                   </span>
                 </p>
               )}
-              {jewelryLength && (
+              {jewelryLengthText && (
                 <p className="text-sm text-muted-foreground">
                   <span className="font-medium text-foreground">
                     Довжина прикраси:{" "}
                   </span>
                   <span className="whitespace-pre-line break-words">
-                    {jewelryLength.replace(/\\n/g, "\n")}
+                    {jewelryLengthText.replace(/\\n/g, "\n")}
                   </span>
                 </p>
               )}

@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { MATERIAL_VALUES } from "@/lib/materials";
+import { PRODUCT_TYPE_VALUES } from "@/lib/product-types";
 import { slugify } from "@/lib/utils";
 
 const productFields = z.object({
@@ -10,18 +12,22 @@ const productFields = z.object({
     .max(5000, "Description is too long")
     .optional()
     .or(z.literal("")),
-  material: z
+  materialText: z
     .string()
     .trim()
-    .max(500, "Material is too long")
+    .max(500, "Material notes are too long")
     .optional()
     .or(z.literal("")),
-  jewelryLength: z
+  jewelryLengthText: z
     .string()
     .trim()
     .max(500, "Jewelry length is too long")
     .optional()
     .or(z.literal("")),
+  materials: z.array(z.enum(MATERIAL_VALUES)).default([]),
+  productType: z
+    .union([z.literal(""), z.enum(PRODUCT_TYPE_VALUES)])
+    .default(""),
   slug: z.string().trim().max(160).optional().or(z.literal("")),
   categoryId: z.string().trim().min(1, "Category is required"),
   price: z.coerce.number().int().min(0, "Price must be a positive number"),
@@ -47,8 +53,10 @@ function normalizeProductData(
   return {
     ...data,
     description: data.description || null,
-    material: data.material || null,
-    jewelryLength: data.jewelryLength || null,
+    materialText: data.materialText || null,
+    jewelryLengthText: data.jewelryLengthText || null,
+    materials: [...new Set(data.materials)],
+    productType: data.productType || null,
     slug,
   };
 }
@@ -63,8 +71,10 @@ type FieldKey = keyof ProductInput | "collectionIds";
 export type FormValues = {
   title: string;
   description: string;
-  material: string;
-  jewelryLength: string;
+  materials: string[];
+  materialText: string;
+  jewelryLengthText: string;
+  productType: string;
   slug: string;
   categoryId: string;
   price: number;
@@ -85,8 +95,10 @@ export const initialFormState: FormState = {
   values: {
     title: "",
     description: "",
-    material: "",
-    jewelryLength: "",
+    materials: [],
+    materialText: "",
+    jewelryLengthText: "",
+    productType: "",
     slug: "",
     categoryId: "",
     price: 0,
