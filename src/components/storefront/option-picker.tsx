@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { useCart } from "@/lib/cart";
@@ -29,8 +30,8 @@ export function OptionPicker({
   price,
   options,
 }: OptionPickerProps) {
+  const router = useRouter();
   const { addItem } = useCart();
-  const [added, setAdded] = useState(false);
 
   const grouped = useMemo(() => {
     const materials = options
@@ -65,8 +66,7 @@ export function OptionPicker({
       pendant: selectedPendant,
       price,
     });
-    setAdded(true);
-    setTimeout(() => setAdded(false), 1500);
+    router.push("/shop");
   }
 
   return (
@@ -115,7 +115,7 @@ export function OptionPicker({
         onClick={handleAdd}
         className="w-full bg-accent py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
       >
-        {added ? "Додано ✓" : "Додати до кошика"}
+        Додати до кошика
       </button>
     </div>
   );
