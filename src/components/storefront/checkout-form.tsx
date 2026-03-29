@@ -12,8 +12,12 @@ import { placeOrderAction } from "@/app/(storefront)/checkout/actions";
 import { initialCheckoutFormState } from "@/lib/validations/checkout";
 import { NpCombobox, type NpOption } from "./np-combobox";
 
-const inputClass =
-  "w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground";
+/** 16px on small screens avoids iOS Safari zoom-on-focus; min height improves tap targets */
+const textInputClass =
+  "w-full min-h-[44px] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground md:min-h-0 md:py-2 md:text-sm";
+
+const textareaClass =
+  "w-full min-h-[7.5rem] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground md:text-sm";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -22,7 +26,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-accent px-8 py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+      className="min-h-12 w-full touch-manipulation bg-accent px-6 py-3.5 text-base font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:px-8 sm:text-sm"
     >
       {pending ? "Обробка..." : "Оформити замовлення"}
     </button>
@@ -84,13 +88,13 @@ export function CheckoutForm() {
 
   if (items.length === 0) {
     return (
-      <div className="mt-8 text-center">
-        <p className="text-muted-foreground">
+      <div className="mt-6 text-center sm:mt-8">
+        <p className="px-1 text-base text-muted-foreground sm:text-sm">
           Ваш кошик порожній. Додайте товари перед оформленням.
         </p>
         <Link
           href="/shop"
-          className="mt-6 inline-block bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+          className="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center bg-foreground px-8 py-3 text-base font-medium text-background transition-opacity hover:opacity-90 sm:text-sm"
         >
           До магазину
         </Link>
@@ -101,23 +105,23 @@ export function CheckoutForm() {
   return (
     <form action={formAction} className="mt-6 sm:mt-8">
       {state.message && (
-        <div className="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+        <div className="mb-4 break-words rounded border border-red-200 bg-red-50 px-3 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200 sm:mb-6 sm:px-4">
           {state.message}
         </div>
       )}
 
       <input type="hidden" name="cartItems" value={cartPayload(items)} />
 
-      <div className="grid gap-6 lg:gap-10 lg:grid-cols-[1fr_380px]">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1fr)_min(100%,380px)] lg:gap-10">
         {/* Left column — form fields */}
-        <div className="space-y-6 sm:space-y-8">
+        <div className="min-w-0 space-y-6 sm:space-y-8">
           {/* Contact */}
           <fieldset className="space-y-4">
-            <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
               Контактні дані
             </legend>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <label htmlFor="name" className="block text-sm font-medium">
                   Ім&apos;я та прізвище{" "}
@@ -129,10 +133,10 @@ export function CheckoutForm() {
                   type="text"
                   autoComplete="name"
                   defaultValue={state.values.name}
-                  className={inputClass}
+                  className={textInputClass}
                 />
                 {state.fieldErrors.name && (
-                  <p className="text-sm text-red-600">
+                  <p className="break-words text-sm text-red-600">
                     {state.fieldErrors.name}
                   </p>
                 )}
@@ -148,10 +152,10 @@ export function CheckoutForm() {
                   type="tel"
                   autoComplete="tel"
                   defaultValue={state.values.phone}
-                  className={inputClass}
+                  className={textInputClass}
                 />
                 {state.fieldErrors.phone && (
-                  <p className="text-sm text-red-600">
+                  <p className="break-words text-sm text-red-600">
                     {state.fieldErrors.phone}
                   </p>
                 )}
@@ -168,10 +172,10 @@ export function CheckoutForm() {
                 type="email"
                 autoComplete="email"
                 defaultValue={state.values.email}
-                className={inputClass}
-              />
+                  className={textInputClass}
+                />
               {state.fieldErrors.email && (
-                <p className="text-sm text-red-600">
+                <p className="break-words text-sm text-red-600">
                   {state.fieldErrors.email}
                 </p>
               )}
@@ -180,11 +184,11 @@ export function CheckoutForm() {
 
           {/* Shipping */}
           <fieldset className="space-y-4">
-            <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
               Доставка Новою Поштою
             </legend>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <label
                   htmlFor="shippingCity"
@@ -201,7 +205,7 @@ export function CheckoutForm() {
                   onSelect={handleCitySelect}
                 />
                 {state.fieldErrors.shippingCity && (
-                  <p className="text-sm text-red-600">
+                  <p className="break-words text-sm text-red-600">
                     {state.fieldErrors.shippingCity}
                   </p>
                 )}
@@ -225,7 +229,7 @@ export function CheckoutForm() {
                   onSearch={searchWarehouses}
                 />
                 {state.fieldErrors.shippingPostOffice && (
-                  <p className="text-sm text-red-600">
+                  <p className="break-words text-sm text-red-600">
                     {state.fieldErrors.shippingPostOffice}
                   </p>
                 )}
@@ -234,7 +238,7 @@ export function CheckoutForm() {
           </fieldset>
 
           <fieldset className="space-y-4">
-            <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
               Коментар до замовлення
             </legend>
             <div className="space-y-1.5">
@@ -247,40 +251,44 @@ export function CheckoutForm() {
                 rows={4}
                 maxLength={500}
                 defaultValue={state.values.note}
-                className={inputClass}
+                className={textareaClass}
               />
               {state.fieldErrors.note && (
-                <p className="text-sm text-red-600">{state.fieldErrors.note}</p>
+                <p className="break-words text-sm text-red-600">{state.fieldErrors.note}</p>
               )}
             </div>
           </fieldset>
 
           {/* Payment placeholder */}
           <fieldset className="space-y-4">
-            <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
               Спосіб оплати
             </legend>
 
-            <label className="flex cursor-pointer items-center gap-3 rounded border border-foreground bg-background px-4 py-3">
+            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-foreground bg-background px-3 py-3 sm:min-h-0 sm:px-4">
               <input
                 type="radio"
                 name="paymentMethod"
                 value="cod"
                 defaultChecked
-                className="h-4 w-4 accent-foreground"
+                className="h-5 w-5 shrink-0 accent-foreground sm:h-4 sm:w-4"
               />
-              <span className="text-sm">Оплата при отриманні</span>
+              <span className="text-base leading-snug sm:text-sm">
+                Оплата при отриманні
+              </span>
             </label>
 
-            <label className="flex cursor-not-allowed items-center gap-3 rounded border border-border bg-muted/50 px-4 py-3 opacity-60">
+            <label className="flex min-h-12 cursor-not-allowed touch-manipulation items-center gap-3 rounded border border-border bg-muted/50 px-3 py-3 opacity-60 sm:min-h-0 sm:px-4">
               <input
                 type="radio"
                 name="paymentMethod"
                 value="online"
                 disabled
-                className="h-4 w-4"
+                className="h-5 w-5 shrink-0 sm:h-4 sm:w-4"
               />
-              <span className="text-sm">Онлайн оплата (скоро)</span>
+              <span className="text-base leading-snug sm:text-sm">
+                Онлайн оплата (скоро)
+              </span>
             </label>
           </fieldset>
 
@@ -291,9 +299,9 @@ export function CheckoutForm() {
         </div>
 
         {/* Right column — order summary */}
-        <div>
-          <div className="rounded border border-border p-4 sm:p-5">
-            <h2 className="font-[family-name:var(--font-cormorant)] text-xl font-light">
+        <div className="min-w-0">
+          <div className="rounded border border-border p-3 sm:p-5">
+            <h2 className="font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
               Ваше замовлення
             </h2>
 
@@ -308,9 +316,11 @@ export function CheckoutForm() {
               ))}
             </div>
 
-            <div className="mt-4 flex items-baseline justify-between border-t border-border pt-4">
-              <span className="text-sm text-muted-foreground">Разом</span>
-              <span className="font-[family-name:var(--font-cormorant)] text-2xl font-light">
+            <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-border pt-4">
+              <span className="text-base text-muted-foreground sm:text-sm">
+                Разом
+              </span>
+              <span className="font-[family-name:var(--font-cormorant)] text-xl font-light tabular-nums sm:text-2xl">
                 {formatPrice(totalPrice)}
               </span>
             </div>
@@ -343,13 +353,13 @@ function SummaryRow({
 
   return (
     <div className="flex gap-3 py-3">
-      <div className="relative h-16 w-14 flex-shrink-0 overflow-hidden rounded">
+      <div className="relative h-[4.5rem] w-[3.75rem] shrink-0 overflow-hidden rounded sm:h-16 sm:w-14">
         {item.imageUrl ? (
           <Image
             src={item.imageUrl}
             alt={item.productTitle}
             fill
-            sizes="56px"
+            sizes="60px"
             className="object-cover"
           />
         ) : (
@@ -357,64 +367,69 @@ function SummaryRow({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col justify-center">
-        <span className="truncate text-sm font-medium">
-          {item.productTitle}
-        </span>
-        {attrs && (
-          <span className="text-xs text-muted-foreground">{attrs}</span>
-        )}
-        {pendantImage && (
-          <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-            <span>Підвіска:</span>
-            <div className="relative h-5 w-5 overflow-hidden rounded border border-border">
-              <Image
-                src={pendantImage}
-                alt="Підвіска"
-                fill
-                sizes="20px"
-                className="object-cover"
-              />
-            </div>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+          <div className="min-w-0">
+            <span className="text-sm font-medium leading-snug break-words sm:line-clamp-2">
+              {item.productTitle}
+            </span>
+            {attrs && (
+              <span className="mt-0.5 block text-xs leading-snug break-words text-muted-foreground">
+                {attrs}
+              </span>
+            )}
+            {pendantImage && (
+              <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span>Підвіска:</span>
+                <div className="relative h-5 w-5 overflow-hidden rounded border border-border">
+                  <Image
+                    src={pendantImage}
+                    alt="Підвіска"
+                    fill
+                    sizes="20px"
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        )}
+          <span className="shrink-0 font-[family-name:var(--font-cormorant)] text-base font-light tabular-nums sm:text-right">
+            {formatPrice(item.price * item.quantity)}
+          </span>
+        </div>
 
-        <div className="mt-2 flex items-center gap-2">
+        <div className="mt-3 flex flex-wrap items-center gap-2">
           <div className="flex items-center border border-border">
             <button
               type="button"
               onClick={() => onUpdateQuantity(key, item.quantity - 1)}
               disabled={item.quantity <= 1}
-              className="px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+              className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30 sm:min-h-0 sm:min-w-0 sm:px-2 sm:py-1.5"
             >
-              <Minus className="h-3.5 w-3.5" />
+              <Minus className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
             </button>
-            <span className="min-w-[1.75rem] text-center text-xs">
+            <span className="min-w-[2rem] text-center text-sm sm:text-xs">
               {item.quantity}
             </span>
             <button
               type="button"
               onClick={() => onUpdateQuantity(key, item.quantity + 1)}
-              className="px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+              className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center text-muted-foreground transition-colors hover:text-foreground sm:min-h-0 sm:min-w-0 sm:px-2 sm:py-1.5"
             >
-              <Plus className="h-3.5 w-3.5" />
+              <Plus className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
             </button>
           </div>
 
           <button
             type="button"
             onClick={() => onRemove(key)}
-            className="p-1 text-muted-foreground transition-colors hover:text-destructive"
+            className="flex min-h-11 min-w-11 touch-manipulation items-center justify-center text-muted-foreground transition-colors hover:text-destructive sm:min-h-0 sm:min-w-0 sm:p-1"
             aria-label="Видалити товар"
           >
-            <Trash2 className="h-3.5 w-3.5" />
+            <Trash2 className="h-4 w-4 sm:h-3.5 sm:w-3.5" />
           </button>
         </div>
       </div>
-
-      <span className="flex-shrink-0 font-[family-name:var(--font-cormorant)] text-base font-light">
-        {formatPrice(item.price * item.quantity)}
-      </span>
     </div>
   );
 }

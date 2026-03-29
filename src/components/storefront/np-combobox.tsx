@@ -26,7 +26,7 @@ type Props = {
 };
 
 const inputClass =
-  "w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full min-h-[44px] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground disabled:cursor-not-allowed disabled:opacity-60 md:min-h-0 md:py-2 md:text-sm";
 
 export function NpCombobox({
   name,
@@ -181,7 +181,7 @@ export function NpCombobox({
               role="option"
               aria-selected={i === activeIndex}
               onMouseDown={() => pick(opt)}
-              className={`cursor-pointer px-3 py-2 text-sm ${
+              className={`cursor-pointer break-words px-3 py-2.5 text-sm md:py-2 ${
                 i === activeIndex
                   ? "bg-accent text-accent-foreground"
                   : "hover:bg-muted"
