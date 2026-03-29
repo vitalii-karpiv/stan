@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useCallback, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
 
@@ -10,6 +10,7 @@ import { cartItemKey, useCart, type CartItem } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
 import { placeOrderAction } from "@/app/(storefront)/checkout/actions";
 import { initialCheckoutFormState } from "@/lib/validations/checkout";
+import { NpCombobox, type NpOption } from "./np-combobox";
 
 const inputClass =
   "w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground";
@@ -41,12 +42,45 @@ function cartPayload(items: CartItem[]) {
   );
 }
 
+async function fetchNpOptions(url: string): Promise<NpOption[]> {
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
 export function CheckoutForm() {
   const { items, totalPrice, updateQuantity, removeItem } = useCart();
   const [state, formAction] = useActionState(
     placeOrderAction,
     initialCheckoutFormState,
   );
+
+  const [cityRef, setCityRef] = useState("");
+
+  const searchCities = useCallback(
+    (q: string) => fetchNpOptions(`/api/nova-poshta/cities?q=${encodeURIComponent(q)}`),
+    [],
+  );
+
+  const searchWarehouses = useCallback(
+    (q: string) =>
+      fetchNpOptions(
+        `/api/nova-poshta/warehouses?cityRef=${encodeURIComponent(cityRef)}&q=${encodeURIComponent(q)}`,
+      ),
+    [cityRef],
+  );
+
+  const [warehouseKey, setWarehouseKey] = useState(0);
+
+  const handleCitySelect = useCallback((opt: NpOption | null) => {
+    setCityRef(opt?.ref ?? "");
+    setWarehouseKey((k) => k + 1);
+  }, []);
 
   if (items.length === 0) {
     return (
@@ -158,13 +192,13 @@ export function CheckoutForm() {
                 >
                   Місто <span className="text-red-500">*</span>
                 </label>
-                <input
+                <NpCombobox
                   id="shippingCity"
                   name="shippingCity"
-                  type="text"
-                  autoComplete="address-level2"
+                  placeholder="Почніть вводити назву міста"
                   defaultValue={state.values.shippingCity}
-                  className={inputClass}
+                  onSearch={searchCities}
+                  onSelect={handleCitySelect}
                 />
                 {state.fieldErrors.shippingCity && (
                   <p className="text-sm text-red-600">
@@ -181,13 +215,14 @@ export function CheckoutForm() {
                   Відділення Нової Пошти{" "}
                   <span className="text-red-500">*</span>
                 </label>
-                <input
+                <NpCombobox
+                  key={warehouseKey}
                   id="shippingPostOffice"
                   name="shippingPostOffice"
-                  type="text"
-                  placeholder="№"
+                  placeholder="Почніть вводити номер"
+                  disabled={!cityRef}
                   defaultValue={state.values.shippingPostOffice}
-                  className={inputClass}
+                  onSearch={searchWarehouses}
                 />
                 {state.fieldErrors.shippingPostOffice && (
                   <p className="text-sm text-red-600">
