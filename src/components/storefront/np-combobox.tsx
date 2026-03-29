@@ -172,7 +172,7 @@ export function NpCombobox({
         <ul
           ref={listRef}
           role="listbox"
-          className="absolute z-50 mt-1 max-h-56 w-full overflow-auto rounded border border-border bg-background shadow-lg"
+          className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded border border-border bg-background shadow-lg sm:max-h-56"
         >
           {options.map((opt, i) => (
             <li

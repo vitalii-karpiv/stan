@@ -99,7 +99,7 @@ export function CheckoutForm() {
   }
 
   return (
-    <form action={formAction} className="mt-8">
+    <form action={formAction} className="mt-6 sm:mt-8">
       {state.message && (
         <div className="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
           {state.message}
@@ -108,9 +108,9 @@ export function CheckoutForm() {
 
       <input type="hidden" name="cartItems" value={cartPayload(items)} />
 
-      <div className="grid gap-10 lg:grid-cols-[1fr_380px]">
+      <div className="grid gap-6 lg:gap-10 lg:grid-cols-[1fr_380px]">
         {/* Left column — form fields */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {/* Contact */}
           <fieldset className="space-y-4">
             <legend className="font-[family-name:var(--font-cormorant)] text-xl font-light">
@@ -291,8 +291,8 @@ export function CheckoutForm() {
         </div>
 
         {/* Right column — order summary */}
-        <div className="order-first lg:order-last">
-          <div className="rounded border border-border p-5">
+        <div>
+          <div className="rounded border border-border p-4 sm:p-5">
             <h2 className="font-[family-name:var(--font-cormorant)] text-xl font-light">
               Ваше замовлення
             </h2>
@@ -385,7 +385,7 @@ function SummaryRow({
               type="button"
               onClick={() => onUpdateQuantity(key, item.quantity - 1)}
               disabled={item.quantity <= 1}
-              className="px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
+              className="px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-30"
             >
               <Minus className="h-3.5 w-3.5" />
             </button>
@@ -395,7 +395,7 @@ function SummaryRow({
             <button
               type="button"
               onClick={() => onUpdateQuantity(key, item.quantity + 1)}
-              className="px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
+              className="px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             >
               <Plus className="h-3.5 w-3.5" />
             </button>
@@ -404,7 +404,7 @@ function SummaryRow({
           <button
             type="button"
             onClick={() => onRemove(key)}
-            className="text-muted-foreground transition-colors hover:text-destructive"
+            className="p-1 text-muted-foreground transition-colors hover:text-destructive"
             aria-label="Видалити товар"
           >
             <Trash2 className="h-3.5 w-3.5" />
