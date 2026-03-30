@@ -15,8 +15,7 @@ import {
   reorderProductImagesAction,
 } from "@/app/admin/products/[id]/image-actions";
 import { ImageDropzone } from "@/components/admin/image-dropzone";
-
-const MAX_TOTAL_UPLOAD_SIZE = 20 * 1024 * 1024; // 20 MB total request size
+import { MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES } from "@/lib/upload-limits";
 
 type ProductImage = {
   id: string;
@@ -68,8 +67,10 @@ export function ProductImages({
       if (files.length === 0) return;
 
       const totalSize = files.reduce((sum, file) => sum + file.size, 0);
-      if (totalSize > MAX_TOTAL_UPLOAD_SIZE) {
-        setError("Selected files are too large together. Please upload up to 20 MB at a time.");
+      if (totalSize > MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES) {
+        setError(
+          `Selected files are too large together. Upload up to ${MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES / (1024 * 1024)} MB total per batch (each file max 100 MB).`,
+        );
         return;
       }
 

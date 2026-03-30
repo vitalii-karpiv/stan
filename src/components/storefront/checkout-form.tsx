@@ -42,6 +42,11 @@ function cartPayload(items: CartItem[]) {
       material: i.material,
       gemstone: i.gemstone,
       pendant: i.pendant,
+      builderPartIds: i.builderPartIds,
+      builderSnapshotUrl: i.builderSnapshotUrl ?? null,
+      customLineTitle: i.customLineTitle ?? null,
+      collectionSlug: i.collectionSlug ?? null,
+      categorySlug: i.categorySlug ?? null,
     })),
   );
 }
@@ -350,17 +355,24 @@ function SummaryRow({
     .filter(Boolean)
     .join(" / ");
   const pendantImage = item.pendant?.trim() || null;
+  const isBuilder = Boolean(item.builderPartIds?.length);
+  const thumbUrl =
+    item.builderSnapshotUrl?.trim() || item.imageUrl?.trim() || null;
+  const thumbUnoptimized = Boolean(
+    thumbUrl?.toLowerCase().endsWith(".svg"),
+  );
 
   return (
     <div className="flex gap-3 py-3">
       <div className="relative h-[4.5rem] w-[3.75rem] shrink-0 overflow-hidden rounded sm:h-16 sm:w-14">
-        {item.imageUrl ? (
+        {thumbUrl ? (
           <Image
-            src={item.imageUrl}
+            src={thumbUrl}
             alt={item.productTitle}
             fill
             sizes="60px"
             className="object-cover"
+            unoptimized={thumbUnoptimized}
           />
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted-foreground/20" />
@@ -373,7 +385,12 @@ function SummaryRow({
             <span className="text-sm font-medium leading-snug break-words sm:line-clamp-2">
               {item.productTitle}
             </span>
-            {attrs && (
+            {isBuilder && item.customLineTitle && (
+              <span className="mt-0.5 block text-xs leading-snug break-words text-muted-foreground">
+                {item.customLineTitle}
+              </span>
+            )}
+            {!isBuilder && attrs && (
               <span className="mt-0.5 block text-xs leading-snug break-words text-muted-foreground">
                 {attrs}
               </span>

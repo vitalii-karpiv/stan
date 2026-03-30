@@ -143,27 +143,51 @@ export default async function OrderDetailPage({ params }: Props) {
                 .filter(Boolean)
                 .join(" / ");
               const pendantImage = item.pendant?.trim() || null;
+              const isBuilder = item.builderPartIds.length > 0;
+              const snapshot = item.builderSnapshotUrl?.trim() || null;
 
               return (
                 <tr key={item.id} className="hover:bg-muted/50">
                   <td className="px-4 py-3">
-                    <Link
-                      href={`/admin/products/${item.product.id}`}
-                      className="font-medium hover:underline"
-                    >
-                      {item.product.title}
-                    </Link>
+                    {isBuilder ? (
+                      <span className="font-medium">Конструктор</span>
+                    ) : (
+                      <Link
+                        href={`/admin/products/${item.product.id}`}
+                        className="font-medium hover:underline"
+                      >
+                        {item.product.title}
+                      </Link>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <span>{attrs || "—"}</span>
-                      {pendantImage && (
-                        <ImageLightbox
-                          src={pendantImage}
-                          alt="Pendant"
-                          thumbClassName="h-7 w-7"
-                          thumbSizes="28px"
-                        />
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                      {isBuilder ? (
+                        <>
+                          <span className="max-w-md text-foreground">
+                            {item.customLineTitle || "—"}
+                          </span>
+                          {snapshot && (
+                            <ImageLightbox
+                              src={snapshot}
+                              alt="Збірка"
+                              thumbClassName="h-10 w-10"
+                              thumbSizes="40px"
+                            />
+                          )}
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span>{attrs || "—"}</span>
+                          {pendantImage && (
+                            <ImageLightbox
+                              src={pendantImage}
+                              alt="Pendant"
+                              thumbClassName="h-7 w-7"
+                              thumbSizes="28px"
+                            />
+                          )}
+                        </div>
                       )}
                     </div>
                   </td>

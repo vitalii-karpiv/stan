@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
 import { uploadToS3, deleteFromS3, getS3KeyFromUrl } from "@/lib/s3";
+import {
+  MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES,
+  MAX_ADMIN_IMAGE_UPLOAD_BYTES,
+} from "@/lib/upload-limits";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -11,7 +15,6 @@ const ALLOWED_TYPES = [
   "image/webp",
   "image/avif",
 ];
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function addProductImagesAction(
   productId: string,
@@ -27,12 +30,19 @@ export async function addProductImagesAction(
     return { error: "At least one image file is required." };
   }
 
+  const batchTotal = files.reduce((sum, f) => sum + f.size, 0);
+  if (batchTotal > MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES) {
+    return {
+      error: `Total upload size exceeds ${MAX_ADMIN_IMAGE_BATCH_TOTAL_BYTES / (1024 * 1024)} MB. Upload fewer or smaller images.`,
+    };
+  }
+
   for (const file of files) {
     if (!ALLOWED_TYPES.includes(file.type)) {
       return { error: `"${file.name}" is not a supported format. Only JPEG, PNG, WebP, and AVIF are allowed.` };
     }
-    if (file.size > MAX_SIZE) {
-      return { error: `"${file.name}" exceeds the 5 MB size limit.` };
+    if (file.size > MAX_ADMIN_IMAGE_UPLOAD_BYTES) {
+      return { error: `"${file.name}" exceeds the 100 MB per-file size limit.` };
     }
   }
 

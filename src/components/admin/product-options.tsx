@@ -174,7 +174,7 @@ export function ProductOptions({
                 className="w-full rounded border border-border bg-background px-3 py-2 text-sm outline-none focus:border-foreground"
               />
               <p className="text-xs text-muted-foreground">
-                Upload JPEG, PNG, WebP, or AVIF up to 5 MB.
+                Upload JPEG, PNG, WebP, or AVIF up to 100 MB.
               </p>
             </div>
           ) : (

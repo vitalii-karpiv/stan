@@ -9,6 +9,7 @@ import {
   Tag,
   ShoppingCart,
   Users,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +18,7 @@ const navItems = [
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/collections", label: "Collections", icon: FolderOpen },
   { href: "/admin/categories", label: "Categories", icon: Tag },
+  { href: "/admin/builder-parts", label: "Builder parts", icon: Layers },
   { href: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { href: "/admin/customers", label: "Customers", icon: Users },
 ];

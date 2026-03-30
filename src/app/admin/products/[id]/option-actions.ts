@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
 import { deleteFromS3, getS3KeyFromUrl, uploadToS3 } from "@/lib/s3";
+import { MAX_ADMIN_IMAGE_UPLOAD_BYTES } from "@/lib/upload-limits";
 import type { OptionType } from "@/generated/prisma";
 
 const VALID_TYPES: OptionType[] = ["SIZE", "COLOR", "GEMSTONE", "PENDANT"];
@@ -13,7 +14,6 @@ const ALLOWED_IMAGE_TYPES = [
   "image/webp",
   "image/avif",
 ];
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function addOptionAction(
   productId: string,
@@ -41,8 +41,8 @@ export async function addOptionAction(
           "Unsupported image format. Only JPEG, PNG, WebP, and AVIF are allowed.",
       };
     }
-    if (pendantImage.size > MAX_IMAGE_SIZE) {
-      return { error: "Pendant image exceeds the 5 MB size limit." };
+    if (pendantImage.size > MAX_ADMIN_IMAGE_UPLOAD_BYTES) {
+      return { error: "Pendant image exceeds the 100 MB size limit." };
     }
   } else if (!value) {
     return { error: "Value is required." };

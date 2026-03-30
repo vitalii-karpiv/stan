@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+import { BuilderEditor } from "@/components/storefront/builder-editor";
+import { BUILDER_ASSEMBLY_SLUG } from "@/lib/constants/builder";
 import { db } from "@/lib/db";
 
 export const metadata = { title: "Конструктор — збірка" };
@@ -22,14 +24,33 @@ export default async function BuilderEditPage({
     redirect("/builder");
   }
 
-  const [collection, category] = await Promise.all([
+  const [collection, category, anchorProduct, parts] = await Promise.all([
     db.collection.findFirst({
       where: { slug: collectionSlug, supportsBuilder: true },
-      select: { name: true },
+      select: { id: true, name: true, slug: true },
     }),
     db.category.findFirst({
       where: { slug: categorySlug },
-      select: { name: true },
+      select: { id: true, name: true, slug: true },
+    }),
+    db.product.findFirst({
+      where: { slug: BUILDER_ASSEMBLY_SLUG },
+      select: { id: true },
+    }),
+    db.builderPart.findMany({
+      where: {
+        collection: { slug: collectionSlug },
+        category: { slug: categorySlug },
+      },
+      orderBy: [{ kind: "asc" }, { sortOrder: "asc" }, { title: "asc" }],
+      select: {
+        id: true,
+        title: true,
+        previewImageUrl: true,
+        selectorImageUrl: true,
+        price: true,
+        kind: true,
+      },
     }),
   ]);
 
@@ -37,28 +58,40 @@ export default async function BuilderEditPage({
     redirect("/builder");
   }
 
-  return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
-      <p className="text-sm text-muted-foreground">
-        <Link href="/builder" className="underline underline-offset-2">
-          ← Назад до вибору
-        </Link>
-      </p>
-
-      <h1 className="mt-6 font-[family-name:var(--font-cormorant)] text-4xl font-light">
-        Конструктор
-      </h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        {collection.name} · {category.name}
-      </p>
-
-      <div className="mt-8 space-y-4 text-sm leading-relaxed text-muted-foreground">
-        <p>Робоча зона конструктора зараз у розробці.</p>
-        <p>
-          Незабаром тут можна буде зібрати прикрасу у власній комбінації та
-          переглянути доступні елементи.
+  if (!anchorProduct) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-12">
+        <p className="text-sm text-muted-foreground">
+          <Link href="/builder" className="underline underline-offset-2">
+            ← Назад до вибору
+          </Link>
+        </p>
+        <h1 className="mt-6 font-[family-name:var(--font-cormorant)] text-4xl font-light">
+          Конструктор
+        </h1>
+        <p className="mt-4 text-sm text-muted-foreground">
+          Конструктор ще не налаштований. Запустіть{" "}
+          <code className="rounded bg-muted px-1">npm run db:seed:builder-anchor</code>{" "}
+          на сервері з базою даних.
         </p>
       </div>
+    );
+  }
+
+  return (
+    <div className="mx-auto max-w-lg px-6 py-10">
+      <h1 className="text-center font-[family-name:var(--font-cormorant)] text-4xl font-light lowercase tracking-tight text-foreground">
+        Конструктор
+      </h1>
+
+      <BuilderEditor
+        collectionSlug={collection.slug}
+        categorySlug={category.slug}
+        collectionName={collection.name}
+        categoryName={category.name}
+        anchorProductId={anchorProduct.id}
+        parts={parts}
+      />
     </div>
   );
 }

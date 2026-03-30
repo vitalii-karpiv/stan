@@ -24,6 +24,12 @@ export type CartItem = {
   pendant: string | null;
   price: number;
   quantity: number;
+  /** Set for jewelry builder assemblies; order of IDs is significant. */
+  builderPartIds?: string[];
+  builderSnapshotUrl?: string | null;
+  customLineTitle?: string | null;
+  collectionSlug?: string | null;
+  categorySlug?: string | null;
 };
 
 export function cartItemKey(item: {
@@ -32,13 +38,19 @@ export function cartItemKey(item: {
   size: string | null;
   gemstone: string | null;
   pendant: string | null;
+  builderPartIds?: string[];
 }): string {
+  const builder =
+    item.builderPartIds && item.builderPartIds.length > 0
+      ? `b:${item.builderPartIds.join(",")}`
+      : "";
   return [
     item.productId,
     item.material ?? "",
     item.size ?? "",
     item.gemstone ?? "",
     item.pendant ?? "",
+    builder,
   ].join("|");
 }
 

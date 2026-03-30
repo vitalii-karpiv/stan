@@ -51,6 +51,12 @@ enum ProductType {
   CAPSULES             @map("Капсули")
 }
 
+enum BuilderPartKind {
+  LEFT_HALF
+  RIGHT_HALF
+  PENDANT
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
@@ -69,6 +75,7 @@ model Category {
   name     String    @unique
   slug     String    @unique
   products Product[]
+  builderParts BuilderPart[]
 }
 
 model Collection {
@@ -78,6 +85,7 @@ model Collection {
   imageUrl         String?
   supportsBuilder  Boolean             @default(false)
   products         ProductCollection[]
+  builderParts     BuilderPart[]
 }
 
 model Product {
@@ -157,17 +165,39 @@ model Order {
 }
 
 model OrderItem {
-  id        String  @id @default(uuid())
-  orderId   String
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId String
-  product   Product @relation(fields: [productId], references: [id])
-  quantity  Int
-  price     Int
-  size      String?
-  material  String?
-  gemstone  String?
-  pendant   String?
+  id                   String   @id @default(uuid())
+  orderId              String
+  order                Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId            String
+  product              Product  @relation(fields: [productId], references: [id])
+  quantity             Int
+  price                Int
+  size                 String?
+  material             String?
+  gemstone             String?
+  pendant              String?
+  builderPartIds       String[] @default([])
+  builderSnapshotUrl   String?
+  customLineTitle      String?
 
   @@index([orderId])
+}
+
+model BuilderPart {
+  id               String          @id @default(uuid())
+  title            String
+  previewImageUrl  String
+  selectorImageUrl String
+  price            Int?
+  kind             BuilderPartKind
+  sortOrder        Int             @default(0)
+  collectionId     String
+  categoryId       String
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@index([collectionId, categoryId, kind])
 }

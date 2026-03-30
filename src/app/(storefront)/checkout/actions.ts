@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 
 import { db } from "@/lib/db";
+import { BUILDER_ASSEMBLY_SLUG } from "@/lib/constants/builder";
 import {
   notifyAdminsNewOrder,
   notifyCustomerOrderConfirmation,
@@ -19,6 +20,24 @@ type CartItemPayload = {
   material: string | null;
   gemstone: string | null;
   pendant: string | null;
+  builderPartIds?: string[];
+  builderSnapshotUrl?: string | null;
+  customLineTitle?: string | null;
+  collectionSlug?: string | null;
+  categorySlug?: string | null;
+};
+
+type OrderItemCreateInput = {
+  productId: string;
+  quantity: number;
+  price: number;
+  size: string | null;
+  material: string | null;
+  gemstone: string | null;
+  pendant: string | null;
+  builderPartIds: string[];
+  builderSnapshotUrl: string | null;
+  customLineTitle: string | null;
 };
 
 function extractValues(formData: FormData) {
@@ -41,14 +60,32 @@ function parseCartItems(raw: string): CartItemPayload[] | null {
   try {
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed) || parsed.length === 0) return null;
-    return parsed.map((item: Record<string, unknown>) => ({
-      productId: String(item.productId ?? ""),
-      quantity: Number(item.quantity ?? 1),
-      size: item.size ? String(item.size) : null,
-      material: item.material ? String(item.material) : null,
-      gemstone: item.gemstone ? String(item.gemstone) : null,
-      pendant: item.pendant ? String(item.pendant) : null,
-    }));
+    return parsed.map((item: Record<string, unknown>) => {
+      const builderPartIds = Array.isArray(item.builderPartIds)
+        ? item.builderPartIds.map((id) => String(id))
+        : undefined;
+      return {
+        productId: String(item.productId ?? ""),
+        quantity: Math.max(1, Math.floor(Number(item.quantity ?? 1))),
+        size: item.size ? String(item.size) : null,
+        material: item.material ? String(item.material) : null,
+        gemstone: item.gemstone ? String(item.gemstone) : null,
+        pendant: item.pendant ? String(item.pendant) : null,
+        builderPartIds,
+        builderSnapshotUrl: item.builderSnapshotUrl
+          ? String(item.builderSnapshotUrl)
+          : null,
+        customLineTitle: item.customLineTitle
+          ? String(item.customLineTitle)
+          : null,
+        collectionSlug: item.collectionSlug
+          ? String(item.collectionSlug)
+          : null,
+        categorySlug: item.categorySlug
+          ? String(item.categorySlug)
+          : null,
+      };
+    });
   } catch {
     return null;
   }
@@ -88,33 +125,146 @@ export async function placeOrderAction(
     };
   }
 
-  const productIds = cartItems.map((i) => i.productId);
+  const anchorProduct = await db.product.findFirst({
+    where: { slug: BUILDER_ASSEMBLY_SLUG },
+    select: { id: true },
+  });
+
+  const standardProductIds = [
+    ...new Set(
+      cartItems
+        .filter((i) => !i.builderPartIds?.length)
+        .map((i) => i.productId),
+    ),
+  ];
+
   const products = await db.product.findMany({
-    where: { id: { in: productIds } },
+    where: { id: { in: standardProductIds } },
     select: { id: true, price: true },
   });
 
   const priceMap = new Map(products.map((p) => [p.id, p.price]));
 
+  const allBuilderPartIds = [
+    ...new Set(
+      cartItems.flatMap((i) =>
+        i.builderPartIds?.length ? i.builderPartIds : [],
+      ),
+    ),
+  ];
+
+  const builderParts =
+    allBuilderPartIds.length > 0
+      ? await db.builderPart.findMany({
+          where: { id: { in: allBuilderPartIds } },
+          select: {
+            id: true,
+            title: true,
+            price: true,
+            collection: { select: { slug: true } },
+            category: { select: { slug: true } },
+          },
+        })
+      : [];
+
+  const builderPartMap = new Map(builderParts.map((p) => [p.id, p]));
+
+  const orderItems: OrderItemCreateInput[] = [];
+
   for (const item of cartItems) {
-    if (!priceMap.has(item.productId)) {
-      return {
-        message: "Деякі товари у кошику більше недоступні. Оновіть кошик.",
-        fieldErrors: {},
-        values,
-      };
+    const isBuilder = Boolean(item.builderPartIds?.length);
+
+    if (isBuilder) {
+      if (!anchorProduct) {
+        return {
+          message:
+            "Конструктор тимчасово недоступний. Спробуйте пізніше або приберіть збірку з кошика.",
+          fieldErrors: {},
+          values,
+        };
+      }
+
+      if (item.productId !== anchorProduct.id) {
+        return {
+          message: "Некоректні дані кошика. Оновіть сторінку та спробуйте знову.",
+          fieldErrors: {},
+          values,
+        };
+      }
+
+      const coll = item.collectionSlug?.trim();
+      const cat = item.categorySlug?.trim();
+      if (!coll || !cat) {
+        return {
+          message: "Некоректні дані збірки конструктора. Додайте товар знову.",
+          fieldErrors: {},
+          values,
+        };
+      }
+
+      const ids = item.builderPartIds!;
+      const orderedParts = [];
+      for (const id of ids) {
+        const p = builderPartMap.get(id);
+        if (!p) {
+          return {
+            message:
+              "Деякі елементи збірки більше недоступні. Відкрийте конструктор і збережіть знову.",
+            fieldErrors: {},
+            values,
+          };
+        }
+        if (p.collection.slug !== coll || p.category.slug !== cat) {
+          return {
+            message: "Збірка не відповідає колекції. Оновіть кошик.",
+            fieldErrors: {},
+            values,
+          };
+        }
+        orderedParts.push(p);
+      }
+
+      const linePrice = orderedParts.reduce(
+        (sum, p) => sum + (p.price ?? 0),
+        0,
+      );
+      const customLineTitle = orderedParts.map((p) => p.title).join(" · ");
+
+      orderItems.push({
+        productId: anchorProduct.id,
+        quantity: item.quantity,
+        price: linePrice,
+        size: null,
+        material: null,
+        gemstone: null,
+        pendant: null,
+        builderPartIds: ids,
+        builderSnapshotUrl: item.builderSnapshotUrl ?? null,
+        customLineTitle,
+      });
+    } else {
+      if (!priceMap.has(item.productId)) {
+        return {
+          message: "Деякі товари у кошику більше недоступні. Оновіть кошик.",
+          fieldErrors: {},
+          values,
+        };
+      }
+
+      orderItems.push({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: priceMap.get(item.productId)!,
+        size: item.size,
+        material: item.material,
+        gemstone: item.gemstone,
+        pendant: item.pendant,
+        builderPartIds: [],
+        builderSnapshotUrl: null,
+        customLineTitle: null,
+      });
     }
   }
-
-  const orderItems = cartItems.map((item) => ({
-    productId: item.productId,
-    quantity: item.quantity,
-    price: priceMap.get(item.productId)!,
-    size: item.size,
-    material: item.material,
-    gemstone: item.gemstone,
-    pendant: item.pendant,
-  }));
 
   const totalInCents = orderItems.reduce(
     (sum, i) => sum + i.price * i.quantity,

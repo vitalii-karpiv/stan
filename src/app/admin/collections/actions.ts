@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/admin";
 import { uploadToS3, deleteFromS3, getS3KeyFromUrl } from "@/lib/s3";
+import { MAX_ADMIN_IMAGE_UPLOAD_BYTES } from "@/lib/upload-limits";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -11,7 +12,6 @@ const ALLOWED_TYPES = [
   "image/webp",
   "image/avif",
 ];
-const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
 
 export async function uploadCollectionImageAction(
   formData: FormData,
@@ -27,8 +27,8 @@ export async function uploadCollectionImageAction(
     return { error: "Only JPEG, PNG, WebP, and AVIF images are allowed." };
   }
 
-  if (file.size > MAX_SIZE) {
-    return { error: "Image must be smaller than 5 MB." };
+  if (file.size > MAX_ADMIN_IMAGE_UPLOAD_BYTES) {
+    return { error: "Image must be smaller than 100 MB." };
   }
 
   const ext = file.name.split(".").pop() ?? "jpg";
