@@ -12,6 +12,7 @@ const collectionFields = z.object({
     .url("Must be a valid URL")
     .optional()
     .or(z.literal("")),
+  supportsBuilder: z.boolean(),
 });
 
 function normalizeCollectionData(
@@ -48,6 +49,7 @@ export type CollectionFormValues = {
   name: string;
   slug: string;
   imageUrl: string;
+  supportsBuilder: boolean;
 };
 
 export type CollectionFormState = {
@@ -63,5 +65,6 @@ export const initialCollectionFormState: CollectionFormState = {
     name: "",
     slug: "",
     imageUrl: "",
+    supportsBuilder: false,
   },
 };

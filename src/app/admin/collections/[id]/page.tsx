@@ -18,6 +18,7 @@ export default async function EditCollectionPage({ params }: Props) {
       name: true,
       slug: true,
       imageUrl: true,
+      supportsBuilder: true,
     },
   });
 

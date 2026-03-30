@@ -20,6 +20,7 @@ function extractValues(formData: FormData) {
     name: str("name"),
     slug: str("slug"),
     imageUrl: str("imageUrl"),
+    supportsBuilder: formData.get("supportsBuilder") === "on",
   };
 }
 
@@ -50,6 +51,7 @@ export async function createCollectionAction(
         name: parsed.data.name,
         slug: parsed.data.slug,
         imageUrl: parsed.data.imageUrl,
+        supportsBuilder: parsed.data.supportsBuilder,
       },
     });
   } catch (error: unknown) {
@@ -76,6 +78,7 @@ export async function createCollectionAction(
   }
 
   revalidatePath("/admin/collections");
+  revalidatePath("/builder");
   redirect("/admin/collections");
 }
 

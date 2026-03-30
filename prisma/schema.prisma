@@ -72,11 +72,12 @@ model Category {
 }
 
 model Collection {
-  id       String              @id @default(uuid())
-  name     String              @unique
-  slug     String              @unique
-  imageUrl String?
-  products ProductCollection[]
+  id               String              @id @default(uuid())
+  name             String              @unique
+  slug             String              @unique
+  imageUrl         String?
+  supportsBuilder  Boolean             @default(false)
+  products         ProductCollection[]
 }
 
 model Product {

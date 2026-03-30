@@ -23,6 +23,7 @@ export type CollectionData = {
   name: string;
   slug: string;
   imageUrl: string | null;
+  supportsBuilder: boolean;
 };
 
 function SubmitButton({ isEdit }: { isEdit: boolean }) {
@@ -59,6 +60,7 @@ function buildInitialState(
       name: collection.name,
       slug: collection.slug,
       imageUrl: collection.imageUrl ?? "",
+      supportsBuilder: collection.supportsBuilder,
     },
   };
 }
@@ -203,6 +205,20 @@ export function CollectionForm({
               {state.fieldErrors.imageUrl}
             </p>
           )}
+        </div>
+
+        <div className="flex items-center gap-2 md:col-span-2">
+          <input
+            id="supportsBuilder"
+            name="supportsBuilder"
+            type="checkbox"
+            value="on"
+            defaultChecked={state.values.supportsBuilder}
+            className="h-4 w-4 rounded border-border"
+          />
+          <label htmlFor="supportsBuilder" className="text-sm font-medium">
+            Available in builder
+          </label>
         </div>
       </div>
 
