@@ -53,9 +53,6 @@ function countKind(instances: Instance[], k: BuilderPartKind) {
   return instances.filter((i) => i.kind === k).length;
 }
 
-/** Horizontal offset per extra left/right layer (larger = more separation). */
-const PREVIEW_HALF_OVERLAP_PX = 22;
-
 function previewSrcForInstance(
   inst: Instance,
   partById: Map<string, BuilderPartOption>,
@@ -75,7 +72,7 @@ function PendantPreviewLayer({
   const { width: iw, height: ih } = BUILDER_PREVIEW_INTRINSIC.PENDANT;
   return (
     <div
-      className="pointer-events-none absolute bottom-[2%] left-1/2 z-10 w-[20%] max-w-[64px] -translate-x-1/2 sm:max-w-[76px]"
+      className="pointer-events-none relative w-[5.5%] max-w-[19px] shrink-0 sm:max-w-[23px]"
       style={{ aspectRatio: `${iw} / ${ih}` }}
     >
       <div className="relative h-full w-full">
@@ -84,7 +81,7 @@ function PendantPreviewLayer({
           alt=""
           fill
           className="object-contain object-bottom drop-shadow-sm"
-          sizes="76px"
+          sizes="23px"
           unoptimized={src.endsWith(".svg")}
         />
       </div>
@@ -182,8 +179,13 @@ export function BuilderEditor({
     if (!canAddRight) return;
     const id = newClientId();
     setInstances((prev) => {
-      const idx = prev.findIndex((i) => i.kind === "PENDANT");
-      const insertAt = idx === -1 ? prev.length : idx + 1;
+      let insertAt = prev.length;
+      for (let j = prev.length - 1; j >= 0; j--) {
+        if (prev[j]!.kind === "RIGHT_HALF") {
+          insertAt = j + 1;
+          break;
+        }
+      }
       const next = [...prev];
       next.splice(insertAt, 0, {
         clientId: id,
@@ -291,94 +293,96 @@ export function BuilderEditor({
         </div>
 
         <div className="relative aspect-square w-full min-w-0 max-w-[280px] sm:max-w-sm">
-          {/* Pendant: below center, smaller, under the arcs (lower z-index) */}
-          {pendantInstance ? (
-            <PendantPreviewLayer
-              inst={pendantInstance}
-              partById={partById}
-            />
-          ) : null}
-
-          {/* Arcs: columns shrink-wrap to base layer width (no forced 50/50 gap) */}
-          <div className="absolute inset-x-0 top-[1%] bottom-[22%] z-20 flex flex-row items-end justify-center gap-0">
-            <div className="relative -mr-px h-full shrink-0 overflow-visible">
-              {leftInstances.map((inst, i) => {
-                const src = previewSrcForInstance(inst, partById);
-                const { width: lw, height: lh } =
-                  BUILDER_PREVIEW_INTRINSIC.LEFT_HALF;
-                const boxStyle = {
-                  aspectRatio: `${lw} / ${lh}`,
-                  height: "98%",
-                  width: "auto" as const,
-                  zIndex: 20 + i,
-                  transform:
-                    i === 0
-                      ? undefined
-                      : `translateX(${-i * PREVIEW_HALF_OVERLAP_PX}px)`,
-                };
-                return (
-                  <div
-                    key={inst.clientId}
-                    className={
+          {/* Arcs (flex-1, bottom-aligned) then pendant flush underneath — no percentage gap */}
+          <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col">
+            <div className="relative z-20 flex min-h-0 flex-1 flex-row items-end justify-center gap-0 [--preview-half-overlap:38px] sm:[--preview-half-overlap:45px]">
+              <div className="relative -mr-px flex h-full min-h-0 shrink-0 flex-col justify-end overflow-visible">
+                {leftInstances.map((inst, i) => {
+                  const src = previewSrcForInstance(inst, partById);
+                  const { width: lw, height: lh } =
+                    BUILDER_PREVIEW_INTRINSIC.LEFT_HALF;
+                  const boxStyle = {
+                    aspectRatio: `${lw} / ${lh}`,
+                    height: "98%",
+                    width: "auto" as const,
+                    zIndex: 20 + i,
+                    transform:
                       i === 0
-                        ? "pointer-events-none relative max-h-[98%] shrink-0"
-                        : "pointer-events-none absolute bottom-0 left-0 max-h-[98%] max-w-full"
-                    }
-                    style={boxStyle}
-                  >
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={src}
-                        alt=""
-                        fill
-                        className="object-contain object-right drop-shadow-sm"
-                        sizes="(max-width: 640px) 260px, 280px"
-                        unoptimized={src.endsWith(".svg")}
-                      />
+                        ? undefined
+                        : `translateX(calc(${-i} * var(--preview-half-overlap)))`,
+                  };
+                  return (
+                    <div
+                      key={inst.clientId}
+                      className={
+                        i === 0
+                          ? "pointer-events-none relative max-h-[98%] shrink-0"
+                          : "pointer-events-none absolute bottom-0 left-0 max-h-[98%] max-w-full"
+                      }
+                      style={boxStyle}
+                    >
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={src}
+                          alt=""
+                          fill
+                          className="object-contain object-right drop-shadow-sm"
+                          sizes="(max-width: 640px) 260px, 280px"
+                          unoptimized={src.endsWith(".svg")}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="relative -ml-px flex h-full shrink-0 items-end justify-end overflow-visible">
-              {rightInstances.map((inst, i) => {
-                const src = previewSrcForInstance(inst, partById);
-                const { width: rw, height: rh } =
-                  BUILDER_PREVIEW_INTRINSIC.RIGHT_HALF;
-                const boxStyle = {
-                  aspectRatio: `${rw} / ${rh}`,
-                  height: "98%",
-                  width: "auto" as const,
-                  zIndex: 20 + i,
-                  transform:
-                    i === 0
-                      ? undefined
-                      : `translateX(${-i * PREVIEW_HALF_OVERLAP_PX}px)`,
-                };
-                return (
-                  <div
-                    key={inst.clientId}
-                    className={
+                  );
+                })}
+              </div>
+              <div className="relative -ml-px flex h-full min-h-0 shrink-0 items-end justify-end overflow-visible">
+                {rightInstances.map((inst, i) => {
+                  const src = previewSrcForInstance(inst, partById);
+                  const { width: rw, height: rh } =
+                    BUILDER_PREVIEW_INTRINSIC.RIGHT_HALF;
+                  const boxStyle = {
+                    aspectRatio: `${rw} / ${rh}`,
+                    height: "98%",
+                    width: "auto" as const,
+                    zIndex: 20 + i,
+                    transform:
                       i === 0
-                        ? "pointer-events-none relative max-h-[98%] shrink-0"
-                        : "pointer-events-none absolute bottom-0 right-0 max-h-[98%] max-w-full"
-                    }
-                    style={boxStyle}
-                  >
-                    <div className="relative h-full w-full">
-                      <Image
-                        src={src}
-                        alt=""
-                        fill
-                        className="object-contain object-left drop-shadow-sm"
-                        sizes="(max-width: 640px) 260px, 280px"
-                        unoptimized={src.endsWith(".svg")}
-                      />
+                        ? undefined
+                        : `translateX(calc(${i} * var(--preview-half-overlap)))`,
+                  };
+                  return (
+                    <div
+                      key={inst.clientId}
+                      className={
+                        i === 0
+                          ? "pointer-events-none relative max-h-[98%] shrink-0"
+                          : "pointer-events-none absolute bottom-0 right-0 max-h-[98%] max-w-full"
+                      }
+                      style={boxStyle}
+                    >
+                      <div className="relative h-full w-full">
+                        <Image
+                          src={src}
+                          alt=""
+                          fill
+                          className="object-contain object-left drop-shadow-sm"
+                          sizes="(max-width: 640px) 260px, 280px"
+                          unoptimized={src.endsWith(".svg")}
+                        />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
+            {pendantInstance ? (
+              <div className="relative z-10 flex shrink-0 justify-center">
+                <PendantPreviewLayer
+                  inst={pendantInstance}
+                  partById={partById}
+                />
+              </div>
+            ) : null}
           </div>
         </div>
 

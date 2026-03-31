@@ -79,7 +79,7 @@ export default async function BuilderEditPage({
   }
 
   return (
-    <div className="mx-auto max-w-lg px-6 py-10">
+    <div className="mx-auto max-w-lg px-6 py-10 md:max-w-2xl md:px-8 lg:max-w-4xl xl:max-w-6xl">
       <h1 className="text-center font-[family-name:var(--font-cormorant)] text-4xl font-light lowercase tracking-tight text-foreground">
         Конструктор
       </h1>
