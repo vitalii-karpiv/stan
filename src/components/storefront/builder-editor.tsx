@@ -7,6 +7,8 @@ import { useCallback, useMemo, useState } from "react";
 
 import type { BuilderPartKind } from "@/generated/prisma";
 import {
+  BUILDER_DEFAULT_PREVIEW_BY_KIND,
+  BUILDER_PREVIEW_INTRINSIC,
   MAX_BUILDER_LEFT_INSTANCES,
   MAX_BUILDER_RIGHT_INSTANCES,
 } from "@/lib/constants/builder";
@@ -49,6 +51,42 @@ function labelForInstance(
 
 function countKind(instances: Instance[], k: BuilderPartKind) {
   return instances.filter((i) => i.kind === k).length;
+}
+
+function previewSrcForInstance(
+  inst: Instance,
+  partById: Map<string, BuilderPartOption>,
+): string {
+  const p = inst.selectedPartId ? partById.get(inst.selectedPartId) : undefined;
+  return p?.previewImageUrl ?? BUILDER_DEFAULT_PREVIEW_BY_KIND[inst.kind];
+}
+
+function PendantPreviewLayer({
+  inst,
+  partById,
+}: {
+  inst: Instance;
+  partById: Map<string, BuilderPartOption>;
+}) {
+  const src = previewSrcForInstance(inst, partById);
+  const { width: iw, height: ih } = BUILDER_PREVIEW_INTRINSIC.PENDANT;
+  return (
+    <div
+      className="pointer-events-none absolute bottom-[2%] left-1/2 z-10 w-[20%] max-w-[64px] -translate-x-1/2 sm:max-w-[76px]"
+      style={{ aspectRatio: `${iw} / ${ih}` }}
+    >
+      <div className="relative h-full w-full">
+        <Image
+          src={src}
+          alt=""
+          fill
+          className="object-contain object-bottom drop-shadow-sm"
+          sizes="76px"
+          unoptimized={src.endsWith(".svg")}
+        />
+      </div>
+    </div>
+  );
 }
 
 type BuilderEditorProps = {
@@ -102,6 +140,19 @@ export function BuilderEditor({
     }
     return sum;
   }, [instances, partById]);
+
+  const leftInstances = useMemo(
+    () => instances.filter((i) => i.kind === "LEFT_HALF"),
+    [instances],
+  );
+  const rightInstances = useMemo(
+    () => instances.filter((i) => i.kind === "RIGHT_HALF"),
+    [instances],
+  );
+  const pendantInstance = useMemo(
+    () => instances.find((i) => i.kind === "PENDANT"),
+    [instances],
+  );
 
   const canAddLeft =
     countKind(instances, "LEFT_HALF") < MAX_BUILDER_LEFT_INSTANCES;
@@ -237,30 +288,78 @@ export function BuilderEditor({
         </div>
 
         <div className="relative aspect-square w-full min-w-0 max-w-[280px] sm:max-w-sm">
-          <div className="absolute inset-0 flex items-center justify-center">
-            {instances.map((inst, stackIndex) => {
-              if (!inst.selectedPartId) return null;
-              const p = partById.get(inst.selectedPartId);
-              if (!p) return null;
-              return (
-                <div
-                  key={inst.clientId}
-                  className="absolute inset-0 flex items-center justify-center p-4"
-                  style={{ zIndex: stackIndex + 1 }}
-                >
-                  <div className="relative h-full w-full">
-                    <Image
-                      src={p.previewImageUrl}
-                      alt=""
-                      fill
-                      className="object-contain drop-shadow-sm"
-                      sizes="(max-width: 640px) 280px, 384px"
-                      unoptimized={p.previewImageUrl.endsWith(".svg")}
-                    />
+          {/* Pendant: below center, smaller, under the arcs (lower z-index) */}
+          {pendantInstance ? (
+            <PendantPreviewLayer
+              inst={pendantInstance}
+              partById={partById}
+            />
+          ) : null}
+
+          {/* Arcs: intrinsic aspect ratios from source PNGs, bottoms aligned (toggle/ring meet) */}
+          <div className="absolute inset-x-0 top-[1%] bottom-[22%] z-20 flex flex-row items-end justify-center gap-0">
+            <div className="relative -mr-px h-full min-h-0 w-1/2 max-w-[min(50%,260px)] overflow-visible sm:max-w-[280px]">
+              {leftInstances.map((inst, i) => {
+                const src = previewSrcForInstance(inst, partById);
+                const { width: lw, height: lh } =
+                  BUILDER_PREVIEW_INTRINSIC.LEFT_HALF;
+                return (
+                  <div
+                    key={inst.clientId}
+                    className="pointer-events-none absolute bottom-0 right-0 max-h-[98%] max-w-full"
+                    style={{
+                      aspectRatio: `${lw} / ${lh}`,
+                      height: "98%",
+                      width: "auto",
+                      zIndex: 20 + i,
+                      transform: `translateX(${i * 12}px)`,
+                    }}
+                  >
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        className="object-contain object-right drop-shadow-sm"
+                        sizes="(max-width: 640px) 260px, 280px"
+                        unoptimized={src.endsWith(".svg")}
+                      />
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
+            <div className="relative -ml-px h-full min-h-0 w-1/2 max-w-[min(50%,260px)] overflow-visible sm:max-w-[280px]">
+              {rightInstances.map((inst, i) => {
+                const src = previewSrcForInstance(inst, partById);
+                const { width: rw, height: rh } =
+                  BUILDER_PREVIEW_INTRINSIC.RIGHT_HALF;
+                return (
+                  <div
+                    key={inst.clientId}
+                    className="pointer-events-none absolute bottom-0 left-0 max-h-[98%] max-w-full"
+                    style={{
+                      aspectRatio: `${rw} / ${rh}`,
+                      height: "98%",
+                      width: "auto",
+                      zIndex: 20 + i,
+                      transform: `translateX(${-i * 12}px)`,
+                    }}
+                  >
+                    <div className="relative h-full w-full">
+                      <Image
+                        src={src}
+                        alt=""
+                        fill
+                        className="object-contain object-left drop-shadow-sm"
+                        sizes="(max-width: 640px) 260px, 280px"
+                        unoptimized={src.endsWith(".svg")}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
 
