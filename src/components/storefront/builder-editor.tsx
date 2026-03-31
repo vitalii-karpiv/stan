@@ -53,6 +53,9 @@ function countKind(instances: Instance[], k: BuilderPartKind) {
   return instances.filter((i) => i.kind === k).length;
 }
 
+/** Horizontal offset per extra left/right layer (larger = more separation). */
+const PREVIEW_HALF_OVERLAP_PX = 22;
+
 function previewSrcForInstance(
   inst: Instance,
   partById: Map<string, BuilderPartOption>,
@@ -296,24 +299,32 @@ export function BuilderEditor({
             />
           ) : null}
 
-          {/* Arcs: intrinsic aspect ratios from source PNGs, bottoms aligned (toggle/ring meet) */}
+          {/* Arcs: columns shrink-wrap to base layer width (no forced 50/50 gap) */}
           <div className="absolute inset-x-0 top-[1%] bottom-[22%] z-20 flex flex-row items-end justify-center gap-0">
-            <div className="relative -mr-px h-full min-h-0 w-1/2 max-w-[min(50%,260px)] overflow-visible sm:max-w-[280px]">
+            <div className="relative -mr-px h-full shrink-0 overflow-visible">
               {leftInstances.map((inst, i) => {
                 const src = previewSrcForInstance(inst, partById);
                 const { width: lw, height: lh } =
                   BUILDER_PREVIEW_INTRINSIC.LEFT_HALF;
+                const boxStyle = {
+                  aspectRatio: `${lw} / ${lh}`,
+                  height: "98%",
+                  width: "auto" as const,
+                  zIndex: 20 + i,
+                  transform:
+                    i === 0
+                      ? undefined
+                      : `translateX(${-i * PREVIEW_HALF_OVERLAP_PX}px)`,
+                };
                 return (
                   <div
                     key={inst.clientId}
-                    className="pointer-events-none absolute bottom-0 right-0 max-h-[98%] max-w-full"
-                    style={{
-                      aspectRatio: `${lw} / ${lh}`,
-                      height: "98%",
-                      width: "auto",
-                      zIndex: 20 + i,
-                      transform: `translateX(${i * 12}px)`,
-                    }}
+                    className={
+                      i === 0
+                        ? "pointer-events-none relative max-h-[98%] shrink-0"
+                        : "pointer-events-none absolute bottom-0 left-0 max-h-[98%] max-w-full"
+                    }
+                    style={boxStyle}
                   >
                     <div className="relative h-full w-full">
                       <Image
@@ -329,22 +340,30 @@ export function BuilderEditor({
                 );
               })}
             </div>
-            <div className="relative -ml-px h-full min-h-0 w-1/2 max-w-[min(50%,260px)] overflow-visible sm:max-w-[280px]">
+            <div className="relative -ml-px flex h-full shrink-0 items-end justify-end overflow-visible">
               {rightInstances.map((inst, i) => {
                 const src = previewSrcForInstance(inst, partById);
                 const { width: rw, height: rh } =
                   BUILDER_PREVIEW_INTRINSIC.RIGHT_HALF;
+                const boxStyle = {
+                  aspectRatio: `${rw} / ${rh}`,
+                  height: "98%",
+                  width: "auto" as const,
+                  zIndex: 20 + i,
+                  transform:
+                    i === 0
+                      ? undefined
+                      : `translateX(${-i * PREVIEW_HALF_OVERLAP_PX}px)`,
+                };
                 return (
                   <div
                     key={inst.clientId}
-                    className="pointer-events-none absolute bottom-0 left-0 max-h-[98%] max-w-full"
-                    style={{
-                      aspectRatio: `${rw} / ${rh}`,
-                      height: "98%",
-                      width: "auto",
-                      zIndex: 20 + i,
-                      transform: `translateX(${-i * 12}px)`,
-                    }}
+                    className={
+                      i === 0
+                        ? "pointer-events-none relative max-h-[98%] shrink-0"
+                        : "pointer-events-none absolute bottom-0 right-0 max-h-[98%] max-w-full"
+                    }
+                    style={boxStyle}
                   >
                     <div className="relative h-full w-full">
                       <Image
