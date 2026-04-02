@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { Minus, Plus } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { BuilderPartKind } from "@/generated/prisma";
 import {
@@ -140,6 +140,15 @@ export function BuilderEditor({
 
   const [activeClientId, setActiveClientId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (
+      activeClientId &&
+      !instances.some((i) => i.clientId === activeClientId)
+    ) {
+      setActiveClientId(instances[0]?.clientId ?? null);
+    }
+  }, [instances, activeClientId]);
+
   const activeInstance =
     instances.find((i) => i.clientId === activeClientId) ?? instances[0]!;
 
@@ -192,6 +201,9 @@ export function BuilderEditor({
   const canAddRight =
     countKind(instances, "RIGHT_HALF") < MAX_BUILDER_RIGHT_INSTANCES;
 
+  const canRemoveLeft = leftInstances.length > 1;
+  const canRemoveRight = rightInstances.length > 1;
+
   const addLeft = useCallback(() => {
     if (!canAddLeft) return;
     const leftId = newClientId();
@@ -241,6 +253,30 @@ export function BuilderEditor({
     });
     setActiveClientId(id);
   }, [canAddRight]);
+
+  const removeLeft = useCallback(() => {
+    setInstances((prev) => {
+      const { lefts, pendants, rights } = partitionInstances(prev);
+      if (lefts.length <= 1) return prev;
+      return flattenPartition({
+        lefts: lefts.slice(0, -1),
+        pendants: pendants.slice(0, -1),
+        rights,
+      });
+    });
+  }, []);
+
+  const removeRight = useCallback(() => {
+    setInstances((prev) => {
+      const { lefts, pendants, rights } = partitionInstances(prev);
+      if (rights.length <= 1) return prev;
+      return flattenPartition({
+        lefts,
+        pendants,
+        rights: rights.slice(0, -1),
+      });
+    });
+  }, []);
 
   const selectPart = useCallback((partId: string) => {
     setInstances((prev) =>
@@ -321,23 +357,8 @@ export function BuilderEditor({
         </button>
       </div>
 
-      <div className="relative flex items-center justify-center gap-1 sm:gap-2">
-        <div className="flex w-[4.5rem] shrink-0 flex-col items-center gap-1 sm:w-24">
-          <button
-            type="button"
-            onClick={addLeft}
-            disabled={!canAddLeft}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-14 sm:w-14"
-            aria-label="Додати ліву половинку"
-          >
-            <Plus className="h-6 w-6" />
-          </button>
-          <span className="text-center text-[10px] leading-tight text-muted-foreground sm:text-xs">
-            додати ліву половинку
-          </span>
-        </div>
-
-        <div className="relative aspect-square w-full min-w-0 max-w-[280px] sm:max-w-sm">
+      <div className="mx-auto w-full max-w-[280px] space-y-4 sm:max-w-sm">
+        <div className="relative aspect-square w-full min-w-0">
           {/* Arcs (flex-1, bottom-aligned) then pendant flush underneath — no percentage gap */}
           <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col [--preview-half-overlap:38px] sm:[--preview-half-overlap:45px]">
             <div className="relative z-20 flex min-h-0 flex-1 flex-row items-end justify-center gap-0">
@@ -460,19 +481,57 @@ export function BuilderEditor({
           </div>
         </div>
 
-        <div className="flex w-[4.5rem] shrink-0 flex-col items-center gap-1 sm:w-24">
-          <button
-            type="button"
-            onClick={addRight}
-            disabled={!canAddRight}
-            className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-14 sm:w-14"
-            aria-label="Додати праву половинку"
-          >
-            <Plus className="h-6 w-6" />
-          </button>
-          <span className="text-center text-[10px] leading-tight text-muted-foreground sm:text-xs">
-            додати праву половинку
-          </span>
+        <div className="flex w-full items-start justify-between gap-6 px-1 sm:gap-8">
+          <div className="flex flex-col items-start gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={addLeft}
+                disabled={!canAddLeft}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
+                aria-label="Додати ліву половинку"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={removeLeft}
+                disabled={!canRemoveLeft}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
+                aria-label="Прибрати останню ліву половинку"
+              >
+                <Minus className="h-5 w-5" />
+              </button>
+            </div>
+            <span className="text-left text-[10px] leading-tight text-muted-foreground sm:text-xs">
+              ліва половинка
+            </span>
+          </div>
+          <div className="flex flex-col items-end gap-2">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={addRight}
+                disabled={!canAddRight}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
+                aria-label="Додати праву половинку"
+              >
+                <Plus className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={removeRight}
+                disabled={!canRemoveRight}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-muted text-muted-foreground transition-colors hover:bg-muted/80 disabled:cursor-not-allowed disabled:opacity-40 sm:h-10 sm:w-10"
+                aria-label="Прибрати останню праву половинку"
+              >
+                <Minus className="h-5 w-5" />
+              </button>
+            </div>
+            <span className="text-right text-[10px] leading-tight text-muted-foreground sm:text-xs">
+              права половинка
+            </span>
+          </div>
         </div>
       </div>
 
