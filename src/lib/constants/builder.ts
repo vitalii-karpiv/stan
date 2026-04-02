@@ -3,8 +3,8 @@ import type { BuilderPartKind } from "@/generated/prisma";
 /** Slug of the hidden Product used as OrderItem anchor for builder assemblies. */
 export const BUILDER_ASSEMBLY_SLUG = "builder-assembly";
 
-export const MAX_BUILDER_LEFT_INSTANCES = 4;
-export const MAX_BUILDER_RIGHT_INSTANCES = 4;
+export const MAX_BUILDER_LEFT_INSTANCES = 3;
+export const MAX_BUILDER_RIGHT_INSTANCES = 3;
 
 /** Public assets shown in the result zone when a slot has no selected part yet. */
 export const BUILDER_DEFAULT_PREVIEW_BY_KIND: Record<BuilderPartKind, string> =
