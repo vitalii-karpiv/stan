@@ -41,7 +41,7 @@ function labelForInstance(
   indexInKind: number,
 ): string {
   if (inst.kind === "PENDANT") {
-    return "Підвіска";
+    return `Підвіска ${indexInKind + 1}`;
   }
   if (inst.kind === "LEFT_HALF") {
     return `Ліва ${indexInKind + 1}`;
@@ -51,6 +51,22 @@ function labelForInstance(
 
 function countKind(instances: Instance[], k: BuilderPartKind) {
   return instances.filter((i) => i.kind === k).length;
+}
+
+function partitionInstances(prev: Instance[]) {
+  return {
+    lefts: prev.filter((i) => i.kind === "LEFT_HALF"),
+    pendants: prev.filter((i) => i.kind === "PENDANT"),
+    rights: prev.filter((i) => i.kind === "RIGHT_HALF"),
+  };
+}
+
+function flattenPartition(p: {
+  lefts: Instance[];
+  pendants: Instance[];
+  rights: Instance[];
+}) {
+  return [...p.lefts, ...p.pendants, ...p.rights];
 }
 
 function previewSrcForInstance(
@@ -64,16 +80,23 @@ function previewSrcForInstance(
 function PendantPreviewLayer({
   inst,
   partById,
+  fill = false,
 }: {
   inst: Instance;
   partById: Map<string, BuilderPartOption>;
+  /** When true, parent supplies size (stacked preview); otherwise width is % of preview. */
+  fill?: boolean;
 }) {
   const src = previewSrcForInstance(inst, partById);
   const { width: iw, height: ih } = BUILDER_PREVIEW_INTRINSIC.PENDANT;
   return (
     <div
-      className="pointer-events-none relative w-[5.5%] max-w-[19px] shrink-0 sm:max-w-[23px]"
-      style={{ aspectRatio: `${iw} / ${ih}` }}
+      className={
+        fill
+          ? "pointer-events-none relative h-full min-h-0 w-full"
+          : "pointer-events-none relative w-[5.5%] max-w-[19px] shrink-0 sm:max-w-[23px]"
+      }
+      style={fill ? undefined : { aspectRatio: `${iw} / ${ih}` }}
     >
       <div className="relative h-full w-full">
         <Image
@@ -149,9 +172,19 @@ export function BuilderEditor({
     () => instances.filter((i) => i.kind === "RIGHT_HALF"),
     [instances],
   );
-  const pendantInstance = useMemo(
-    () => instances.find((i) => i.kind === "PENDANT"),
+  const pendantInstances = useMemo(
+    () => instances.filter((i) => i.kind === "PENDANT"),
     [instances],
+  );
+
+  /** Left & pendant tabs outer-first; rights keep array order. */
+  const segmentTabs = useMemo(
+    () => [
+      ...leftInstances.slice().reverse(),
+      ...pendantInstances.slice().reverse(),
+      ...rightInstances,
+    ],
+    [leftInstances, pendantInstances, rightInstances],
   );
 
   const canAddLeft =
@@ -161,38 +194,50 @@ export function BuilderEditor({
 
   const addLeft = useCallback(() => {
     if (!canAddLeft) return;
-    const id = newClientId();
+    const leftId = newClientId();
+    const pendantId = newClientId();
     setInstances((prev) => {
-      const idx = prev.findIndex((i) => i.kind === "PENDANT");
-      const next = [...prev];
-      next.splice(idx, 0, {
-        clientId: id,
-        kind: "LEFT_HALF",
-        selectedPartId: null,
+      const { lefts, pendants, rights } = partitionInstances(prev);
+      return flattenPartition({
+        lefts: [
+          ...lefts,
+          {
+            clientId: leftId,
+            kind: "LEFT_HALF",
+            selectedPartId: null,
+          },
+        ],
+        pendants: [
+          ...pendants,
+          {
+            clientId: pendantId,
+            kind: "PENDANT",
+            selectedPartId: null,
+          },
+        ],
+        rights,
       });
-      return next;
     });
-    setActiveClientId(id);
+    setActiveClientId(leftId);
   }, [canAddLeft]);
 
   const addRight = useCallback(() => {
     if (!canAddRight) return;
     const id = newClientId();
     setInstances((prev) => {
-      let insertAt = prev.length;
-      for (let j = prev.length - 1; j >= 0; j--) {
-        if (prev[j]!.kind === "RIGHT_HALF") {
-          insertAt = j + 1;
-          break;
-        }
-      }
-      const next = [...prev];
-      next.splice(insertAt, 0, {
-        clientId: id,
-        kind: "RIGHT_HALF",
-        selectedPartId: null,
+      const { lefts, pendants, rights } = partitionInstances(prev);
+      return flattenPartition({
+        lefts,
+        pendants,
+        rights: [
+          ...rights,
+          {
+            clientId: id,
+            kind: "RIGHT_HALF",
+            selectedPartId: null,
+          },
+        ],
       });
-      return next;
     });
     setActiveClientId(id);
   }, [canAddRight]);
@@ -294,8 +339,8 @@ export function BuilderEditor({
 
         <div className="relative aspect-square w-full min-w-0 max-w-[280px] sm:max-w-sm">
           {/* Arcs (flex-1, bottom-aligned) then pendant flush underneath — no percentage gap */}
-          <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col">
-            <div className="relative z-20 flex min-h-0 flex-1 flex-row items-end justify-center gap-0 [--preview-half-overlap:38px] sm:[--preview-half-overlap:45px]">
+          <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col [--preview-half-overlap:38px] sm:[--preview-half-overlap:45px]">
+            <div className="relative z-20 flex min-h-0 flex-1 flex-row items-end justify-center gap-0">
               <div className="relative -mr-px flex h-full min-h-0 shrink-0 flex-col justify-end overflow-visible">
                 {leftInstances.map((inst, i) => {
                   const src = previewSrcForInstance(inst, partById);
@@ -375,12 +420,41 @@ export function BuilderEditor({
                 })}
               </div>
             </div>
-            {pendantInstance ? (
-              <div className="relative z-10 flex shrink-0 justify-center">
-                <PendantPreviewLayer
-                  inst={pendantInstance}
-                  partById={partById}
-                />
+            {pendantInstances.length > 0 ? (
+              <div className="relative z-10 flex w-full shrink-0 justify-center">
+                <div
+                  className="relative shrink-0 w-[5.5%] max-w-[19px] sm:max-w-[23px]"
+                  style={{
+                    aspectRatio: `${BUILDER_PREVIEW_INTRINSIC.PENDANT.width} / ${BUILDER_PREVIEW_INTRINSIC.PENDANT.height}`,
+                  }}
+                >
+                  {pendantInstances.map((inst, i) => {
+                    const boxStyle = {
+                      zIndex: 20 + i,
+                      transform:
+                        i === 0
+                          ? undefined
+                          : `translateX(calc(${-i} * var(--preview-half-overlap)))`,
+                    };
+                    return (
+                      <div
+                        key={inst.clientId}
+                        className={
+                          i === 0
+                            ? "pointer-events-none relative h-full w-full"
+                            : "pointer-events-none absolute bottom-0 left-0 h-full w-full"
+                        }
+                        style={boxStyle}
+                      >
+                        <PendantPreviewLayer
+                          inst={inst}
+                          partById={partById}
+                          fill
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ) : null}
           </div>
@@ -407,17 +481,17 @@ export function BuilderEditor({
           Обери сегмент
         </p>
         <div className="mt-2 flex gap-1 overflow-x-auto border-b border-border pb-px">
-          {instances.map((inst, globalIdx) => {
+          {segmentTabs.map((inst) => {
             const idxInKind =
               inst.kind === "LEFT_HALF"
-                ? instances
-                    .slice(0, globalIdx)
-                    .filter((i) => i.kind === "LEFT_HALF").length
+                ? leftInstances.findIndex((i) => i.clientId === inst.clientId)
                 : inst.kind === "RIGHT_HALF"
-                  ? instances
-                      .slice(0, globalIdx)
-                      .filter((i) => i.kind === "RIGHT_HALF").length
-                  : 0;
+                  ? rightInstances.findIndex((i) => i.clientId === inst.clientId)
+                  : inst.kind === "PENDANT"
+                    ? pendantInstances.findIndex(
+                        (i) => i.clientId === inst.clientId,
+                      )
+                    : 0;
             const label = labelForInstance(inst, idxInKind);
             const active = inst.clientId === activeInstance.clientId;
             return (
