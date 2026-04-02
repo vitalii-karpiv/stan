@@ -117,6 +117,7 @@ type BuilderEditorProps = {
   categorySlug: string;
   collectionName: string;
   categoryName: string;
+  collectionImageUrl: string | null;
   anchorProductId: string;
   parts: BuilderPartOption[];
 };
@@ -126,6 +127,7 @@ export function BuilderEditor({
   categorySlug,
   collectionName,
   categoryName,
+  collectionImageUrl,
   anchorProductId,
   parts,
 }: BuilderEditorProps) {
@@ -312,7 +314,11 @@ export function BuilderEditor({
       productId: anchorProductId,
       productTitle: "Конструктор",
       productSlug: "builder-assembly",
-      imageUrl: firstWithPreview?.previewImageUrl ?? firstWithPreview?.selectorImageUrl ?? null,
+      imageUrl:
+        collectionImageUrl?.trim() ||
+        firstWithPreview?.previewImageUrl ||
+        firstWithPreview?.selectorImageUrl ||
+        null,
       material: null,
       size: null,
       gemstone: null,
@@ -335,6 +341,7 @@ export function BuilderEditor({
     totalPrice,
     collectionSlug,
     categorySlug,
+    collectionImageUrl,
   ]);
 
   return (

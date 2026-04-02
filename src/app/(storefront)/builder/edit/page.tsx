@@ -27,7 +27,7 @@ export default async function BuilderEditPage({
   const [collection, category, anchorProduct, parts] = await Promise.all([
     db.collection.findFirst({
       where: { slug: collectionSlug, supportsBuilder: true },
-      select: { id: true, name: true, slug: true },
+      select: { id: true, name: true, slug: true, imageUrl: true },
     }),
     db.category.findFirst({
       where: { slug: categorySlug },
@@ -89,6 +89,7 @@ export default async function BuilderEditPage({
         categorySlug={category.slug}
         collectionName={collection.name}
         categoryName={category.name}
+        collectionImageUrl={collection.imageUrl}
         anchorProductId={anchorProduct.id}
         parts={parts}
       />
