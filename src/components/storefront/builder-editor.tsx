@@ -198,6 +198,11 @@ export function BuilderEditor({
     [leftInstances, pendantInstances, rightInstances],
   );
 
+  const allPartsSelected = useMemo(
+    () => instances.every((i) => Boolean(i.selectedPartId)),
+    [instances],
+  );
+
   const canAddLeft =
     countKind(instances, "LEFT_HALF") < MAX_BUILDER_LEFT_INSTANCES;
   const canAddRight =
@@ -291,6 +296,10 @@ export function BuilderEditor({
   }, [activeInstance.clientId]);
 
   const handleAddToCart = useCallback(() => {
+    if (!instances.every((i) => i.selectedPartId)) {
+      return;
+    }
+
     const orderedIds: string[] = [];
     const titles: string[] = [];
     for (const inst of instances) {
@@ -358,7 +367,8 @@ export function BuilderEditor({
         <button
           type="button"
           onClick={handleAddToCart}
-          className="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90"
+          disabled={!allPartsSelected}
+          className="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           Додати до кошика
         </button>
@@ -545,6 +555,11 @@ export function BuilderEditor({
       <div>
         <p className="text-xs font-medium text-muted-foreground">
           Обери сегмент
+          {!allPartsSelected && (
+            <span className="mt-0.5 block font-normal text-amber-700 dark:text-amber-400">
+              Позначені вкладки потребують вибору варіанту нижче.
+            </span>
+          )}
         </p>
         <div className="mt-2 flex gap-1 overflow-x-auto border-b border-border pb-px">
           {segmentTabs.map((inst) => {
@@ -560,18 +575,34 @@ export function BuilderEditor({
                     : 0;
             const label = labelForInstance(inst, idxInKind);
             const active = inst.clientId === activeInstance.clientId;
+            const needsSelection = !inst.selectedPartId;
             return (
               <button
                 key={inst.clientId}
                 type="button"
                 onClick={() => setActiveClientId(inst.clientId)}
+                title={
+                  needsSelection
+                    ? "Оберіть варіант для цього сегмента"
+                    : undefined
+                }
                 className={`shrink-0 border-b-2 px-3 py-2 text-xs transition-colors sm:text-sm ${
                   active
-                    ? "border-foreground font-medium text-foreground"
-                    : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? needsSelection
+                      ? "border-amber-600 font-medium text-amber-900 dark:border-amber-400 dark:text-amber-100"
+                      : "border-foreground font-medium text-foreground"
+                    : needsSelection
+                      ? "border-amber-500/90 font-medium text-amber-900 dark:border-amber-500 dark:text-amber-100"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {label}
+                {needsSelection ? (
+                  <span
+                    className="ml-1 inline-block size-1.5 rounded-full bg-amber-500 align-middle sm:size-2"
+                    aria-hidden
+                  />
+                ) : null}
               </button>
             );
           })}
