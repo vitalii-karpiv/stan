@@ -355,10 +355,6 @@ export function BuilderEditor({
 
   return (
     <div className="pt-10 space-y-8">
-      {// <p className="text-sm text-muted-foreground">
-        //{collectionName} · {categoryName}
-      // </p>}
-}
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
         <div>
@@ -590,10 +586,10 @@ export function BuilderEditor({
                 className={`shrink-0 border-b-2 px-3 py-2 text-xs transition-colors sm:text-sm ${
                   active
                     ? needsSelection
-                      ? "border-amber-600 font-medium text-amber-900 dark:border-amber-400 dark:text-amber-100"
+                      ? "border-amber-600 font-medium text-foreground dark:border-amber-400"
                       : "border-foreground font-medium text-foreground"
                     : needsSelection
-                      ? "border-amber-500/90 font-medium text-amber-900 dark:border-amber-500 dark:text-amber-100"
+                      ? "border-amber-500/90 font-medium text-foreground dark:border-amber-500"
                       : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
