@@ -105,7 +105,7 @@ export function ProductImageGallery({
   const current = images[selectedIndex];
 
   return (
-    <div>
+    <div className="w-full min-w-0">
       {images.length > 1 ? (
         <div className="group relative">
           <div
@@ -201,7 +201,7 @@ export function ProductImageGallery({
       )}
 
       {images.length > 1 && (
-        <div className="mt-3 flex gap-2 overflow-x-auto">
+        <div className="mt-3 flex w-full min-w-0 max-w-full gap-2 overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {images.map((img, i) => (
             <button
               key={i}
