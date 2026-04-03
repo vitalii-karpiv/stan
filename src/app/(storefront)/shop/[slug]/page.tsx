@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: Props) {
   const showMaterialBlock = Boolean(materialText || jewelryLengthText);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 pt-8 pb-12">
       {/* Breadcrumb */}
       <nav className="mb-8 flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
         <Link href="/shop" className="transition-colors hover:text-foreground">

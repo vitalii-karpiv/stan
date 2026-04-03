@@ -354,10 +354,11 @@ export function BuilderEditor({
   ]);
 
   return (
-    <div className="space-y-8">
-      <p className="text-sm text-muted-foreground">
-        {collectionName} · {categoryName}
-      </p>
+    <div className="pt-10 space-y-8">
+      {// <p className="text-sm text-muted-foreground">
+        //{collectionName} · {categoryName}
+      // </p>}
+}
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
         <div>

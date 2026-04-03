@@ -65,7 +65,7 @@ export default async function ShopPage({
   ]);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 pt-8 pb-12">
       <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light">
         {activeCollection ? activeCollection.name : "Магазин"}
       </h1>
