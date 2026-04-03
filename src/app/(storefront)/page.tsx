@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 import { db } from "@/lib/db";
@@ -118,16 +119,73 @@ export default async function HomePage() {
 
       <section
         id="jewelry-care"
-        className="mx-auto max-w-7xl scroll-mt-24 px-6 py-8"
+        className="mx-auto max-w-3xl scroll-mt-24 bg-background px-6 py-12 text-left"
       >
-        <h2 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+        <h2 className="text-3xl font-bold tracking-tight text-[#4a3428] md:text-4xl">
           Як доглядати за прикрасами
         </h2>
-        <p className="mt-4 max-w-3xl leading-relaxed text-muted-foreground">
-          Тут з’явиться короткий гайд з догляду: зберігання, контакт з водою та
-          косметикою, чищення та коли краще знімати прикраси. Наразі розділ у
-          підготовці.
-        </p>
+
+        <div className="mt-10 space-y-10 text-[#8c7f74]">
+          <div className="space-y-4">
+            <h3 className="text-[11px] font-light uppercase tracking-[0.28em]">
+              НОСІННЯ
+            </h3>
+            <p className="font-light leading-[1.75]">
+              Уникайте контакту з косметичними засобами та домашніми хімікатами.
+              Наносьте парфуми, креми, лак для волосся та інші засоби перед
+              одяганням прикраси. Знімайте прикраси перед прибиранням та миттям
+              посуду. Радимо знімати їх перед відвідуванням сауни, заняттям
+              спортом, плаванням.
+            </p>
+            <p className="font-light leading-[1.75]">
+              Обов&apos;язково знімайте їх перед сном. В першу чергу - це про
+              вашу безпеку та комфортний сон. Також це захистить прикраси від
+              пошкоджень та деформування.
+            </p>
+            <p className="font-light leading-[1.75]">
+              Запам&apos;ятай золоте правило користування коштовностями: «Прикраса
+              – остання річ, яку варто одягати, виходячи з дому, та перша річ,
+              яку треба знімати, повертаючись туди».
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-[11px] font-light uppercase tracking-[0.28em]">
+              ЗБЕРІГАННЯ
+            </h3>
+            <p className="font-light leading-[1.75]">
+              Зберігайте прикраси окремо одна від одної, а також окремо від
+              гострих предметів, щоб уникнути подряпин і пошкоджень. Уникайте
+              впливу прямих сонячних променів.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-[11px] font-light uppercase tracking-[0.28em]">
+              ПРАВИЛЬНЕ ОЧИЩЕННЯ
+            </h3>
+            <p className="font-light leading-[1.75]">
+              З часом на прикрасах може накопичуватись пил і забруднення, що
+              зменшує їх блиск. Не рекомендується мити або замочувати вироби, а
+              також використовувати хімічні чи агресивні засоби для очищення.
+              Для догляду достатньо регулярно протирати прикраси м&apos;якою
+              сухою тканиною.
+            </p>
+          </div>
+
+          <p className="pt-2 font-light italic leading-[1.75]">
+            Піклуйся про себе і свої прикраси
+          </p>
+        </div>
+
+        <Image
+          src="/jewelry_care.png"
+          alt="Візуальні поради з догляду за прикрасами"
+          width={786}
+          height={851}
+          className="mt-12 w-full max-w-2xl"
+          sizes="(max-width: 768px) 100vw, 672px"
+        />
       </section>
 
       <section
