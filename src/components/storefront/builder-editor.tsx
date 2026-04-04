@@ -558,7 +558,7 @@ export function BuilderEditor({
             </span>
           )}
         </p>
-        <div className="mt-2 flex gap-1 overflow-x-auto border-b border-border pb-px">
+        <div className="mt-2 flex gap-1 overflow-x-auto overscroll-x-contain [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden border-b border-border pb-px">
           {segmentTabs.map((inst) => {
             const idxInKind =
               inst.kind === "LEFT_HALF"
