@@ -111,7 +111,7 @@ export function ProductImageGallery({
           <div
             ref={mainStripRef}
             onScroll={handleMainScroll}
-            className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto scroll-smooth"
+            className="flex aspect-[3/4] snap-x snap-mandatory overflow-x-auto overflow-y-hidden scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {images.map((img, i) => (
               <button
