@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
+import { ImageWithLoader } from "@/components/image-with-loader";
 import { ChevronDown, Minus, Plus } from "lucide-react";
 import { useCallback, useEffect, useId, useMemo, useState } from "react";
 
@@ -99,13 +99,14 @@ function PendantPreviewLayer({
       style={fill ? undefined : { aspectRatio: `${iw} / ${ih}` }}
     >
       <div className="relative h-full w-full">
-        <Image
+        <ImageWithLoader
           src={src}
           alt=""
           fill
           className="object-contain object-bottom drop-shadow-sm"
           sizes="23px"
           unoptimized={src.endsWith(".svg")}
+          loaderClassName="scale-[0.55]"
         />
       </div>
     </div>
@@ -143,7 +144,7 @@ function CombinationPreviewMini({
               }}
             >
               <div className="relative h-full w-full">
-                <Image
+                <ImageWithLoader
                   src={leftSrc}
                   alt=""
                   fill
@@ -164,7 +165,7 @@ function CombinationPreviewMini({
               }}
             >
               <div className="relative h-full w-full">
-                <Image
+                <ImageWithLoader
                   src={rightSrc}
                   alt=""
                   fill
@@ -252,7 +253,7 @@ function BuilderCombinationsPreview({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center justify-between gap-2 py-1 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        className="flex w-full items-center gap-2 py-1 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
         aria-expanded={open}
         id={triggerId}
         aria-controls={panelId}
@@ -590,7 +591,7 @@ export function BuilderEditor({
                       style={boxStyle}
                     >
                       <div className="relative h-full w-full">
-                        <Image
+                        <ImageWithLoader
                           src={src}
                           alt=""
                           fill
@@ -629,7 +630,7 @@ export function BuilderEditor({
                       style={boxStyle}
                     >
                       <div className="relative h-full w-full">
-                        <Image
+                        <ImageWithLoader
                           src={src}
                           alt=""
                           fill
@@ -812,35 +813,36 @@ export function BuilderEditor({
             Немає варіантів для цієї позиції. Додайте частини в адмінці.
           </p>
         ) : (
-          <ul className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
+          <ul className="mt-3 grid grid-cols-3 items-stretch gap-2 sm:gap-3">
             {optionsForActiveKind.map((p) => {
               const selected =
                 activeInstance.selectedPartId === p.id;
               return (
-                <li key={p.id}>
+                <li key={p.id} className="min-h-0">
                   <button
                     type="button"
                     onClick={() => selectPart(p.id)}
-                    className={`w-full rounded-md border p-2 text-left transition-colors ${
+                    className={`flex h-full min-h-0 w-full flex-col rounded-md border p-2 text-left transition-colors ${
                       selected
                         ? "border-foreground ring-1 ring-foreground/20"
                         : "border-border hover:border-foreground/30"
                     }`}
                   >
-                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[120px]">
-                      <Image
+                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[120px] shrink-0">
+                      <ImageWithLoader
                         src={p.selectorImageUrl}
                         alt=""
                         fill
                         className="object-contain"
                         sizes="120px"
                         unoptimized={p.selectorImageUrl.endsWith(".svg")}
+                        loaderClassName="scale-90"
                       />
                     </div>
-                    <p className="mt-2 line-clamp-2 text-center font-[family-name:var(--font-cormorant)] text-xs italic leading-snug sm:text-sm">
+                    <p className="mt-2 line-clamp-2 min-h-[2.75em] text-center font-[family-name:var(--font-cormorant)] text-xs italic leading-snug sm:text-sm">
                       {p.title}
                     </p>
-                    <p className="mt-1 text-center text-[10px] text-muted-foreground sm:text-xs">
+                    <p className="mt-auto pt-1 text-center text-[10px] text-muted-foreground sm:text-xs">
                       {p.price != null ? formatPrice(p.price) : "—"}
                     </p>
                   </button>
