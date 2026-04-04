@@ -275,12 +275,12 @@ function BuilderCombinationsPreview({
         ) : (
           <ul
             id={panelId}
-            className="mt-2 max-h-[min(28rem,70vh)] space-y-5 overflow-y-auto"
+            className="mt-2 grid max-h-[min(28rem,70vh)] grid-cols-1 gap-x-6 gap-y-6 overflow-y-auto md:grid-cols-2 lg:grid-cols-3"
             aria-labelledby={triggerId}
           >
             {rows.map(({ key, label, leftInst, pendantInst, rightInst }) => (
-              <li key={key}>
-                <div className="mx-auto w-full max-w-[148px] sm:max-w-[176px]">
+              <li key={key} className="min-w-0">
+                <div className="mx-auto w-full max-w-[148px] sm:max-w-[176px] md:max-w-none md:px-1">
                   <CombinationPreviewMini
                     leftInst={leftInst}
                     pendantInst={pendantInst}
