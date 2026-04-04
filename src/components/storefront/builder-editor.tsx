@@ -374,7 +374,7 @@ export function BuilderEditor({
       <div className="mx-auto w-full max-w-[280px] space-y-4 sm:max-w-sm">
         <div className="relative aspect-square w-full min-w-0">
           {/* Arcs (flex-1, bottom-aligned) then pendant flush underneath — no percentage gap */}
-          <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col [--preview-half-overlap:38px] sm:[--preview-half-overlap:45px]">
+          <div className="pointer-events-none absolute inset-x-0 top-[1%] bottom-[2%] z-10 flex flex-col [--preview-half-overlap:38px] [--preview-pendant-nudge-x:2.5px]">
             <div className="relative z-20 flex min-h-0 flex-1 flex-row items-end justify-center gap-0">
               <div className="relative -mr-px flex h-full min-h-0 shrink-0 flex-col justify-end overflow-visible">
                 {leftInstances.map((inst, i) => {
@@ -456,7 +456,7 @@ export function BuilderEditor({
               </div>
             </div>
             {pendantInstances.length > 0 ? (
-              <div className="relative z-10 flex w-full shrink-0 justify-center">
+              <div className="relative z-10 flex w-full shrink-0 justify-center translate-x-[var(--preview-pendant-nudge-x)]">
                 <div
                   className="relative shrink-0 w-[5.5%] max-w-[19px] sm:max-w-[23px]"
                   style={{
