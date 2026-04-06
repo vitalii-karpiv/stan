@@ -6,6 +6,7 @@ import { formatPrice } from "@/lib/utils";
 import { ImageLightbox } from "@/components/admin/image-lightbox";
 import {
   manualOrderStatuses,
+  PaidBadge,
   statusLabels,
   StatusBadge,
 } from "@/components/admin/order-status";
@@ -92,8 +93,9 @@ export default async function OrderDetailPage({ params }: Props) {
           <h2 className="mt-5 text-sm font-medium text-muted-foreground">
             Статус
           </h2>
-          <div className="mt-2 flex flex-wrap items-center gap-2">
+          <div className="mt-2 flex flex-wrap items-center gap-3">
             <StatusBadge status={order.status} />
+            <PaidBadge paidAt={order.paidAt} />
           </div>
           {order.status === "AWAITING_PAYMENT" ? (
             <p className="mt-3 text-sm text-muted-foreground">

@@ -36,9 +36,32 @@ export const manualOrderStatuses: OrderStatus[] = [
 export function StatusBadge({ status }: { status: OrderStatus }) {
   return (
     <span
-      className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[status]}`}
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles[status]}`}
     >
       {statusLabels[status]}
+    </span>
+  );
+}
+
+const unpaidPaymentBadgeClass =
+  "bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-200";
+
+export function PaidBadge({ paidAt }: { paidAt: Date | null }) {
+  if (paidAt) {
+    return (
+      <span
+        className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${statusStyles.DELIVERED}`}
+      >
+        Оплачено
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className={`inline-block rounded-full px-2.5 py-1 text-xs font-medium ${unpaidPaymentBadgeClass}`}
+    >
+      Післяплата
     </span>
   );
 }
