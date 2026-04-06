@@ -4,16 +4,17 @@ import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
 import { ImageLightbox } from "@/components/admin/image-lightbox";
-import { statusLabels } from "@/components/admin/order-status";
+import {
+  manualOrderStatuses,
+  statusLabels,
+  StatusBadge,
+} from "@/components/admin/order-status";
 import { OrderShipmentNotifyForm } from "@/components/admin/order-shipment-notify-form";
 import { updateOrderStatus } from "./actions";
-import type { OrderStatus } from "@/generated/prisma";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
-
-const allStatuses = Object.keys(statusLabels) as OrderStatus[];
 
 export default async function OrderDetailPage({ params }: Props) {
   const { id } = await params;
@@ -91,26 +92,36 @@ export default async function OrderDetailPage({ params }: Props) {
           <h2 className="mt-5 text-sm font-medium text-muted-foreground">
             Статус
           </h2>
-          <form action={updateStatus} className="mt-2 flex items-center gap-2">
-            <select
-              key={order.status}
-              name="status"
-              defaultValue={order.status}
-              className="rounded border border-border bg-background px-3 py-1.5 text-sm outline-none focus:border-foreground"
-            >
-              {allStatuses.map((s) => (
-                <option key={s} value={s}>
-                  {statusLabels[s]}
-                </option>
-              ))}
-            </select>
-            <button
-              type="submit"
-              className="rounded bg-foreground px-3 py-1.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
-            >
-              Оновити
-            </button>
-          </form>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <StatusBadge status={order.status} />
+          </div>
+          {order.status === "AWAITING_PAYMENT" ? (
+            <p className="mt-3 text-sm text-muted-foreground">
+              Клієнт ще не завершив онлайн-оплату. Після успішної оплати статус
+              зміниться на «Очікує» автоматично.
+            </p>
+          ) : (
+            <form action={updateStatus} className="mt-3 flex items-center gap-2">
+              <select
+                key={order.status}
+                name="status"
+                defaultValue={order.status}
+                className="rounded border border-border bg-background px-3 py-1.5 text-sm outline-none focus:border-foreground"
+              >
+                {manualOrderStatuses.map((s) => (
+                  <option key={s} value={s}>
+                    {statusLabels[s]}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="submit"
+                className="rounded bg-foreground px-3 py-1.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+              >
+                Оновити
+              </button>
+            </form>
+          )}
 
           <h2 className="mt-5 text-sm font-medium text-muted-foreground">
             ТТН (Нова Пошта)

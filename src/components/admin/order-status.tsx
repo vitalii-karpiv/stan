@@ -1,6 +1,7 @@
 import type { OrderStatus } from "@/generated/prisma";
 
 export const statusLabels: Record<OrderStatus, string> = {
+  AWAITING_PAYMENT: "Очікує оплату",
   PENDING: "Очікує",
   CONFIRMED: "Підтверджено",
   SHIPPED: "Відправлено",
@@ -9,6 +10,8 @@ export const statusLabels: Record<OrderStatus, string> = {
 };
 
 export const statusStyles: Record<OrderStatus, string> = {
+  AWAITING_PAYMENT:
+    "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200",
   PENDING:
     "bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-200",
   CONFIRMED:
@@ -20,6 +23,15 @@ export const statusStyles: Record<OrderStatus, string> = {
   CANCELLED:
     "bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400",
 };
+
+/** Statuses the admin may set manually (not system-only). */
+export const manualOrderStatuses: OrderStatus[] = [
+  "PENDING",
+  "CONFIRMED",
+  "SHIPPED",
+  "DELIVERED",
+  "CANCELLED",
+];
 
 export function StatusBadge({ status }: { status: OrderStatus }) {
   return (

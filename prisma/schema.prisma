@@ -16,11 +16,17 @@ enum UserRole {
 }
 
 enum OrderStatus {
+  AWAITING_PAYMENT
   PENDING
   CONFIRMED
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum PaymentMethod {
+  COD
+  MONOBANK
 }
 
 enum OptionType {
@@ -146,10 +152,13 @@ model ProductImage {
 }
 
 model Order {
-  id              String      @id @default(uuid())
+  id              String         @id @default(uuid())
   userId          String
-  user            User        @relation(fields: [userId], references: [id])
-  status          OrderStatus @default(PENDING)
+  user            User           @relation(fields: [userId], references: [id])
+  status          OrderStatus    @default(PENDING)
+  paymentMethod   PaymentMethod  @default(COD)
+  monoInvoiceId   String?        @unique
+  paidAt          DateTime?
   totalInCents    Int
   shippingName       String
   shippingCity       String

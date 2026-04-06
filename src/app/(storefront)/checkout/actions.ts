@@ -8,6 +8,8 @@ import {
   notifyAdminsNewOrder,
   notifyCustomerOrderConfirmation,
 } from "@/lib/mail";
+import { createInvoice } from "@/lib/monobank/client";
+import { getAppBaseUrl } from "@/lib/monobank/base-url";
 import {
   checkoutSchema,
   type CheckoutFormState,
@@ -110,6 +112,17 @@ export async function placeOrderAction(
         shippingPostOffice: flat.shippingPostOffice?.[0],
         note: flat.note?.[0],
       },
+      values,
+    };
+  }
+
+  const paymentRaw = formData.get("paymentMethod");
+  const payMonobank = paymentRaw === "monobank";
+
+  if (payMonobank && !process.env.MONOBANK_TOKEN?.trim()) {
+    return {
+      message: "Онлайн-оплата тимчасово недоступна. Оберіть оплату при отриманні.",
+      fieldErrors: {},
       values,
     };
   }
@@ -291,6 +304,8 @@ export async function placeOrderAction(
     const order = await db.order.create({
       data: {
         userId: user.id,
+        status: payMonobank ? "AWAITING_PAYMENT" : "PENDING",
+        paymentMethod: payMonobank ? "MONOBANK" : "COD",
         totalInCents,
         shippingName: parsed.data.name,
         shippingCity: parsed.data.shippingCity,
@@ -302,29 +317,67 @@ export async function placeOrderAction(
 
     orderId = order.id;
 
-    notifyAdminsNewOrder({
-      id: order.id,
-      customerName: parsed.data.name,
-      customerEmail: parsed.data.email,
-      totalInCents,
-      itemCount: orderItems.length,
-    }).catch(() => {});
+    if (!payMonobank) {
+      notifyAdminsNewOrder({
+        id: order.id,
+        customerName: parsed.data.name,
+        customerEmail: parsed.data.email,
+        totalInCents,
+        itemCount: orderItems.length,
+      }).catch(() => {});
 
-    notifyCustomerOrderConfirmation({
-      orderId: order.id,
-      customerName: parsed.data.name,
-      customerEmail: parsed.data.email,
-      totalInCents,
-      itemCount: orderItems.reduce((sum, i) => sum + i.quantity, 0),
-      shippingCity: parsed.data.shippingCity,
-      shippingPostOffice: parsed.data.shippingPostOffice,
-    }).catch(() => {});
+      notifyCustomerOrderConfirmation({
+        orderId: order.id,
+        customerName: parsed.data.name,
+        customerEmail: parsed.data.email,
+        totalInCents,
+        itemCount: orderItems.reduce((sum, i) => sum + i.quantity, 0),
+        shippingCity: parsed.data.shippingCity,
+        shippingPostOffice: parsed.data.shippingPostOffice,
+      }).catch(() => {});
+    }
   } catch {
     return {
       message: "Не вдалося створити замовлення. Спробуйте ще раз.",
       fieldErrors: {},
       values,
     };
+  }
+
+  if (payMonobank) {
+    const base = getAppBaseUrl();
+    let monobankPageUrl: string;
+    try {
+      const { invoiceId, pageUrl } = await createInvoice({
+        amount: totalInCents,
+        redirectUrl: `${base}/checkout/payment/return?order=${orderId}`,
+        webHookUrl: `${base}/api/webhooks/monobank`,
+        merchantPaymInfo: {
+          reference: orderId,
+          destination: `Оплата замовлення ${orderId.slice(0, 8)}`,
+        },
+      });
+
+      await db.order.update({
+        where: { id: orderId },
+        data: { monoInvoiceId: invoiceId },
+      });
+
+      monobankPageUrl = pageUrl;
+    } catch (e) {
+      await db.order.delete({ where: { id: orderId } }).catch(() => {});
+      const detail = e instanceof Error ? e.message.trim() : "";
+      return {
+        message:
+          detail && detail.length < 240
+            ? `Не вдалося відкрити сторінку оплати: ${detail}. Спробуйте ще раз або оберіть оплату при отриманні.`
+            : "Не вдалося відкрити сторінку оплати. Спробуйте ще раз або оберіть оплату при отриманні.",
+        fieldErrors: {},
+        values,
+      };
+    }
+    // redirect() throws NEXT_REDIRECT — must not sit inside try/catch above
+    redirect(monobankPageUrl);
   }
 
   redirect(`/checkout/success?order=${orderId}`);

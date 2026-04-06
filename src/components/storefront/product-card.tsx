@@ -59,12 +59,12 @@ export function ProductCard({
         )}
       </div>
 
-      <div className="mt-3">
-        <h3 className="font-[family-name:var(--font-cormorant)] text-lg font-light">
+      <div className="mt-2">
+        <h3 className="font-[family-name:var(--font-cormorant)] text-lg font-light leading-tight">
           {title}
         </h3>
         {price > 0 && (
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1.5 text-sm text-muted-foreground">
             {formatPrice(price)}
           </p>
         )}

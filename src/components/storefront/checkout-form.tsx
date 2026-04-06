@@ -283,16 +283,15 @@ export function CheckoutForm() {
               </span>
             </label>
 
-            <label className="flex min-h-12 cursor-not-allowed touch-manipulation items-center gap-3 rounded border border-border bg-muted/50 px-3 py-3 opacity-60 sm:min-h-0 sm:px-4">
+            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-border bg-background px-3 py-3 sm:min-h-0 sm:px-4">
               <input
                 type="radio"
                 name="paymentMethod"
-                value="online"
-                disabled
-                className="h-5 w-5 shrink-0 sm:h-4 sm:w-4"
+                value="monobank"
+                className="h-5 w-5 shrink-0 accent-foreground sm:h-4 sm:w-4"
               />
               <span className="text-base leading-snug sm:text-sm">
-                Онлайн оплата (скоро)
+                Онлайн оплата (карта, Apple Pay, Google Pay)
               </span>
             </label>
           </fieldset>
