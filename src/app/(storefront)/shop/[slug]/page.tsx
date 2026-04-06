@@ -52,7 +52,7 @@ export default async function ProductPage({ params }: Props) {
     take: 4,
     orderBy: { createdAt: "desc" },
     include: {
-      images: { orderBy: { sortOrder: "asc" }, take: 1 },
+      images: { orderBy: { sortOrder: "asc" }, take: 2 },
     },
   });
 
@@ -167,6 +167,8 @@ export default async function ProductPage({ params }: Props) {
                   slug={p.slug}
                   imageUrl={p.images[0]?.url ?? null}
                   imageAlt={p.images[0]?.alt ?? null}
+                  secondImageUrl={p.images[1]?.url ?? null}
+                  secondImageAlt={p.images[1]?.alt ?? null}
                   price={p.price}
                 />
               </div>

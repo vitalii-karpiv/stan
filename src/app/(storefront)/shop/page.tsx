@@ -55,7 +55,7 @@ export default async function ShopPage({
       where,
       orderBy: { price: filters.sort === "desc" ? "desc" : "asc" },
       include: {
-        images: { orderBy: { sortOrder: "asc" }, take: 1 },
+        images: { orderBy: { sortOrder: "asc" }, take: 2 },
       },
     }),
     db.category.findMany({ orderBy: { name: "asc" } }),
@@ -163,6 +163,8 @@ export default async function ShopPage({
               slug={product.slug}
               imageUrl={product.images[0]?.url ?? null}
               imageAlt={product.images[0]?.alt ?? null}
+              secondImageUrl={product.images[1]?.url ?? null}
+              secondImageAlt={product.images[1]?.alt ?? null}
               price={product.price}
             />
           ))}

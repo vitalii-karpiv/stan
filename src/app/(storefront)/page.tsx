@@ -23,7 +23,7 @@ export default async function HomePage() {
       take: 4,
       orderBy: { createdAt: "desc" },
       include: {
-        images: { orderBy: { sortOrder: "asc" }, take: 1 },
+        images: { orderBy: { sortOrder: "asc" }, take: 2 },
       },
     }),
   ]);
@@ -94,6 +94,8 @@ export default async function HomePage() {
                   slug={product.slug}
                   imageUrl={product.images[0]?.url ?? null}
                   imageAlt={product.images[0]?.alt ?? null}
+                  secondImageUrl={product.images[1]?.url ?? null}
+                  secondImageAlt={product.images[1]?.alt ?? null}
                   price={product.price}
                 />
               </div>
