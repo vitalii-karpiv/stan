@@ -103,7 +103,7 @@ function PendantPreviewLayer({
           src={src}
           alt=""
           fill
-          className="object-contain object-bottom drop-shadow-sm"
+          className="object-contain object-bottom"
           sizes="23px"
           unoptimized={src.endsWith(".svg")}
           loaderClassName="scale-[0.55]"
@@ -148,7 +148,7 @@ function CombinationPreviewMini({
                   src={leftSrc}
                   alt=""
                   fill
-                  className="object-contain object-right drop-shadow-sm"
+                  className="object-contain object-right"
                   sizes="(max-width: 640px) 128px, 160px"
                   unoptimized={leftSrc.endsWith(".svg")}
                 />
@@ -169,7 +169,7 @@ function CombinationPreviewMini({
                   src={rightSrc}
                   alt=""
                   fill
-                  className="object-contain object-left drop-shadow-sm"
+                  className="object-contain object-left"
                   sizes="(max-width: 640px) 128px, 160px"
                   unoptimized={rightSrc.endsWith(".svg")}
                 />
@@ -179,7 +179,7 @@ function CombinationPreviewMini({
         </div>
         <div className="relative z-10 flex w-full shrink-0 justify-center translate-x-[var(--preview-pendant-nudge-x)]">
           <div
-            className="relative w-[16%] max-w-[28px] shrink-0 sm:max-w-[32px]"
+            className="relative w-[8.5%] max-w-[16px] shrink-0 sm:max-w-[18px]"
             style={{
               aspectRatio: `${BUILDER_PREVIEW_INTRINSIC.PENDANT.width} / ${BUILDER_PREVIEW_INTRINSIC.PENDANT.height}`,
             }}
@@ -545,7 +545,7 @@ export function BuilderEditor({
   return (
     <div className="pt-10 space-y-8">
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4 !mb-0">
         <div>
           <p className="text-sm text-muted-foreground">Ціна</p>
           <p className="text-lg font-medium">{formatPrice(totalPrice)}</p>
@@ -595,7 +595,7 @@ export function BuilderEditor({
                           src={src}
                           alt=""
                           fill
-                          className="object-contain object-right drop-shadow-sm"
+                          className="object-contain object-right"
                           sizes="(max-width: 640px) 260px, 280px"
                           unoptimized={src.endsWith(".svg")}
                         />
@@ -634,7 +634,7 @@ export function BuilderEditor({
                           src={src}
                           alt=""
                           fill
-                          className="object-contain object-left drop-shadow-sm"
+                          className="object-contain object-left"
                           sizes="(max-width: 640px) 260px, 280px"
                           unoptimized={src.endsWith(".svg")}
                         />
