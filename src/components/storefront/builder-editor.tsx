@@ -179,7 +179,7 @@ function CombinationPreviewMini({
         </div>
         <div className="relative z-10 flex w-full shrink-0 justify-center translate-x-[var(--preview-pendant-nudge-x)]">
           <div
-            className="relative w-[8.5%] max-w-[16px] shrink-0 sm:max-w-[18px]"
+            className="relative w-[7%] max-w-[14px] shrink-0 sm:w-[8.5%] sm:max-w-[18px]"
             style={{
               aspectRatio: `${BUILDER_PREVIEW_INTRINSIC.PENDANT.width} / ${BUILDER_PREVIEW_INTRINSIC.PENDANT.height}`,
             }}
