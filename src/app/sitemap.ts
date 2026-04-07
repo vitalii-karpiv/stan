@@ -1,12 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { db } from "@/lib/db";
-
-function getSiteUrl() {
-  const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
-  if (!rawUrl) return "http://localhost:3000";
-  return rawUrl.replace(/\/+$/, "");
-}
+import { getSiteUrl } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();

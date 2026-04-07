@@ -1,13 +1,11 @@
 import type { MetadataRoute } from "next";
 
-function getSiteUrl() {
-  const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
-  if (!rawUrl) return null;
-  return rawUrl.replace(/\/+$/, "");
-}
+import { getSiteUrl } from "@/lib/site-url";
 
 export default function robots(): MetadataRoute.Robots {
   const siteUrl = getSiteUrl();
+  const hasEnv =
+    Boolean(process.env.NEXT_PUBLIC_SITE_URL) || Boolean(process.env.SITE_URL);
 
   return {
     rules: [
@@ -17,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/admin", "/admin/", "/api/", "/_next/"],
       },
     ],
-    sitemap: siteUrl ? `${siteUrl}/sitemap.xml` : undefined,
-    host: siteUrl ?? undefined,
+    sitemap: hasEnv ? `${siteUrl}/sitemap.xml` : undefined,
+    host: hasEnv ? siteUrl : undefined,
   };
 }
