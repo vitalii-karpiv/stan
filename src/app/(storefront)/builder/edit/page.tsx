@@ -24,7 +24,7 @@ export default async function BuilderEditPage({
     redirect("/builder");
   }
 
-  const [collection, category, anchorProduct, parts] = await Promise.all([
+  const [collection, category, anchorProduct, parts, builderColors] = await Promise.all([
     db.collection.findFirst({
       where: { slug: collectionSlug, supportsBuilder: true },
       select: { id: true, name: true, slug: true, imageUrl: true },
@@ -51,6 +51,11 @@ export default async function BuilderEditPage({
         price: true,
         kind: true,
       },
+    }),
+    db.builderColor.findMany({
+      where: { collection: { slug: collectionSlug } },
+      orderBy: [{ sortOrder: "asc" }, { value: "asc" }],
+      select: { value: true },
     }),
   ]);
 
@@ -92,6 +97,7 @@ export default async function BuilderEditPage({
         collectionImageUrl={collection.imageUrl}
         anchorProductId={anchorProduct.id}
         parts={parts}
+        colorOptions={builderColors.map((c) => c.value)}
       />
     </div>
   );

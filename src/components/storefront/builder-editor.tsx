@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ImageWithLoader } from "@/components/image-with-loader";
 import { ChevronDown, Minus, Plus } from "lucide-react";
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import type { BuilderPartKind } from "@/generated/prisma";
 import {
@@ -16,6 +16,7 @@ import { BUILDER_PART_KIND_LABELS } from "@/lib/builder-part-kinds";
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { AttributeGroup } from "@/components/storefront/option-picker";
 
 export type BuilderPartOption = {
   id: string;
@@ -309,6 +310,7 @@ type BuilderEditorProps = {
   collectionImageUrl: string | null;
   anchorProductId: string;
   parts: BuilderPartOption[];
+  colorOptions: string[];
 };
 
 export function BuilderEditor({
@@ -319,9 +321,13 @@ export function BuilderEditor({
   collectionImageUrl,
   anchorProductId,
   parts,
+  colorOptions,
 }: BuilderEditorProps) {
   const router = useRouter();
   const { addItem } = useCart();
+  const colorSectionRef = useRef<HTMLDivElement>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [colorHighlight, setColorHighlight] = useState(false);
 
   const [instances, setInstances] = useState<Instance[]>(() => [
     { clientId: newClientId(), kind: "LEFT_HALF", selectedPartId: null },
@@ -391,6 +397,9 @@ export function BuilderEditor({
     () => instances.every((i) => Boolean(i.selectedPartId)),
     [instances],
   );
+
+  const colorRequired = colorOptions.length > 0;
+  const canAddToCart = allPartsSelected && (!colorRequired || selectedColor !== null);
 
   const canAddLeft =
     countKind(instances, "LEFT_HALF") < MAX_BUILDER_LEFT_INSTANCES;
@@ -485,7 +494,15 @@ export function BuilderEditor({
   }, [activeInstance.clientId]);
 
   const handleAddToCart = useCallback(() => {
-    if (!instances.every((i) => i.selectedPartId)) {
+    if (!allPartsSelected) return;
+
+    if (colorRequired && selectedColor === null) {
+      colorSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setColorHighlight(true);
+      setTimeout(() => setColorHighlight(false), 1500);
       return;
     }
 
@@ -517,7 +534,7 @@ export function BuilderEditor({
         firstWithPreview?.previewImageUrl ||
         firstWithPreview?.selectorImageUrl ||
         null,
-      material: null,
+      material: selectedColor,
       size: null,
       gemstone: null,
       pendant: null,
@@ -532,10 +549,13 @@ export function BuilderEditor({
     router.push("/shop");
   }, [
     addItem,
+    allPartsSelected,
     anchorProductId,
+    colorRequired,
     instances,
     partById,
     router,
+    selectedColor,
     totalPrice,
     collectionSlug,
     categorySlug,
@@ -554,11 +574,36 @@ export function BuilderEditor({
           type="button"
           onClick={handleAddToCart}
           disabled={!allPartsSelected}
-          className="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 aria-disabled:opacity-40"
         >
           Додати до кошика
         </button>
       </div>
+
+      {colorOptions.length > 0 && (
+        <div
+          ref={colorSectionRef}
+          className={`rounded-md border px-4 py-3 transition-all duration-300 ${
+            colorHighlight
+              ? "border-amber-500 ring-2 ring-amber-500/40"
+              : selectedColor
+                ? "border-border"
+                : "border-border"
+          }`}
+        >
+          <AttributeGroup
+            label="Колір"
+            options={colorOptions}
+            selected={selectedColor}
+            onSelect={setSelectedColor}
+          />
+          {colorHighlight && (
+            <p className="mt-2 text-xs font-medium text-amber-600 dark:text-amber-400">
+              Будь ласка, оберіть колір перед додаванням до кошика.
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="mx-auto w-full max-w-[280px] space-y-4 sm:max-w-sm">
         <div className="relative aspect-square w-full min-w-0">

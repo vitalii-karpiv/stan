@@ -92,6 +92,18 @@ model Collection {
   supportsBuilder  Boolean             @default(false)
   products         ProductCollection[]
   builderParts     BuilderPart[]
+  builderColors    BuilderColor[]
+}
+
+model BuilderColor {
+  id           String     @id @default(uuid())
+  value        String
+  sortOrder    Int        @default(0)
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, value])
+  @@index([collectionId])
 }
 
 model Product {

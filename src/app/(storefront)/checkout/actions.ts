@@ -248,7 +248,7 @@ export async function placeOrderAction(
         quantity: item.quantity,
         price: linePrice,
         size: null,
-        material: null,
+        material: item.material,
         gemstone: null,
         pendant: null,
         builderPartIds: ids,

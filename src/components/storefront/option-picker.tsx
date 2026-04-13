@@ -165,7 +165,7 @@ function PendantGroup({
   );
 }
 
-function AttributeGroup({
+export function AttributeGroup({
   label,
   options,
   selected,

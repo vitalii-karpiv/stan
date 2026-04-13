@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CollectionForm } from "@/components/admin/collection-form";
+import { BuilderColors } from "@/components/admin/builder-colors";
 import { db } from "@/lib/db";
 
 type Props = {
@@ -19,6 +20,10 @@ export default async function EditCollectionPage({ params }: Props) {
       slug: true,
       imageUrl: true,
       supportsBuilder: true,
+      builderColors: {
+        orderBy: [{ sortOrder: "asc" }, { value: "asc" }],
+        select: { id: true, value: true },
+      },
     },
   });
 
@@ -42,6 +47,13 @@ export default async function EditCollectionPage({ params }: Props) {
       </div>
 
       <CollectionForm collection={collection} />
+
+      {collection.supportsBuilder && (
+        <BuilderColors
+          collectionId={collection.id}
+          colors={collection.builderColors}
+        />
+      )}
     </div>
   );
 }
