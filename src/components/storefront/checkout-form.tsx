@@ -344,11 +344,11 @@ function SummaryRow({
   item,
   onUpdateQuantity,
   onRemove,
-}: {
+}: Readonly<{
   item: CartItem;
   onUpdateQuantity: (key: string, quantity: number) => void;
   onRemove: (key: string) => void;
-}) {
+}>) {
   const key = cartItemKey(item);
   const attrs = [item.material, item.size, item.gemstone]
     .filter(Boolean)
