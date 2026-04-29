@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { formatPrice } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 const imageSizes =
   "(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw";
@@ -14,6 +14,9 @@ type ProductCardProps = {
   price: number;
   secondImageUrl?: string | null;
   secondImageAlt?: string | null;
+  className?: string;
+  titleClassName?: string;
+  priceClassName?: string;
 };
 
 export function ProductCard({
@@ -24,12 +27,18 @@ export function ProductCard({
   price,
   secondImageUrl = null,
   secondImageAlt = null,
+  className,
+  titleClassName,
+  priceClassName,
 }: ProductCardProps) {
   const secondSrc =
     imageUrl && secondImageUrl ? secondImageUrl : null;
 
   return (
-    <Link href={`/shop/${slug}`} className="group block">
+    <Link
+      href={`/shop/${slug}`}
+      className={cn("group block", className)}
+    >
       <div className="relative aspect-[3/4] overflow-hidden">
         {imageUrl ? (
           <>
@@ -60,11 +69,21 @@ export function ProductCard({
       </div>
 
       <div className="mt-2">
-        <h3 className="font-[family-name:var(--font-cormorant)] text-lg font-light leading-tight">
+        <h3
+          className={cn(
+            "font-[family-name:var(--font-cormorant)] text-lg font-light leading-tight",
+            titleClassName,
+          )}
+        >
           {title}
         </h3>
         {price > 0 && (
-          <p className="mt-1.5 text-sm text-muted-foreground">
+          <p
+            className={cn(
+              "mt-1.5 text-sm text-muted-foreground",
+              priceClassName,
+            )}
+          >
             {formatPrice(price)}
           </p>
         )}
