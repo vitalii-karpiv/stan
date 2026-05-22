@@ -12,6 +12,8 @@
 
   --font-sans: var(--font-inter);
   --font-serif: var(--font-cormorant);
+  --font-display: var(--font-muller-wide);
+  --font-quote: var(--font-kosko);
 }
 
 body {
