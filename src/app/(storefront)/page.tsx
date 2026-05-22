@@ -31,21 +31,26 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
-        <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light tracking-tight md:text-6xl">
-          ПРИКРАСИ-КОНСТРУКТОРИ
-        </h1>
-        <p className="mt-4 max-w-md text-sm text-muted-foreground sm:text-base md:text-lg">
-          Коли прикраса перестає бути просто аксесуаром і стає
-          маленьким ритуалом щоденного самовираження.
-        </p>
-        <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link href="/shop" className={heroCtaClassName}>
-            Каталог
-          </Link>
-          <Link href="/builder" className={heroCtaClassName}>
-            Конструктор
-          </Link>
+      <section
+        className="relative isolate flex min-h-[70vh] flex-col items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-6 text-center before:absolute before:inset-0 before:-z-10 before:bg-white/45"
+        style={{ backgroundImage: "url('/main-background.png')" }}
+      >
+        <div className="max-w-3xl">
+          <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light tracking-tight md:text-6xl">
+            ПРИКРАСИ-КОНСТРУКТОРИ
+          </h1>
+          <p className="mx-auto mt-4 max-w-md text-sm text-muted-foreground sm:text-base md:text-lg">
+            Коли прикраса перестає бути просто аксесуаром і стає
+            маленьким ритуалом щоденного самовираження.
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-4">
+            <Link href="/shop" className={heroCtaClassName}>
+              Каталог
+            </Link>
+            <Link href="/builder" className={heroCtaClassName}>
+              Конструктор
+            </Link>
+          </div>
         </div>
       </section>
 
