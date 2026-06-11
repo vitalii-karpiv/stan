@@ -231,9 +231,9 @@ export default async function HomePage() {
         <Image
           src="/home-builder-preview.png"
           alt="Конструктор прикрас Stan"
-          width={1116}
-          height={785}
-          className="mt-8 h-auto w-full overflow-hidden rounded-xl border border-border"
+          width={2595}
+          height={1602}
+          className="mt-6 h-auto w-full"
           sizes="(max-width: 1280px) 100vw, 1216px"
           priority
         />
