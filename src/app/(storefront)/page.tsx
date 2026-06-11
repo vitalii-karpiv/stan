@@ -228,20 +228,15 @@ export default async function HomePage() {
         <h2 className={`${headingClassName} text-2xl md:text-3xl`}>
           Створюй власну прикрасу
         </h2>
-        <Link
-          href="/builder"
-          className="mt-8 block overflow-hidden rounded-xl border border-border"
-        >
-          <Image
-            src="/home-builder-preview.png"
-            alt="Конструктор прикрас Stan"
-            width={1116}
-            height={785}
-            className="h-auto w-full"
-            sizes="(max-width: 1280px) 100vw, 1216px"
-            priority
-          />
-        </Link>
+        <Image
+          src="/home-builder-preview.png"
+          alt="Конструктор прикрас Stan"
+          width={1116}
+          height={785}
+          className="mt-8 h-auto w-full overflow-hidden rounded-xl border border-border"
+          sizes="(max-width: 1280px) 100vw, 1216px"
+          priority
+        />
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/builder">Конструктор</ButtonLink>
         </div>
@@ -255,7 +250,7 @@ export default async function HomePage() {
           </h2>
           <Link
             href="/shop"
-            className="shrink-0 text-sm text-brand underline-offset-4 hover:underline"
+            className="shrink-0 text-sm text-brand underline underline-offset-4"
           >
             Перейти до каталогу
           </Link>
@@ -343,7 +338,7 @@ export default async function HomePage() {
         </h2>
         <div className="mt-10 grid gap-10 lg:grid-cols-3">
           <div>
-            <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-accent">
+            <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
               Носіння
             </h3>
             <p className="mt-4 leading-relaxed text-brand/80">
@@ -372,7 +367,7 @@ export default async function HomePage() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-accent">
+              <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
                 Зберігання
               </h3>
               <p className="mt-4 leading-relaxed text-brand/80">
@@ -382,7 +377,7 @@ export default async function HomePage() {
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-medium uppercase tracking-[0.2em] text-accent">
+              <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
                 Догляд
               </h3>
               <p className="mt-4 leading-relaxed text-brand/80">
