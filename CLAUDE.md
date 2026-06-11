@@ -17,11 +17,12 @@ npm run db:migrate   # Run migrations
 npm run db:studio    # Open Prisma Studio GUI
 
 # Seeding
-npm run db:seed:admin       # Create admin user
-npm run db:seed:categories  # Seed default categories
+npm run db:seed:admin          # Create admin user
+npm run db:seed:categories     # Seed default categories
+npm run db:seed:builder-anchor # Seed the builder anchor product
 ```
 
-No test runner configured.
+No test runner configured. Default local admin: `admin@stan.com` / `1234`. Local Postgres via `docker compose up -d`.
 
 ## Architecture
 
@@ -38,7 +39,10 @@ Single Next.js 16 app (App Router + Server Actions). Ukrainian jewelry e-commerc
 - `src/lib/` — shared utilities: `db.ts` (Prisma singleton), `s3.ts` (AWS uploads), `mail.ts` (Nodemailer), `cart.tsx` (client-side cart context), `monobank/` (payment client + webhook), `validations/` (Zod schemas)
 - `src/components/storefront/` — customer-facing components
 - `src/components/admin/` — admin CRUD components
+- `src/components/ui/` — shared UI primitives used by both storefront and admin
 - `prisma/schema.prisma` — full DB schema
+
+> **Gotcha:** the Prisma client is generated to `src/generated/prisma` (set via the schema's `generator.output`), **not** `node_modules/@prisma/client`. Import it as `import { PrismaClient } from "@/generated/prisma"` — see `src/lib/db.ts`. `postinstall` runs `prisma generate`; if types go missing after a schema change, re-run it.
 
 ### Data Flow
 
@@ -53,8 +57,8 @@ Custom feature for combining builder parts (LEFT_HALF / RIGHT_HALF / PENDANT) wi
 
 ### Payment & Shipping
 
-- **Monobank** — Ukrainian payment gateway, invoice creation + webhook verification (`src/lib/monobank/`)
-- **Nova Poshta** — Ukrainian shipping API, post office ComboBox in checkout (`src/components/storefront/np-combobox.tsx`)
+- **Monobank** — Ukrainian payment gateway, invoice creation + webhook verification (`src/lib/monobank/`). Webhook handler at `src/app/api/webhooks/monobank/`
+- **Nova Poshta** — Ukrainian shipping API, post office ComboBox in checkout (`src/components/storefront/np-combobox.tsx`); city/warehouse lookups proxied through `src/app/api/nova-poshta/`
 - **COD** — cash on delivery fallback
 
 ### Enums (from Prisma schema)
@@ -74,6 +78,10 @@ Custom feature for combining builder parts (LEFT_HALF / RIGHT_HALF / PENDANT) wi
 - **NextAuth v5** (JWT strategy)
 - **Zod v4** for validation
 - **Vercel** deployment (Analytics + Speed Insights included)
+
+## Storefront Design Conventions
+
+The storefront language is **Ukrainian** (`lang="uk"`). When working on storefront UI, follow the design outlines in `.cursor/rules/stan-design-outlines.mdc` and `docs/figma-style-guide.md` (typography roles, brand dark `#4C2F1F`, accent `#F26C23`). Do not hardcode ad hoc hex/font-family values — extend `src/app/globals.css` and the layout font loading instead. Note: the Figma spec targets Muller/Montserrat/Kosko, but `src/app/layout.tsx` currently loads Inter + Cormorant Garamond (migration pending).
 
 ## Path Alias
 
