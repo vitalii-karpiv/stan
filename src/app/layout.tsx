@@ -1,13 +1,19 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
+import { Inter, Cormorant_Garamond, Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin", "cyrillic"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600"],
 });
 
 const cormorant = Cormorant_Garamond({
@@ -56,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body
-        className={`${inter.variable} ${cormorant.variable} ${mullerNextWide.variable} ${kosko.variable} antialiased`}
+        className={`${inter.variable} ${montserrat.variable} ${cormorant.variable} ${mullerNextWide.variable} ${kosko.variable} antialiased`}
       >
         {children}
         <Analytics />
