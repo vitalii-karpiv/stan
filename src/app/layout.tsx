@@ -60,10 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="uk">
-      <body
-        className={`${inter.variable} ${montserrat.variable} ${cormorant.variable} ${mullerNextWide.variable} ${kosko.variable} antialiased`}
-      >
+    <html
+      lang="uk"
+      className={`${inter.variable} ${montserrat.variable} ${cormorant.variable} ${mullerNextWide.variable} ${kosko.variable}`}
+    >
+      <body className="antialiased">
         {children}
         <Analytics />
         <SpeedInsights />
