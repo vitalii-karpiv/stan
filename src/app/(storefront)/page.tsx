@@ -205,7 +205,7 @@ export default async function HomePage() {
     <div className="bg-[#fffefd]">
       {/* Hero */}
       <section
-        className="relative isolate overflow-hidden bg-cover bg-center bg-no-repeat px-6 py-20 text-center md:py-28"
+        className="relative isolate flex min-h-[80vh] items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-6 py-20 text-center"
         style={{ backgroundImage: "url('/main-background.png')" }}
       >
         <div className="relative mx-auto max-w-3xl">
