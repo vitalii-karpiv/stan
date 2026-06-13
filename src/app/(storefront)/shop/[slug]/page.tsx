@@ -7,6 +7,9 @@ import { ProductImageGallery } from "@/components/storefront/product-image-galle
 import { OptionPicker } from "@/components/storefront/option-picker";
 import { ProductCard } from "@/components/storefront/product-card";
 
+const headingClassName =
+  "font-[family-name:var(--font-display)] font-[750] uppercase text-brand";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -89,7 +92,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Right — info */}
         <div className="space-y-6">
-          <h1 className="font-[family-name:var(--font-cormorant)] text-3xl font-light md:text-4xl">
+          <h1 className="font-sans text-2xl font-semibold tracking-tight text-brand md:text-3xl">
             {product.title}
           </h1>
 
@@ -109,37 +112,37 @@ export default async function ProductPage({ params }: Props) {
           />
 
           {showMaterialBlock && (
-            <div className="space-y-3 border-t border-border pt-4">
+            <div className="space-y-4 pt-2">
               {materialText && (
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">Матеріал: </span>
-                  <span className="whitespace-pre-line break-words">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">Матеріал:</p>
+                  <p className="whitespace-pre-line break-words text-sm text-muted-foreground">
                     {materialText.replace(/\\n/g, "\n")}
-                  </span>
-                </p>
+                  </p>
+                </div>
               )}
               {jewelryLengthText && (
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">
-                    Довжина прикраси:{" "}
-                  </span>
-                  <span className="whitespace-pre-line break-words">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Довжина прикраси:
+                  </p>
+                  <p className="whitespace-pre-line break-words text-sm text-muted-foreground">
                     {jewelryLengthText.replace(/\\n/g, "\n")}
-                  </span>
-                </p>
+                  </p>
+                </div>
               )}
             </div>
           )}
 
           {collections.length > 0 && (
-            <div className="border-t border-border pt-6">
-              <p className="mb-2 text-sm font-medium">Колекції</p>
+            <div className="pt-2">
+              <p className="mb-2 text-sm font-medium text-foreground">Колекція</p>
               <div className="flex flex-wrap gap-2">
                 {collections.map((c) => (
                   <Link
                     key={c.id}
                     href={`/shop?collection=${c.slug}`}
-                    className="border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
+                    className="rounded-md border border-border px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
                   >
                     {c.name}
                   </Link>
@@ -153,8 +156,8 @@ export default async function ProductPage({ params }: Props) {
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="mt-12">
-          <h2 className="font-[family-name:var(--font-cormorant)] text-2xl font-light">
-            Вам також може сподобатись
+          <h2 className={`${headingClassName} text-xl md:text-2xl`}>
+            Обирайте додаткову половинку
           </h2>
           <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
             {relatedProducts.map((p) => (

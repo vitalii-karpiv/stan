@@ -64,7 +64,7 @@ export function ProductCard({
           {title}
         </h3>
         {price > 0 && (
-          <p className="mt-1.5 font-sans text-lg font-semibold text-brand">
+          <p className="mt-1.5 font-sans text-lg font-semibold uppercase text-brand">
             {formatPrice(price)}
           </p>
         )}

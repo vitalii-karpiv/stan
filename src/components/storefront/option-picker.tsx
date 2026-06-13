@@ -107,15 +107,15 @@ export function OptionPicker({
         />
       )}
 
-      <p className="font-[family-name:var(--font-cormorant)] text-2xl font-light">
+      <p className="font-sans text-xl font-semibold uppercase text-brand">
         {formatPrice(price)}
       </p>
 
       <button
         onClick={handleAdd}
-        className="w-full bg-accent py-3 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
+        className="w-full rounded-xl bg-accent py-3.5 text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90"
       >
-        Додати до кошика
+        Додати в кошик
       </button>
     </div>
   );
@@ -134,7 +134,7 @@ function PendantGroup({
 }) {
   return (
     <div>
-      <p className="mb-2 text-sm font-medium">{label}</p>
+      <p className="mb-2 text-sm font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = selected === option;
@@ -143,7 +143,7 @@ function PendantGroup({
               key={option}
               type="button"
               onClick={() => onSelect(isActive ? null : option)}
-              className={`relative h-14 w-14 overflow-hidden border transition-colors ${
+              className={`relative h-14 w-14 overflow-hidden rounded-md border transition-colors ${
                 isActive
                   ? "border-foreground ring-1 ring-foreground"
                   : "border-border hover:border-foreground"
@@ -178,7 +178,7 @@ function AttributeGroup({
 }) {
   return (
     <div>
-      <p className="mb-2 text-sm font-medium">{label}</p>
+      <p className="mb-2 text-sm font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = selected === option;
@@ -186,9 +186,9 @@ function AttributeGroup({
             <button
               key={option}
               onClick={() => onSelect(isActive ? null : option)}
-              className={`border px-4 py-1.5 text-sm transition-colors ${
+              className={`rounded-md border px-4 py-1.5 text-sm transition-colors ${
                 isActive
-                  ? "border-foreground bg-foreground text-background"
+                  ? "border-foreground bg-muted text-foreground"
                   : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
               }`}
             >
