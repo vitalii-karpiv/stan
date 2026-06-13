@@ -1,51 +1,45 @@
 import Image from "next/image";
 import Link from "next/link";
 
-type CollectionCardProps = {
+type CollectionCardProps = Readonly<{
   name: string;
   slug: string;
   imageUrl: string | null;
-  productCount: number;
-};
+  instructionHref?: string;
+}>;
 
 export function CollectionCard({
   name,
   slug,
   imageUrl,
-  productCount,
+  instructionHref,
 }: CollectionCardProps) {
   return (
-    <Link
-      href={`/shop?collection=${slug}`}
-      className="group relative block aspect-[4/5] overflow-hidden"
-    >
-      {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt={name}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted-foreground/20 transition-opacity duration-500 group-hover:opacity-90" />
-      )}
+    <div className="group block">
+      <Link
+        href={`/shop?collection=${encodeURIComponent(slug)}`}
+        className="relative block aspect-4/5 overflow-hidden"
+        aria-label={name}
+      >
+        {imageUrl ? (
+          <Image
+            src={imageUrl}
+            alt={name}
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-linear-to-br from-muted to-muted-foreground/20" />
+        )}
+      </Link>
 
-      <div className="absolute inset-0 bg-black/20 transition-opacity duration-300 group-hover:bg-black/30" />
-
-      <div className="absolute inset-x-0 bottom-0 p-6">
-        <h3 className="font-[family-name:var(--font-cormorant)] text-2xl font-light text-white">
-          {name}
-        </h3>
-        <p className="mt-1 text-sm text-white/70">
-          {productCount}{" "}
-          {productCount === 1
-            ? "виріб"
-            : productCount >= 2 && productCount <= 4
-              ? "вироби"
-              : "виробів"}
-        </p>
-      </div>
-    </Link>
+      <Link
+        href={instructionHref ?? "#"}
+        className="mt-3 block text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
+      >
+        Інструкція
+      </Link>
+    </div>
   );
 }
