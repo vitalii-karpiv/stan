@@ -3,6 +3,9 @@ import { BuilderSetup } from "@/components/storefront/builder-setup";
 
 export const metadata = { title: "Конструктор" };
 
+const headingClassName =
+  "font-[family-name:var(--font-display)] font-[750] uppercase text-brand";
+
 export default async function BuilderPage() {
   const [collections, categories] = await Promise.all([
     db.collection.findMany({
@@ -14,8 +17,10 @@ export default async function BuilderPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-lg px-6 py-10">
-      <h1 className="text-center font-[family-name:var(--font-cormorant)] text-4xl font-light lowercase tracking-tight text-foreground">
+    <div className="mx-auto max-w-5xl px-6 py-10">
+      <h1
+        className={`${headingClassName} text-center text-3xl tracking-tight md:text-[40px]`}
+      >
         Конструктор
       </h1>
 

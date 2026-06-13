@@ -41,47 +41,47 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
   }
 
   return (
-    <div className="mt-10 space-y-10">
+    <div className="mt-10 space-y-12">
       <section>
-        <h2 className="text-center text-sm font-medium text-foreground/80">
+        <h2 className="text-center font-sans text-lg font-medium text-foreground md:text-xl">
           Обери колекцію
         </h2>
-        <div className="mt-4 flex snap-x snap-mandatory justify-center gap-3 overflow-x-auto pb-1 sm:gap-4">
+        <div className="mt-6 flex flex-wrap justify-center gap-4 sm:gap-6">
           {collections.map((c) => {
             const selected = collectionSlug === c.slug;
             return (
               <div
                 key={c.id}
-                className="w-[42%] max-w-[200px] shrink-0 snap-start sm:w-[min(200px,40vw)]"
+                className="w-[44%] max-w-[220px] sm:w-[200px]"
               >
                 <button
                   type="button"
                   onClick={() => setCollectionSlug(c.slug)}
-                  className={`relative aspect-square w-full overflow-hidden rounded-md border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                  className={`relative block aspect-4/5 w-full overflow-hidden rounded-md border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                     selected
                       ? "border-foreground ring-2 ring-foreground/20"
                       : "border-border hover:border-foreground/30"
                   }`}
+                  aria-pressed={selected}
                 >
                   {c.imageUrl ? (
                     <Image
                       src={c.imageUrl}
-                      alt=""
+                      alt={c.name}
                       fill
-                      sizes="200px"
+                      sizes="(max-width: 640px) 44vw, 200px"
                       className="object-cover"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-muted to-muted-foreground/15" />
+                    <div className="absolute inset-0 bg-linear-to-br from-muted to-muted-foreground/15" />
                   )}
                 </button>
-                <p
-                  className={`mt-2 text-center text-xs ${
-                    selected ? "font-medium text-foreground" : "text-muted-foreground"
-                  }`}
+                <Link
+                  href={`/collections/${encodeURIComponent(c.slug)}`}
+                  className="mt-3 block text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
                 >
-                  {c.name}
-                </p>
+                  Інструкція
+                </Link>
               </div>
             );
           })}
@@ -89,10 +89,10 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
       </section>
 
       <section>
-        <h2 className="text-center text-sm font-medium text-foreground/80">
+        <h2 className="text-center font-sans text-lg font-medium text-foreground md:text-xl">
           Обери вид прикраси
         </h2>
-        <div className="mt-4 flex flex-wrap justify-center gap-2 sm:gap-3">
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
           {categories.map((cat) => {
             const selected = categorySlug === cat.slug;
             return (
@@ -100,10 +100,10 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
                 key={cat.id}
                 type="button"
                 onClick={() => setCategorySlug(cat.slug)}
-                className={`rounded-md border px-4 py-2.5 text-sm italic text-muted-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+                className={`rounded-md border px-4 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
                   selected
-                    ? "border-foreground bg-muted/40 text-foreground"
-                    : "border-border hover:border-foreground/40"
+                    ? "border-foreground bg-muted text-foreground"
+                    : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
                 }`}
               >
                 {cat.name}
@@ -113,18 +113,18 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
         </div>
       </section>
 
-      <div className="pt-2">
+      <div className="flex justify-center pt-2">
         {canContinue ? (
           <Link
             href={continueHref}
-            className="block w-full rounded-md bg-accent py-3.5 text-center text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center rounded-xl bg-accent px-10 py-3 font-sans text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90"
           >
             Продовжити
           </Link>
         ) : (
           <span
             aria-disabled
-            className="block w-full cursor-not-allowed rounded-md bg-accent/40 py-3.5 text-center text-sm font-medium italic text-accent-foreground/70"
+            className="inline-flex cursor-not-allowed items-center justify-center rounded-xl bg-accent/40 px-10 py-3 font-sans text-base font-extrabold text-accent-foreground/70"
           >
             Продовжити
           </span>
