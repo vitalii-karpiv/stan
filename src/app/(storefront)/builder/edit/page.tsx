@@ -7,6 +7,9 @@ import { db } from "@/lib/db";
 
 export const metadata = { title: "Конструктор — збірка" };
 
+const headingClassName =
+  "font-[family-name:var(--font-display)] font-[750] uppercase text-brand";
+
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
 export default async function BuilderEditPage({
@@ -66,7 +69,7 @@ export default async function BuilderEditPage({
             ← Назад до вибору
           </Link>
         </p>
-        <h1 className="mt-6 font-[family-name:var(--font-cormorant)] text-4xl font-light">
+        <h1 className={`${headingClassName} mt-6 text-3xl tracking-tight md:text-[40px]`}>
           Конструктор
         </h1>
         <p className="mt-4 text-sm text-muted-foreground">
@@ -80,7 +83,9 @@ export default async function BuilderEditPage({
 
   return (
     <div className="mx-auto max-w-lg px-6 py-10 md:max-w-2xl md:px-8 lg:max-w-4xl xl:max-w-6xl">
-      <h1 className="text-center font-[family-name:var(--font-cormorant)] text-4xl font-light lowercase tracking-tight text-foreground">
+      <h1
+        className={`${headingClassName} text-center text-3xl tracking-tight md:text-[40px]`}
+      >
         Конструктор
       </h1>
 

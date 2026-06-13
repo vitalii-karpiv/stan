@@ -6,6 +6,13 @@ export const BUILDER_ASSEMBLY_SLUG = "builder-assembly";
 export const MAX_BUILDER_LEFT_INSTANCES = 3;
 export const MAX_BUILDER_RIGHT_INSTANCES = 3;
 
+/** Metal furniture colour choices offered in the builder. */
+export const BUILDER_METAL_COLORS = ["Срібний", "Золотий"] as const;
+
+/** Standard length note shown under the builder, mirrors the product page copy. */
+export const BUILDER_LENGTH_NOTE =
+  "38 см (стандартно). Якщо необхідна індивідуальна довжина - напиши про це у рядку «Коментар» при оформленні замовлення. Можлива доплата, якщо довжина буде більше стандартної.";
+
 /** Public assets shown in the result zone when a slot has no selected part yet. */
 export const BUILDER_DEFAULT_PREVIEW_BY_KIND: Record<BuilderPartKind, string> =
   {

@@ -8,6 +8,8 @@ import { useCallback, useEffect, useId, useMemo, useState } from "react";
 import type { BuilderPartKind } from "@/generated/prisma";
 import {
   BUILDER_DEFAULT_PREVIEW_BY_KIND,
+  BUILDER_LENGTH_NOTE,
+  BUILDER_METAL_COLORS,
   BUILDER_PREVIEW_INTRINSIC,
   MAX_BUILDER_LEFT_INSTANCES,
   MAX_BUILDER_RIGHT_INSTANCES,
@@ -253,12 +255,12 @@ function BuilderCombinationsPreview({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 py-1 text-left text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
+        className="flex w-full items-center gap-2 py-1 text-left text-xs font-medium text-foreground transition-colors hover:opacity-70"
         aria-expanded={open}
         id={triggerId}
         aria-controls={panelId}
       >
-        <span>Попередній перегляд</span>
+        <span>Переглянути поєднання</span>
         <ChevronDown
           className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           aria-hidden
@@ -330,6 +332,7 @@ export function BuilderEditor({
   ]);
 
   const [activeClientId, setActiveClientId] = useState<string | null>(null);
+  const [color, setColor] = useState<string | null>(null);
 
   useEffect(() => {
     if (
@@ -391,6 +394,8 @@ export function BuilderEditor({
     () => instances.every((i) => Boolean(i.selectedPartId)),
     [instances],
   );
+
+  const canAddToCart = allPartsSelected && Boolean(color);
 
   const canAddLeft =
     countKind(instances, "LEFT_HALF") < MAX_BUILDER_LEFT_INSTANCES;
@@ -485,7 +490,7 @@ export function BuilderEditor({
   }, [activeInstance.clientId]);
 
   const handleAddToCart = useCallback(() => {
-    if (!instances.every((i) => i.selectedPartId)) {
+    if (!instances.every((i) => i.selectedPartId) || !color) {
       return;
     }
 
@@ -503,7 +508,7 @@ export function BuilderEditor({
       return;
     }
 
-    const customTitle = titles.join(" · ");
+    const customTitle = [...titles, color].join(" · ");
     const firstWithPreview = orderedIds
       .map((id) => partById.get(id))
       .find((p) => p?.previewImageUrl);
@@ -517,7 +522,7 @@ export function BuilderEditor({
         firstWithPreview?.previewImageUrl ||
         firstWithPreview?.selectorImageUrl ||
         null,
-      material: null,
+      material: color,
       size: null,
       gemstone: null,
       pendant: null,
@@ -540,24 +545,32 @@ export function BuilderEditor({
     collectionSlug,
     categorySlug,
     collectionImageUrl,
+    color,
   ]);
 
   return (
     <div className="pt-10 space-y-8">
+      <PriceCtaBar
+        totalPrice={totalPrice}
+        disabled={!canAddToCart}
+        onAdd={handleAddToCart}
+      />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4 !mb-0">
-        <div>
-          <p className="text-sm text-muted-foreground">Ціна</p>
-          <p className="text-lg font-medium">{formatPrice(totalPrice)}</p>
-        </div>
-        <button
-          type="button"
-          onClick={handleAddToCart}
-          disabled={!allPartsSelected}
-          className="min-h-11 rounded-md bg-accent px-5 py-2.5 text-sm font-medium italic text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+      <hr className="border-border" />
+
+      <div className="flex items-start justify-between gap-4 text-xs sm:text-sm">
+        <Link
+          href={`/collections/${collectionSlug}`}
+          className="text-left text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
         >
-          Додати до кошика
-        </button>
+          Як працює конструктор?
+        </Link>
+        <Link
+          href={`/collections/${collectionSlug}`}
+          className="text-right text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
+        >
+          Як працює прикраса?
+        </Link>
       </div>
 
       <div className="mx-auto w-full max-w-[280px] space-y-4 sm:max-w-sm">
@@ -748,10 +761,10 @@ export function BuilderEditor({
       ) : null}
 
       <div>
-        <p className="text-xs font-medium text-muted-foreground">
-          Обери сегмент
+        <p className="text-xs font-medium text-foreground">
+          Обери елементи
           {!allPartsSelected && (
-            <span className="mt-0.5 block font-normal text-amber-700 dark:text-amber-400">
+            <span className="mt-0.5 block font-normal text-accent">
               Позначені вкладки потребують вибору варіанту нижче.
             </span>
           )}
@@ -783,18 +796,14 @@ export function BuilderEditor({
                 }
                 className={`shrink-0 border-b-2 px-3 py-2 text-xs transition-colors sm:text-sm ${
                   active
-                    ? needsSelection
-                      ? "border-amber-600 font-medium text-foreground dark:border-amber-400"
-                      : "border-foreground font-medium text-foreground"
-                    : needsSelection
-                      ? "border-amber-500/90 font-medium text-foreground dark:border-amber-500"
-                      : "border-transparent text-muted-foreground hover:text-foreground"
+                    ? "border-accent font-medium text-foreground"
+                    : "border-transparent text-muted-foreground hover:text-foreground"
                 }`}
               >
                 {label}
                 {needsSelection ? (
                   <span
-                    className="ml-1 inline-block size-1.5 rounded-full bg-amber-500 align-middle sm:size-2"
+                    className="ml-1 inline-block size-1.5 rounded-full bg-accent align-middle sm:size-2"
                     aria-hidden
                   />
                 ) : null}
@@ -813,7 +822,7 @@ export function BuilderEditor({
             Немає варіантів для цієї позиції. Додайте частини в адмінці.
           </p>
         ) : (
-          <ul className="mt-3 grid grid-cols-3 items-stretch gap-2 sm:gap-3">
+          <ul className="mt-3 grid grid-cols-3 items-stretch gap-3 sm:gap-4">
             {optionsForActiveKind.map((p) => {
               const selected =
                 activeInstance.selectedPartId === p.id;
@@ -822,13 +831,13 @@ export function BuilderEditor({
                   <button
                     type="button"
                     onClick={() => selectPart(p.id)}
-                    className={`flex h-full min-h-0 w-full flex-col rounded-md border p-2 text-left transition-colors ${
+                    className={`flex h-full min-h-0 w-full flex-col rounded-md border p-3 text-left transition-colors sm:p-4 ${
                       selected
-                        ? "border-foreground ring-1 ring-foreground/20"
+                        ? "border-accent ring-1 ring-accent/30"
                         : "border-border hover:border-foreground/30"
                     }`}
                   >
-                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[120px] shrink-0">
+                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[180px] shrink-0">
                       <ImageWithLoader
                         src={p.selectorImageUrl}
                         alt=""
@@ -853,11 +862,73 @@ export function BuilderEditor({
         )}
       </div>
 
+      <div>
+        <p className="mb-2 text-sm font-medium text-foreground">Колір</p>
+        <div className="flex flex-wrap gap-2">
+          {BUILDER_METAL_COLORS.map((c) => {
+            const active = color === c;
+            return (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setColor(c)}
+                className={`rounded-md border px-4 py-1.5 text-sm transition-colors ${
+                  active
+                    ? "border-foreground bg-muted text-foreground"
+                    : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
+                }`}
+              >
+                {c}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-sm font-medium text-foreground">Довжина прикраси:</p>
+        <p className="text-sm text-foreground">{BUILDER_LENGTH_NOTE}</p>
+      </div>
+
+      <hr className="border-border" />
+
+      <PriceCtaBar
+        totalPrice={totalPrice}
+        disabled={!canAddToCart}
+        onAdd={handleAddToCart}
+      />
+
       <p className="text-center text-sm text-muted-foreground">
         <Link href="/builder" className="underline underline-offset-2">
           ← Назад до вибору колекції
         </Link>
       </p>
+    </div>
+  );
+}
+
+function PriceCtaBar({
+  totalPrice,
+  disabled,
+  onAdd,
+}: {
+  totalPrice: number;
+  disabled: boolean;
+  onAdd: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <p className="font-sans text-xl font-extrabold uppercase text-brand sm:text-2xl">
+        {formatPrice(totalPrice)}
+      </p>
+      <button
+        type="button"
+        onClick={onAdd}
+        disabled={disabled}
+        className="rounded-xl bg-accent px-6 py-3 font-sans text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        Додати в кошик
+      </button>
     </div>
   );
 }
