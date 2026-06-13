@@ -5,14 +5,12 @@ type CollectionCardProps = Readonly<{
   name: string;
   slug: string;
   imageUrl: string | null;
-  instructionHref?: string;
 }>;
 
 export function CollectionCard({
   name,
   slug,
   imageUrl,
-  instructionHref,
 }: CollectionCardProps) {
   return (
     <div className="group block">
@@ -35,7 +33,7 @@ export function CollectionCard({
       </Link>
 
       <Link
-        href={instructionHref ?? "#"}
+        href={`/collections/${encodeURIComponent(slug)}`}
         className="mt-3 block text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
       >
         Інструкція

@@ -21,11 +21,18 @@ type CategoryOption = { id: string; slug: string; name: string };
 type ShopFilterBarProps = Readonly<{
   filters: ParsedShopFilters;
   categories: CategoryOption[];
+  basePath?: string;
+  showProductType?: boolean;
 }>;
 
 const DropdownCloseContext = createContext<() => void>(() => {});
 
-export function ShopFilterBar({ filters, categories }: ShopFilterBarProps) {
+export function ShopFilterBar({
+  filters,
+  categories,
+  basePath = "/shop",
+  showProductType = Boolean(filters.collection),
+}: ShopFilterBarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const filterGroups = (
@@ -34,7 +41,7 @@ export function ShopFilterBar({ filters, categories }: ShopFilterBarProps) {
         {categories.map((c) => (
           <OptionLink
             key={c.id}
-            href={shopHref(filters, { toggleCategory: c.slug })}
+            href={shopHref(filters, { toggleCategory: c.slug }, basePath)}
             active={filters.categories.includes(c.slug)}
           >
             {c.name}
@@ -46,7 +53,7 @@ export function ShopFilterBar({ filters, categories }: ShopFilterBarProps) {
         {MATERIAL_OPTIONS.map((o) => (
           <OptionLink
             key={o.value}
-            href={shopHref(filters, { toggleMaterial: o.value })}
+            href={shopHref(filters, { toggleMaterial: o.value }, basePath)}
             active={filters.materials.includes(o.value)}
           >
             {o.label}
@@ -54,12 +61,12 @@ export function ShopFilterBar({ filters, categories }: ShopFilterBarProps) {
         ))}
       </FilterDropdown>
 
-      {filters.collection ? (
+      {showProductType ? (
         <FilterDropdown label="Комплектація">
           {PRODUCT_TYPE_OPTIONS.map((o) => (
             <OptionLink
               key={o.value}
-              href={shopHref(filters, { toggleProductType: o.value })}
+              href={shopHref(filters, { toggleProductType: o.value }, basePath)}
               active={filters.productTypes.includes(o.value)}
             >
               {o.label}
@@ -76,13 +83,13 @@ export function ShopFilterBar({ filters, categories }: ShopFilterBarProps) {
       align="right"
     >
       <OptionLink
-        href={shopHref(filters, { sort: null })}
+        href={shopHref(filters, { sort: null }, basePath)}
         active={filters.sort === "asc"}
       >
         Спочатку дешеві
       </OptionLink>
       <OptionLink
-        href={shopHref(filters, { sort: "desc" })}
+        href={shopHref(filters, { sort: "desc" }, basePath)}
         active={filters.sort === "desc"}
       >
         Спочатку дорогі

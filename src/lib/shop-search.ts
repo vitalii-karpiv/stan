@@ -72,6 +72,7 @@ function firstString(
 export function shopHref(
   current: ParsedShopFilters,
   patch: ShopHrefPatch,
+  basePath = "/shop",
 ): string {
   let categories = [...current.categories];
   let collection = current.collection;
@@ -121,11 +122,13 @@ export function shopHref(
 
   const qs = new URLSearchParams();
   for (const c of categories) qs.append("category", c);
-  if (collection) qs.set("collection", collection);
+  // On non-shop routes (e.g. /collections/[slug]) the collection is implied by
+  // the route itself, so it must not leak into the query string.
+  if (collection && basePath === "/shop") qs.set("collection", collection);
   for (const m of materials) qs.append("material", m);
   for (const t of productTypes) qs.append("type", t);
   if (sort === "desc") qs.set("sort", "desc");
 
   const s = qs.toString();
-  return s ? `/shop?${s}` : "/shop";
+  return s ? `${basePath}?${s}` : basePath;
 }
