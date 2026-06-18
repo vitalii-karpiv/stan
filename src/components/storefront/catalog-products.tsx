@@ -100,6 +100,7 @@ export function CatalogProducts({
           ))}
           <Link
             href={basePath}
+            scroll={false}
             className="text-xs text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
           >
             Очистити все
@@ -196,6 +197,7 @@ function FilterChip({ href, label }: Readonly<{ href: string; label: string }>) 
   return (
     <Link
       href={href}
+      scroll={false}
       className="inline-flex items-center gap-1 border border-border px-2.5 py-1 text-xs leading-tight text-muted-foreground transition-colors hover:border-foreground hover:text-foreground"
     >
       <span>{label}</span>

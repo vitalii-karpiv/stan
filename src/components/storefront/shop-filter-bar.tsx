@@ -194,6 +194,7 @@ function OptionLink({
     <Link
       href={href}
       onClick={close}
+      scroll={false}
       className={
         active
           ? "block bg-foreground px-2.5 py-1.5 text-xs leading-tight text-background"
