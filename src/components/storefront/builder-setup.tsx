@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { CollectionInstructionModal } from "./collection-instruction-modal";
+
 export type BuilderCollectionOption = {
   id: string;
   name: string;
@@ -25,6 +27,8 @@ type BuilderSetupProps = {
 export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
   const [collectionSlug, setCollectionSlug] = useState<string | null>(null);
   const [categorySlug, setCategorySlug] = useState<string | null>(null);
+  const [instructionFor, setInstructionFor] =
+    useState<BuilderCollectionOption | null>(null);
 
   const canContinue = Boolean(collectionSlug && categorySlug);
   const continueHref =
@@ -76,12 +80,13 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
                     <div className="absolute inset-0 bg-linear-to-br from-muted to-muted-foreground/15" />
                   )}
                 </button>
-                <Link
-                  href={`/collections/${encodeURIComponent(c.slug)}`}
-                  className="mt-3 block text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
+                <button
+                  type="button"
+                  onClick={() => setInstructionFor(c)}
+                  className="mt-3 block w-full text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
                 >
                   Інструкція
-                </Link>
+                </button>
               </div>
             );
           })}
@@ -130,6 +135,14 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
           </span>
         )}
       </div>
+
+      {instructionFor ? (
+        <CollectionInstructionModal
+          slug={instructionFor.slug}
+          name={instructionFor.name}
+          onClose={() => setInstructionFor(null)}
+        />
+      ) : null}
     </div>
   );
 }
