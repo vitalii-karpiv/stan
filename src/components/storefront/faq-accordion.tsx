@@ -14,7 +14,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
   const uid = useId();
 
   return (
-    <div className="divide-y divide-border border-t border-border">
+    <div className="divide-y divide-brand/25 border-t border-brand/25">
       {items.map((item, index) => {
         const open = openIndex === index;
         const panelId = `faq-panel-${uid}-${index}`;
@@ -30,7 +30,7 @@ export function FaqAccordion({ items }: { items: FaqItem[] }) {
               onClick={() => setOpenIndex((current) => (current === index ? null : index))}
               className="flex w-full items-center justify-between gap-4 py-6 text-left text-brand transition-colors hover:opacity-80"
             >
-              <span className="text-sm font-semibold uppercase tracking-wide sm:text-base">
+              <span className="font-[family-name:var(--font-display)] text-sm font-normal uppercase tracking-wide sm:text-base">
                 {item.question}
               </span>
               {open ? (

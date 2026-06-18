@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
-import { ButtonLink } from "@/components/storefront/button";
 import { CatalogProducts } from "@/components/storefront/catalog-products";
-import { InstructionSteps } from "@/components/storefront/instruction-steps";
+import { InstructionContent } from "@/components/storefront/instruction-content";
 import { getCollectionInstruction } from "@/lib/collection-instructions";
 import { parseShopSearchParams } from "@/lib/shop-search";
 
@@ -55,17 +54,7 @@ export default async function CollectionPage({
 
       {instruction ? (
         <section className="mt-10">
-          <InstructionSteps steps={instruction.steps} />
-
-          <div className="mt-10 flex flex-col items-center gap-6">
-            <a
-              href={instruction.videoUrl}
-              className="text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
-            >
-              Дивитись відеоінструкцію
-            </a>
-            <ButtonLink href="/builder">Створити в конструкторі</ButtonLink>
-          </div>
+          <InstructionContent instruction={instruction} />
         </section>
       ) : null}
 

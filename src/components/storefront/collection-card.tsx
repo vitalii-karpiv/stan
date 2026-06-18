@@ -1,5 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+import { CollectionInstructionModal } from "./collection-instruction-modal";
 
 type CollectionCardProps = Readonly<{
   name: string;
@@ -12,10 +17,12 @@ export function CollectionCard({
   slug,
   imageUrl,
 }: CollectionCardProps) {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="group block">
       <Link
-        href={`/shop?collection=${encodeURIComponent(slug)}`}
+        href={`/collections/${encodeURIComponent(slug)}`}
         className="relative block aspect-4/5 overflow-hidden"
         aria-label={name}
       >
@@ -32,12 +39,21 @@ export function CollectionCard({
         )}
       </Link>
 
-      <Link
-        href={`/collections/${encodeURIComponent(slug)}`}
-        className="mt-3 block text-center text-sm text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="mt-3 block w-full text-center font-[family-name:var(--font-display)] text-sm font-normal text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
       >
         Інструкція
-      </Link>
+      </button>
+
+      {open ? (
+        <CollectionInstructionModal
+          slug={slug}
+          name={name}
+          onClose={() => setOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }
