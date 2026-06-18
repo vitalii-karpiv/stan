@@ -10,7 +10,7 @@ function StoreLink() {
   );
 }
 
-const brown = "text-[#4c2f1f]";
+const brown = "text-brand";
 const body = `font-sans text-xs sm:text-sm font-light italic leading-relaxed ${brown}`;
 const h2 = `font-[family-name:var(--font-cormorant)] text-base font-normal italic md:text-lg ${brown}`;
 
