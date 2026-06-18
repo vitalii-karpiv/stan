@@ -60,11 +60,11 @@ export function ProductCard({
       </div>
 
       <div className="mt-2">
-        <h3 className="font-sans text-lg font-light leading-tight">
+        <h3 className="font-sans text-sm font-normal leading-tight">
           {title}
         </h3>
         {price > 0 && (
-          <p className="mt-1.5 font-sans text-lg font-semibold uppercase text-brand">
+          <p className="mt-1.5 font-[family-name:var(--font-display)] text-base font-normal uppercase text-brand">
             {formatPrice(price)}
           </p>
         )}

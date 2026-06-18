@@ -250,7 +250,7 @@ export default async function HomePage() {
           </h2>
           <Link
             href="/shop"
-            className="shrink-0 text-sm text-brand underline underline-offset-4"
+            className="shrink-0 font-[family-name:var(--font-display)] text-sm font-normal text-brand underline underline-offset-4"
           >
             Перейти до каталогу
           </Link>
@@ -342,10 +342,10 @@ export default async function HomePage() {
         </h2>
         <div className="mt-10 grid gap-10 lg:grid-cols-3">
           <div>
-            <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
+            <h3 className="font-[family-name:var(--font-display)] text-lg font-normal uppercase tracking-[0.08em] text-brand">
               Носіння
             </h3>
-            <p className="mt-4 leading-relaxed text-brand/80">
+            <p className="mt-4 leading-relaxed text-brand">
               Уникайте контакту прикрас із косметичними засобами та побутовою
               хімією. Наносьте парфуми, креми, лак для волосся та інші засоби до
               того, як одягнути прикрасу. Знімайте їх перед прибиранням, а також
@@ -371,17 +371,17 @@ export default async function HomePage() {
 
           <div className="space-y-8">
             <div>
-              <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
+              <h3 className="font-[family-name:var(--font-display)] text-lg font-normal uppercase tracking-[0.08em] text-brand">
                 Зберігання
               </h3>
-              <p className="mt-4 leading-relaxed text-brand/80">
+              <p className="mt-4 leading-relaxed text-brand">
                 Зберігайте прикраси окремо одна від одної, а також подалі від
                 гострих предметів, щоб уникнути подряпин і пошкоджень. Уникайте
                 впливу прямих сонячних променів.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-medium uppercase tracking-[0.2em] text-brand">
+              <h3 className="font-[family-name:var(--font-display)] text-lg font-normal uppercase tracking-[0.08em] text-brand">
                 Догляд
               </h3>
               <p className="mt-4 leading-relaxed text-brand/80">
@@ -393,7 +393,7 @@ export default async function HomePage() {
             </div>
           </div>
         </div>
-        <p className="mt-12 text-center font-[family-name:var(--font-display)] text-lg uppercase tracking-[0.2em] text-accent md:text-xl">
+        <p className="mt-12 text-center font-[family-name:var(--font-quote)] text-lg font-bold uppercase tracking-[0.2em] text-accent md:text-xl">
           Піклуйся про себе і свої прикраси
         </p>
       </section>
