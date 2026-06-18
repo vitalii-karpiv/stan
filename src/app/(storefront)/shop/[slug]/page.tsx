@@ -83,7 +83,7 @@ export default async function ProductPage({ params }: Props) {
       </nav>
 
       {/* Product grid */}
-      <div className="grid gap-12 md:grid-cols-2">
+      <div className="grid gap-16 md:grid-cols-[32rem_1fr]">
         {/* Left — images */}
         <ProductImageGallery
           images={product.images}
@@ -92,7 +92,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Right — info */}
         <div className="space-y-6">
-          <h1 className="font-sans text-xl font-semibold tracking-tight text-brand md:text-2xl">
+          <h1 className="font-sans text-xl font-medium tracking-tight text-brand md:text-2xl">
             {product.title}
           </h1>
 
@@ -112,21 +112,21 @@ export default async function ProductPage({ params }: Props) {
           />
 
           {showMaterialBlock && (
-            <div className="space-y-4 pt-2">
+            <div className="max-w-lg space-y-4 pt-2">
               {materialText && (
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">Матеріал:</p>
-                  <p className="whitespace-pre-line break-words text-sm text-muted-foreground">
+                  <p className="text-base font-medium text-foreground">Матеріал:</p>
+                  <p className="whitespace-pre-line break-words text-base text-muted-foreground">
                     {materialText.replace(/\\n/g, "\n")}
                   </p>
                 </div>
               )}
               {jewelryLengthText && (
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground">
+                  <p className="text-base font-medium text-foreground">
                     Довжина прикраси:
                   </p>
-                  <p className="whitespace-pre-line break-words text-sm text-muted-foreground">
+                  <p className="whitespace-pre-line break-words text-base text-muted-foreground">
                     {jewelryLengthText.replace(/\\n/g, "\n")}
                   </p>
                 </div>
@@ -156,7 +156,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="mt-12">
-          <h2 className={`${headingClassName} text-xl md:text-2xl`}>
+          <h2 className={`${headingClassName} text-base md:text-lg`}>
             Обирайте додаткову половинку
           </h2>
           <div className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">

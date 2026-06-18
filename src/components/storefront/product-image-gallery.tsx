@@ -105,7 +105,7 @@ export function ProductImageGallery({
   const current = images[selectedIndex];
 
   return (
-    <div className="w-full min-w-0">
+    <div className="w-full min-w-0 md:max-w-lg">
       {images.length > 1 ? (
         <div className="group relative">
           <div

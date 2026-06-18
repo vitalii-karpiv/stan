@@ -107,13 +107,13 @@ export function OptionPicker({
         />
       )}
 
-      <p className="font-sans text-xl font-semibold uppercase text-brand">
+      <p className="font-[family-name:var(--font-display)] text-xl font-medium uppercase text-brand">
         {formatPrice(price)}
       </p>
 
       <button
         onClick={handleAdd}
-        className="w-full rounded-xl bg-accent py-3.5 text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90"
+        className="w-full rounded-xl bg-accent py-3.5 font-[family-name:var(--font-display)] text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90"
       >
         Додати в кошик
       </button>
@@ -134,7 +134,7 @@ function PendantGroup({
 }) {
   return (
     <div>
-      <p className="mb-2 text-sm font-medium text-foreground">{label}</p>
+      <p className="mb-2 text-base font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = selected === option;
@@ -178,7 +178,7 @@ function AttributeGroup({
 }) {
   return (
     <div>
-      <p className="mb-2 text-sm font-medium text-foreground">{label}</p>
+      <p className="mb-2 text-base font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const isActive = selected === option;
