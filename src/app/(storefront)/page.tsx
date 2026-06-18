@@ -225,7 +225,7 @@ export default async function HomePage() {
 
       {/* Builder promo */}
       <section className="mx-auto max-w-7xl px-6 py-12 text-center">
-        <h2 className={`${headingClassName} text-2xl md:text-3xl`}>
+        <h2 className={`${headingClassName} text-xl md:text-2xl`}>
           Створюй власну прикрасу
         </h2>
         <Image
@@ -245,7 +245,7 @@ export default async function HomePage() {
       {/* Ready-made products */}
       <section className="mx-auto max-w-7xl px-6 py-12">
         <div className="flex items-end justify-between gap-4">
-          <h2 className={`${headingClassName} text-2xl md:text-3xl`}>
+          <h2 className={`${headingClassName} text-xl md:text-2xl`}>
             Обирай готову прикрасу
           </h2>
           <Link
@@ -298,7 +298,7 @@ export default async function HomePage() {
             />
           </div>
           <div>
-            <h2 className={`${headingClassName} text-2xl md:text-3xl`}>Про нас</h2>
+            <h2 className={`${headingClassName} text-xl md:text-2xl`}>Про нас</h2>
             <div className="mt-6 space-y-4 leading-relaxed text-brand/90">
               <p>STAN розпочався з дружби.</p>
               <p>
@@ -333,7 +333,7 @@ export default async function HomePage() {
 
       {/* Care */}
       <section id="jewelry-care" className="mx-auto max-w-7xl scroll-mt-24 px-6 py-12">
-        <h2 className={`${headingClassName} text-center text-2xl md:text-3xl`}>
+        <h2 className={`${headingClassName} text-center text-xl md:text-2xl`}>
           Догляд за прикрасами
         </h2>
         <div className="mt-10 grid gap-10 lg:grid-cols-3">
@@ -396,7 +396,7 @@ export default async function HomePage() {
 
       {/* FAQ */}
       <section className="mx-auto max-w-4xl px-6 py-12">
-        <h2 className={`${headingClassName} text-center text-2xl md:text-3xl`}>
+        <h2 className={`${headingClassName} text-center text-xl md:text-2xl`}>
           FAQ
         </h2>
         <div className="mt-10">

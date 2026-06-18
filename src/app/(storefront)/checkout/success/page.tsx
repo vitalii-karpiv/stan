@@ -28,7 +28,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
     <div className="mx-auto max-w-2xl px-6 py-16 text-center">
       <ClearCart />
 
-      <h1 className="font-[family-name:var(--font-cormorant)] text-4xl font-light">
+      <h1 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
         Дякуємо за замовлення!
       </h1>
 

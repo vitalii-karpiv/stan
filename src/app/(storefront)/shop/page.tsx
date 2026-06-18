@@ -32,14 +32,14 @@ export default async function ShopPage({
   return (
     <div className="mx-auto max-w-7xl px-6 pt-8 pb-12">
       <h1
-        className={`${headingClassName} mb-8 hidden text-center text-3xl tracking-tight md:block md:text-[40px]`}
+        className={`${headingClassName} mb-8 hidden text-center text-2xl tracking-tight md:block md:text-3xl`}
       >
         Каталог
       </h1>
 
       {collections.length > 0 ? (
         <section>
-          <h2 className={`${headingClassName} text-2xl md:text-3xl`}>
+          <h2 className={`${headingClassName} text-xl md:text-2xl`}>
             Колекції
           </h2>
           <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
@@ -56,7 +56,7 @@ export default async function ShopPage({
       ) : null}
 
       <section className={collections.length > 0 ? "mt-16" : ""}>
-        <h2 className={`${headingClassName} text-2xl md:text-3xl`}>Товари</h2>
+        <h2 className={`${headingClassName} text-xl md:text-2xl`}>Товари</h2>
 
         <CatalogProducts
           filters={filters}

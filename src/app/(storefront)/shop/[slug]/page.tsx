@@ -92,7 +92,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Right — info */}
         <div className="space-y-6">
-          <h1 className="font-sans text-2xl font-semibold tracking-tight text-brand md:text-3xl">
+          <h1 className="font-sans text-xl font-semibold tracking-tight text-brand md:text-2xl">
             {product.title}
           </h1>
 

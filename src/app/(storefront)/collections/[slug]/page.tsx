@@ -48,7 +48,7 @@ export default async function CollectionPage({
   return (
     <div className="mx-auto max-w-7xl px-6 pt-8 pb-12">
       <h1
-        className={`${headingClassName} text-center text-3xl tracking-tight md:text-[40px]`}
+        className={`${headingClassName} text-center text-2xl tracking-tight md:text-3xl`}
       >
         {collection.name}
       </h1>
@@ -70,7 +70,7 @@ export default async function CollectionPage({
       ) : null}
 
       <section className="mt-16">
-        <h2 className={`${headingClassName} text-2xl md:text-3xl`}>Товари</h2>
+        <h2 className={`${headingClassName} text-xl md:text-2xl`}>Товари</h2>
 
         <CatalogProducts
           filters={filters}

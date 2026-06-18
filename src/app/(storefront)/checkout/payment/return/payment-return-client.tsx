@@ -58,7 +58,7 @@ export function PaymentReturnClient({
 
   return (
     <div className="mx-auto max-w-lg px-6 py-16 text-center">
-      <h1 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+      <h1 className="font-[family-name:var(--font-cormorant)] text-2xl font-light">
         {message ? "Статус оплати" : "Перевіряємо оплату…"}
       </h1>
       <p className="mt-4 text-muted-foreground">

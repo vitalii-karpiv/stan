@@ -19,7 +19,7 @@ export default async function BuilderPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-10">
       <h1
-        className={`${headingClassName} text-center text-3xl tracking-tight md:text-[40px]`}
+        className={`${headingClassName} text-center text-2xl tracking-tight md:text-3xl`}
       >
         Конструктор
       </h1>

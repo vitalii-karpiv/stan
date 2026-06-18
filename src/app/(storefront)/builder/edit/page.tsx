@@ -69,7 +69,7 @@ export default async function BuilderEditPage({
             ← Назад до вибору
           </Link>
         </p>
-        <h1 className={`${headingClassName} mt-6 text-3xl tracking-tight md:text-[40px]`}>
+        <h1 className={`${headingClassName} mt-6 text-2xl tracking-tight md:text-3xl`}>
           Конструктор
         </h1>
         <p className="mt-4 text-sm text-muted-foreground">
@@ -84,7 +84,7 @@ export default async function BuilderEditPage({
   return (
     <div className="mx-auto max-w-lg px-6 py-10 md:max-w-2xl md:px-8 lg:max-w-4xl xl:max-w-6xl">
       <h1
-        className={`${headingClassName} text-center text-3xl tracking-tight md:text-[40px]`}
+        className={`${headingClassName} text-center text-2xl tracking-tight md:text-3xl`}
       >
         Конструктор
       </h1>
