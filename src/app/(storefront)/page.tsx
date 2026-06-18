@@ -287,17 +287,21 @@ export default async function HomePage() {
           height={120}
           className="pointer-events-none absolute right-6 top-8 hidden w-20 lg:block"
         />
-        <div className="grid items-start gap-10 lg:grid-cols-2">
-          <div className="relative aspect-[4/5] overflow-hidden rounded-xl">
-            <Image
-              src="/about_us.png"
-              alt="Засновниці бренду STAN"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 608px"
+        <div className="grid items-start gap-10 lg:grid-cols-2 lg:items-stretch">
+          <div className="relative aspect-[4/5] overflow-hidden rounded-xl lg:aspect-auto lg:h-full">
+            <video
+              src="/about_us.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="metadata"
+              poster="/about_us.png"
+              aria-label="Засновниці бренду STAN"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           </div>
-          <div>
+          <div className="max-w-md">
             <h2 className={`${headingClassName} text-xl md:text-2xl`}>Про нас</h2>
             <div className="mt-6 space-y-4 leading-relaxed text-brand/90">
               <p>STAN розпочався з дружби.</p>
