@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ImageWithLoader } from "@/components/image-with-loader";
 import { ChevronDown, Minus, Plus } from "lucide-react";
-import { useCallback, useEffect, useId, useMemo, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 
 import type { BuilderPartKind } from "@/generated/prisma";
 import {
@@ -255,7 +255,7 @@ function BuilderCombinationsPreview({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 py-1 text-left text-xs font-medium text-foreground transition-colors hover:opacity-70"
+        className="flex w-full items-center gap-2 py-1 text-left text-base font-medium text-foreground transition-colors hover:opacity-70"
         aria-expanded={open}
         id={triggerId}
         aria-controls={panelId}
@@ -270,7 +270,7 @@ function BuilderCombinationsPreview({
         empty ? (
           <p
             id={panelId}
-            className="mt-1.5 text-xs text-muted-foreground"
+            className="mt-1.5 text-base text-muted-foreground"
             aria-labelledby={triggerId}
           >
             Немає комбінацій
@@ -333,6 +333,14 @@ export function BuilderEditor({
 
   const [activeClientId, setActiveClientId] = useState<string | null>(null);
   const [color, setColor] = useState<string | null>(null);
+  const [highlightColor, setHighlightColor] = useState(false);
+  const colorRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!highlightColor) return;
+    const t = setTimeout(() => setHighlightColor(false), 1600);
+    return () => clearTimeout(t);
+  }, [highlightColor]);
 
   useEffect(() => {
     if (
@@ -395,7 +403,7 @@ export function BuilderEditor({
     [instances],
   );
 
-  const canAddToCart = allPartsSelected && Boolean(color);
+  const canAddToCart = allPartsSelected;
 
   const canAddLeft =
     countKind(instances, "LEFT_HALF") < MAX_BUILDER_LEFT_INSTANCES;
@@ -490,7 +498,13 @@ export function BuilderEditor({
   }, [activeInstance.clientId]);
 
   const handleAddToCart = useCallback(() => {
-    if (!instances.every((i) => i.selectedPartId) || !color) {
+    if (!instances.every((i) => i.selectedPartId)) {
+      return;
+    }
+
+    if (!color) {
+      colorRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      setHighlightColor(true);
       return;
     }
 
@@ -558,7 +572,7 @@ export function BuilderEditor({
 
       <hr className="border-border" />
 
-      <div className="flex items-start justify-between gap-4 text-xs sm:text-sm">
+      <div className="flex items-start justify-between gap-4 font-[family-name:var(--font-display)] text-sm sm:text-base">
         <Link
           href={`/collections/${collectionSlug}`}
           className="text-left text-brand underline underline-offset-4 transition-opacity hover:opacity-70"
@@ -814,15 +828,15 @@ export function BuilderEditor({
       </div>
 
       <div>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-base text-muted-foreground">
           {BUILDER_PART_KIND_LABELS[activeInstance.kind]} — варіанти
         </p>
         {optionsForActiveKind.length === 0 ? (
-          <p className="mt-4 text-sm text-muted-foreground">
+          <p className="mt-4 text-base text-muted-foreground">
             Немає варіантів для цієї позиції. Додайте частини в адмінці.
           </p>
         ) : (
-          <ul className="mt-3 grid grid-cols-3 items-stretch gap-3 sm:gap-4">
+          <ul className="mt-3 grid grid-cols-3 items-stretch gap-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
             {optionsForActiveKind.map((p) => {
               const selected =
                 activeInstance.selectedPartId === p.id;
@@ -837,7 +851,7 @@ export function BuilderEditor({
                         : "border-border hover:border-foreground/30"
                     }`}
                   >
-                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[180px] shrink-0">
+                    <div className="relative mx-auto aspect-[3/4] w-full max-w-[180px] shrink-0 md:max-w-[150px]">
                       <ImageWithLoader
                         src={p.selectorImageUrl}
                         alt=""
@@ -848,10 +862,10 @@ export function BuilderEditor({
                         loaderClassName="scale-90"
                       />
                     </div>
-                    <p className="mt-2 line-clamp-2 min-h-[2.75em] text-center font-[family-name:var(--font-cormorant)] text-xs italic leading-snug sm:text-sm">
+                    <p className="mt-2 line-clamp-2 text-center font-sans text-sm leading-snug text-brand/70 sm:text-base">
                       {p.title}
                     </p>
-                    <p className="mt-auto pt-1 text-center text-[10px] text-muted-foreground sm:text-xs">
+                    <p className="mt-0.5 text-center font-[family-name:var(--font-display)] text-xs text-brand sm:text-sm">
                       {p.price != null ? formatPrice(p.price) : "—"}
                     </p>
                   </button>
@@ -862,8 +876,15 @@ export function BuilderEditor({
         )}
       </div>
 
-      <div>
-        <p className="mb-2 text-sm font-medium text-foreground">Колір</p>
+      <div
+        ref={colorRef}
+        className={`scroll-mt-24 rounded-md p-2 transition-all ${
+          highlightColor
+            ? "ring-2 ring-accent ring-offset-2 ring-offset-background"
+            : "ring-0"
+        }`}
+      >
+        <p className="mb-2 text-base font-medium text-foreground">Колір</p>
         <div className="flex flex-wrap gap-2">
           {BUILDER_METAL_COLORS.map((c) => {
             const active = color === c;
@@ -871,8 +892,11 @@ export function BuilderEditor({
               <button
                 key={c}
                 type="button"
-                onClick={() => setColor(c)}
-                className={`rounded-md border px-4 py-1.5 text-sm transition-colors ${
+                onClick={() => {
+                  setColor(c);
+                  setHighlightColor(false);
+                }}
+                className={`rounded-md border px-4 py-1.5 text-base transition-colors ${
                   active
                     ? "border-foreground bg-muted text-foreground"
                     : "border-border text-muted-foreground hover:border-foreground hover:text-foreground"
@@ -886,8 +910,8 @@ export function BuilderEditor({
       </div>
 
       <div className="space-y-1">
-        <p className="text-sm font-medium text-foreground">Довжина прикраси:</p>
-        <p className="text-sm text-foreground">{BUILDER_LENGTH_NOTE}</p>
+        <p className="text-base font-medium text-foreground">Довжина прикраси:</p>
+        <p className="text-base text-foreground">{BUILDER_LENGTH_NOTE}</p>
       </div>
 
       <hr className="border-border" />
@@ -898,7 +922,7 @@ export function BuilderEditor({
         onAdd={handleAddToCart}
       />
 
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-center text-base text-muted-foreground">
         <Link href="/builder" className="underline underline-offset-2">
           ← Назад до вибору колекції
         </Link>
@@ -918,14 +942,14 @@ function PriceCtaBar({
 }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <p className="font-sans text-xl font-extrabold uppercase text-brand sm:text-2xl">
+      <p className="font-[family-name:var(--font-display)] text-xl font-medium uppercase text-brand sm:text-2xl">
         {formatPrice(totalPrice)}
       </p>
       <button
         type="button"
         onClick={onAdd}
         disabled={disabled}
-        className="rounded-xl bg-accent px-6 py-3 font-sans text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+        className="rounded-xl bg-accent px-6 py-3 font-[family-name:var(--font-display)] text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
       >
         Додати в кошик
       </button>
