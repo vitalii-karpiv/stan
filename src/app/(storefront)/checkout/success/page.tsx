@@ -28,7 +28,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
     <div className="mx-auto max-w-2xl px-6 py-16 text-center">
       <ClearCart />
 
-      <h1 className="font-[family-name:var(--font-cormorant)] text-3xl font-light">
+      <h1 className="font-display text-3xl font-normal">
         Дякуємо за замовлення!
       </h1>
 
@@ -37,23 +37,23 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         часом.
       </p>
 
-      <div className="mx-auto mt-8 max-w-sm rounded border border-border p-5 text-left">
-        <dl className="space-y-3 text-sm">
+      <div className="mx-auto mt-8 max-w-sm rounded border border-border p-5 text-left md:max-w-xl">
+        <dl className="space-y-3 text-sm md:text-base">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Номер замовлення</dt>
-            <dd className="font-mono text-xs">{order.id.slice(0, 8)}</dd>
+            <dd className="font-mono">{order.id.slice(0, 8)}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Кількість товарів</dt>
             <dd>{itemCount}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Сума</dt>
-            <dd className="font-medium">{formatPrice(order.totalInCents)}</dd>
+            <dt className="font-display text-muted-foreground">Сума</dt>
+            <dd className="font-display font-normal">{formatPrice(order.totalInCents)}</dd>
           </div>
-          <div className="flex justify-between">
-            <dt className="text-muted-foreground">Доставка</dt>
-            <dd>
+          <div className="flex justify-between gap-6">
+            <dt className="shrink-0 text-muted-foreground">Доставка</dt>
+            <dd className="text-right">
                 м. {order.shippingCity}, відділення НП №{order.shippingPostOffice}
             </dd>
           </div>
@@ -63,7 +63,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
       <div className="mt-8">
         <Link
           href="/shop"
-          className="inline-block bg-foreground px-8 py-3 text-sm font-medium text-background transition-opacity hover:opacity-90"
+          className="inline-block bg-foreground px-8 py-3 font-display text-sm font-extrabold text-background transition-opacity hover:opacity-90 md:text-base"
         >
           Продовжити покупки
         </Link>

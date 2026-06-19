@@ -14,10 +14,10 @@ import { NpCombobox, type NpOption } from "./np-combobox";
 
 /** 16px on small screens avoids iOS Safari zoom-on-focus; min height improves tap targets */
 const textInputClass =
-  "w-full min-h-[44px] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground md:min-h-0 md:py-2 md:text-sm";
+  "w-full min-h-[44px] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground md:min-h-0 md:py-2";
 
 const textareaClass =
-  "w-full min-h-[7.5rem] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground md:text-sm";
+  "w-full min-h-[7.5rem] rounded border border-border bg-background px-3 py-2.5 text-base outline-none focus:border-foreground";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -26,7 +26,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="min-h-12 w-full touch-manipulation bg-accent px-6 py-3.5 text-base font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:px-8 sm:text-sm"
+      className="min-h-12 w-full touch-manipulation bg-accent px-6 py-3.5 font-display text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:px-8"
     >
       {pending ? "Обробка..." : "Оформити замовлення"}
     </button>
@@ -94,12 +94,12 @@ export function CheckoutForm() {
   if (items.length === 0) {
     return (
       <div className="mt-6 text-center sm:mt-8">
-        <p className="px-1 text-base text-muted-foreground sm:text-sm">
+        <p className="px-1 text-base text-muted-foreground">
           Ваш кошик порожній. Додайте товари перед оформленням.
         </p>
         <Link
           href="/shop"
-          className="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center bg-foreground px-8 py-3 text-base font-medium text-background transition-opacity hover:opacity-90 sm:text-sm"
+          className="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center bg-foreground px-8 py-3 text-base font-medium text-background transition-opacity hover:opacity-90"
         >
           До магазину
         </Link>
@@ -122,13 +122,13 @@ export function CheckoutForm() {
         <div className="min-w-0 space-y-6 sm:space-y-8">
           {/* Contact */}
           <fieldset className="space-y-4">
-            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
+            <legend className="mb-1 block w-full pb-1 font-display text-lg font-normal sm:text-xl">
               Контактні дані
             </legend>
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="name" className="block text-sm font-medium">
+                <label htmlFor="name" className="block text-sm font-medium md:text-base">
                   Ім&apos;я та прізвище{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -148,7 +148,7 @@ export function CheckoutForm() {
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="phone" className="block text-sm font-medium">
+                <label htmlFor="phone" className="block text-sm font-medium md:text-base">
                   Телефон <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -168,7 +168,7 @@ export function CheckoutForm() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-sm font-medium">
+              <label htmlFor="email" className="block text-sm font-medium md:text-base">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -189,7 +189,7 @@ export function CheckoutForm() {
 
           {/* Shipping */}
           <fieldset className="space-y-4">
-            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
+            <legend className="mb-1 block w-full pb-1 font-display text-lg font-normal sm:text-xl">
               Доставка Новою Поштою
             </legend>
 
@@ -197,7 +197,7 @@ export function CheckoutForm() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="shippingCity"
-                  className="block text-sm font-medium"
+                  className="block text-sm font-medium md:text-base"
                 >
                   Місто <span className="text-red-500">*</span>
                 </label>
@@ -219,7 +219,7 @@ export function CheckoutForm() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="shippingPostOffice"
-                  className="block text-sm font-medium"
+                  className="block text-sm font-medium md:text-base"
                 >
                   Відділення Нової Пошти{" "}
                   <span className="text-red-500">*</span>
@@ -243,11 +243,11 @@ export function CheckoutForm() {
           </fieldset>
 
           <fieldset className="space-y-4">
-            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
+            <legend className="mb-1 block w-full pb-1 font-display text-lg font-normal sm:text-xl">
               Коментар до замовлення
             </legend>
             <div className="space-y-1.5">
-              <label htmlFor="note" className="block text-sm font-medium">
+              <label htmlFor="note" className="block text-sm font-medium md:text-base">
                 Примітка
               </label>
               <textarea
@@ -266,7 +266,7 @@ export function CheckoutForm() {
 
           {/* Payment placeholder */}
           <fieldset className="space-y-4">
-            <legend className="mb-1 block w-full pb-1 font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
+            <legend className="mb-1 block w-full pb-1 font-display text-lg font-normal sm:text-xl">
               Спосіб оплати
             </legend>
 
@@ -278,7 +278,7 @@ export function CheckoutForm() {
                 defaultChecked
                 className="h-5 w-5 shrink-0 accent-foreground sm:h-4 sm:w-4"
               />
-              <span className="text-base leading-snug sm:text-sm">
+              <span className="font-sans text-base leading-snug">
                 Оплата при отриманні
               </span>
             </label>
@@ -290,7 +290,7 @@ export function CheckoutForm() {
                 value="monobank"
                 className="h-5 w-5 shrink-0 accent-foreground sm:h-4 sm:w-4"
               />
-              <span className="text-base leading-snug sm:text-sm">
+              <span className="font-sans text-base leading-snug">
                 Онлайн оплата (карта, Apple Pay, Google Pay)
               </span>
             </label>
@@ -305,7 +305,7 @@ export function CheckoutForm() {
         {/* Right column — order summary */}
         <div className="min-w-0">
           <div className="rounded border border-border p-3 sm:p-5">
-            <h2 className="font-[family-name:var(--font-cormorant)] text-lg font-light sm:text-xl">
+            <h2 className="font-display text-lg font-normal sm:text-xl">
               Ваше замовлення
             </h2>
 
@@ -321,10 +321,10 @@ export function CheckoutForm() {
             </div>
 
             <div className="mt-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-t border-border pt-4">
-              <span className="text-base text-muted-foreground sm:text-sm">
+              <span className="font-display text-base text-muted-foreground">
                 Разом
               </span>
-              <span className="font-[family-name:var(--font-cormorant)] text-xl font-light tabular-nums sm:text-2xl">
+              <span className="font-display text-xl font-normal tabular-nums sm:text-2xl">
                 {formatPrice(totalPrice)}
               </span>
             </div>
@@ -409,7 +409,7 @@ function SummaryRow({
               </div>
             )}
           </div>
-          <span className="shrink-0 font-[family-name:var(--font-cormorant)] text-base font-light tabular-nums sm:text-right">
+          <span className="shrink-0 font-display text-base font-normal tabular-nums sm:text-right">
             {formatPrice(item.price * item.quantity)}
           </span>
         </div>
