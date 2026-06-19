@@ -11,6 +11,8 @@ import {
   type ReactNode,
 } from "react";
 
+import { CartToast, type CartNotice } from "@/components/storefront/cart-toast";
+
 const STORAGE_KEY = "stan-cart";
 
 export type CartItem = {
@@ -88,6 +90,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const hydrated = useRef(false);
 
+  const [notice, setNotice] = useState<CartNotice | null>(null);
+  const noticeId = useRef(0);
+
   useEffect(() => {
     setItems(loadCart());
     hydrated.current = true;
@@ -108,6 +113,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...incoming, quantity: 1 }];
     });
+    noticeId.current += 1;
+    setNotice({ item: incoming, id: noticeId.current });
   }, []);
 
   const removeItem = useCallback((key: string) => {
@@ -127,6 +134,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const clearCart = useCallback(() => setItems([]), []);
+
+  const dismissNotice = useCallback(() => setNotice(null), []);
 
   const totalItems = useMemo(
     () => items.reduce((sum, i) => sum + i.quantity, 0),
@@ -151,7 +160,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items, addItem, removeItem, updateQuantity, clearCart, totalItems, totalPrice],
   );
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+      <CartToast notice={notice} onDismiss={dismissNotice} />
+    </CartContext.Provider>
+  );
 }
 
 export function useCart() {
