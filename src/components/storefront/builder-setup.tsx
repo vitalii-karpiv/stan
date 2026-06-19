@@ -122,14 +122,14 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
         {canContinue ? (
           <Link
             href={continueHref}
-            className="inline-flex items-center justify-center rounded-xl bg-accent px-10 py-3 font-sans text-base font-extrabold text-accent-foreground transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center rounded-xl bg-accent px-10 py-3 font-display text-base font-[750] text-accent-foreground transition-opacity hover:opacity-90"
           >
             Продовжити
           </Link>
         ) : (
           <span
             aria-disabled
-            className="inline-flex cursor-not-allowed items-center justify-center rounded-xl bg-accent/40 px-10 py-3 font-sans text-base font-extrabold text-accent-foreground/70"
+            className="inline-flex cursor-not-allowed items-center justify-center rounded-xl bg-accent/40 px-10 py-3 font-display text-base font-[750] text-accent-foreground/70"
           >
             Продовжити
           </span>
@@ -141,6 +141,7 @@ export function BuilderSetup({ collections, categories }: BuilderSetupProps) {
           slug={instructionFor.slug}
           name={instructionFor.name}
           onClose={() => setInstructionFor(null)}
+          onPrimaryAction={() => setInstructionFor(null)}
         />
       ) : null}
     </div>

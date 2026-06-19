@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useCart } from "@/lib/cart";
 import { formatPrice } from "@/lib/utils";
@@ -54,7 +54,36 @@ export function OptionPicker({
   const [selectedGemstone, setSelectedGemstone] = useState<string | null>(null);
   const [selectedPendant, setSelectedPendant] = useState<string | null>(null);
 
+  const [highlightMaterial, setHighlightMaterial] = useState(false);
+  const [highlightPendant, setHighlightPendant] = useState(false);
+  const materialRef = useRef<HTMLDivElement | null>(null);
+  const pendantRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!highlightMaterial) return;
+    const t = setTimeout(() => setHighlightMaterial(false), 1600);
+    return () => clearTimeout(t);
+  }, [highlightMaterial]);
+
+  useEffect(() => {
+    if (!highlightPendant) return;
+    const t = setTimeout(() => setHighlightPendant(false), 1600);
+    return () => clearTimeout(t);
+  }, [highlightPendant]);
+
   function handleAdd() {
+    const materialMissing = grouped.materials.length > 0 && !selectedMaterial;
+    const pendantMissing = grouped.pendants.length > 0 && !selectedPendant;
+
+    if (materialMissing || pendantMissing) {
+      setHighlightMaterial(materialMissing);
+      setHighlightPendant(pendantMissing);
+      // Scroll to the first missing selection.
+      const target = materialMissing ? materialRef : pendantRef;
+      target.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
+
     addItem({
       productId,
       productTitle,
@@ -76,7 +105,12 @@ export function OptionPicker({
           label="Колір"
           options={grouped.materials}
           selected={selectedMaterial}
-          onSelect={setSelectedMaterial}
+          onSelect={(value) => {
+            setSelectedMaterial(value);
+            setHighlightMaterial(false);
+          }}
+          containerRef={materialRef}
+          highlight={highlightMaterial}
         />
       )}
 
@@ -103,7 +137,12 @@ export function OptionPicker({
           label="Підвіска"
           options={grouped.pendants}
           selected={selectedPendant}
-          onSelect={setSelectedPendant}
+          onSelect={(value) => {
+            setSelectedPendant(value);
+            setHighlightPendant(false);
+          }}
+          containerRef={pendantRef}
+          highlight={highlightPendant}
         />
       )}
 
@@ -126,14 +165,25 @@ function PendantGroup({
   options,
   selected,
   onSelect,
+  containerRef,
+  highlight = false,
 }: {
   label: string;
   options: string[];
   selected: string | null;
   onSelect: (value: string | null) => void;
+  containerRef?: React.Ref<HTMLDivElement>;
+  highlight?: boolean;
 }) {
   return (
-    <div>
+    <div
+      ref={containerRef}
+      className={`scroll-mt-24 rounded-md p-2 transition-all ${
+        highlight
+          ? "ring-2 ring-accent ring-offset-2 ring-offset-background"
+          : "ring-0"
+      }`}
+    >
       <p className="mb-2 text-base font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
@@ -170,14 +220,25 @@ function AttributeGroup({
   options,
   selected,
   onSelect,
+  containerRef,
+  highlight = false,
 }: {
   label: string;
   options: string[];
   selected: string | null;
   onSelect: (value: string | null) => void;
+  containerRef?: React.Ref<HTMLDivElement>;
+  highlight?: boolean;
 }) {
   return (
-    <div>
+    <div
+      ref={containerRef}
+      className={`scroll-mt-24 rounded-md p-2 transition-all ${
+        highlight
+          ? "ring-2 ring-accent ring-offset-2 ring-offset-background"
+          : "ring-0"
+      }`}
+    >
       <p className="mb-2 text-base font-medium text-foreground">{label}</p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {

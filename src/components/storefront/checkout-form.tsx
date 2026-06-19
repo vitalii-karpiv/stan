@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
+import { ButtonLink } from "@/components/storefront/button";
 import { useActionState, useCallback, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Minus, Plus, Trash2 } from "lucide-react";
@@ -97,12 +97,9 @@ export function CheckoutForm() {
         <p className="px-1 text-base text-muted-foreground">
           Ваш кошик порожній. Додайте товари перед оформленням.
         </p>
-        <Link
-          href="/shop"
-          className="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center bg-foreground px-8 py-3 text-base font-medium text-background transition-opacity hover:opacity-90"
-        >
+        <ButtonLink href="/shop" className="mt-6">
           До магазину
-        </Link>
+        </ButtonLink>
       </div>
     );
   }
@@ -128,7 +125,7 @@ export function CheckoutForm() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
-                <label htmlFor="name" className="block text-sm font-medium md:text-base">
+                <label htmlFor="name" className="block text-sm font-light text-brand/80 md:text-base">
                   Ім&apos;я та прізвище{" "}
                   <span className="text-red-500">*</span>
                 </label>
@@ -148,7 +145,7 @@ export function CheckoutForm() {
               </div>
 
               <div className="space-y-1.5">
-                <label htmlFor="phone" className="block text-sm font-medium md:text-base">
+                <label htmlFor="phone" className="block text-sm font-light text-brand/80 md:text-base">
                   Телефон <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -168,7 +165,7 @@ export function CheckoutForm() {
             </div>
 
             <div className="space-y-1.5">
-              <label htmlFor="email" className="block text-sm font-medium md:text-base">
+              <label htmlFor="email" className="block text-sm font-light text-brand/80 md:text-base">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -197,7 +194,7 @@ export function CheckoutForm() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="shippingCity"
-                  className="block text-sm font-medium md:text-base"
+                  className="block text-sm font-light text-brand/80 md:text-base"
                 >
                   Місто <span className="text-red-500">*</span>
                 </label>
@@ -219,7 +216,7 @@ export function CheckoutForm() {
               <div className="space-y-1.5">
                 <label
                   htmlFor="shippingPostOffice"
-                  className="block text-sm font-medium md:text-base"
+                  className="block text-sm font-light text-brand/80 md:text-base"
                 >
                   Відділення Нової Пошти{" "}
                   <span className="text-red-500">*</span>

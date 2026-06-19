@@ -1,13 +1,17 @@
 import type { CollectionInstruction } from "@/lib/collection-instructions";
 
 import { InstructionSteps } from "./instruction-steps";
-import { ButtonLink } from "./button";
+import { Button, ButtonLink } from "./button";
 
 type InstructionContentProps = Readonly<{
   instruction: CollectionInstruction;
+  onPrimaryAction?: () => void;
 }>;
 
-export function InstructionContent({ instruction }: InstructionContentProps) {
+export function InstructionContent({
+  instruction,
+  onPrimaryAction,
+}: InstructionContentProps) {
   return (
     <>
       <InstructionSteps steps={instruction.steps} />
@@ -19,7 +23,11 @@ export function InstructionContent({ instruction }: InstructionContentProps) {
         >
           Дивитись відеоінструкцію
         </a>
-        <ButtonLink href="/builder">Створити в конструкторі</ButtonLink>
+        {onPrimaryAction ? (
+          <Button onClick={onPrimaryAction}>Створити в конструкторі</Button>
+        ) : (
+          <ButtonLink href="/builder">Створити в конструкторі</ButtonLink>
+        )}
       </div>
     </>
   );

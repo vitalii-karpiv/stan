@@ -33,3 +33,27 @@ export function ButtonLink({
     </Link>
   );
 }
+
+type ButtonProps = {
+  children: ReactNode;
+  onClick?: () => void;
+  type?: "button" | "submit";
+  className?: string;
+};
+
+export function Button({
+  children,
+  onClick,
+  type = "button",
+  className = "",
+}: ButtonProps) {
+  return (
+    <button
+      type={type}
+      onClick={onClick}
+      className={`${baseClassName} ${className}`.trim()}
+    >
+      {children}
+    </button>
+  );
+}

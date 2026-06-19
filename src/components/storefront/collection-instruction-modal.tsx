@@ -6,18 +6,22 @@ import { X } from "lucide-react";
 import { getCollectionInstruction } from "@/lib/collection-instructions";
 
 import { InstructionContent } from "./instruction-content";
-import { ButtonLink } from "./button";
+import { Button, ButtonLink } from "./button";
 
 type CollectionInstructionModalProps = Readonly<{
   slug: string;
   name: string;
   onClose: () => void;
+  /** When set, the primary CTA runs this instead of navigating to /builder
+   *  (used when the modal is already opened on the builder route). */
+  onPrimaryAction?: () => void;
 }>;
 
 export function CollectionInstructionModal({
   slug,
   name,
   onClose,
+  onPrimaryAction,
 }: CollectionInstructionModalProps) {
   const instruction = getCollectionInstruction(slug);
 
@@ -63,13 +67,22 @@ export function CollectionInstructionModal({
 
         <div className="mt-8">
           {instruction ? (
-            <InstructionContent instruction={instruction} />
+            <InstructionContent
+              instruction={instruction}
+              onPrimaryAction={onPrimaryAction}
+            />
           ) : (
             <div className="flex flex-col items-center gap-6">
               <p className="text-center text-sm text-brand/80">
                 Інструкція скоро зʼявиться.
               </p>
-              <ButtonLink href="/builder">Створити в конструкторі</ButtonLink>
+              {onPrimaryAction ? (
+                <Button onClick={onPrimaryAction}>
+                  Створити в конструкторі
+                </Button>
+              ) : (
+                <ButtonLink href="/builder">Створити в конструкторі</ButtonLink>
+              )}
             </div>
           )}
         </div>
