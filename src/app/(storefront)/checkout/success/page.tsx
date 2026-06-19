@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { db } from "@/lib/db";
 import { formatPrice } from "@/lib/utils";
+import { ButtonLink } from "@/components/storefront/button";
 import { ClearCart } from "./clear-cart";
 
 export const metadata = { title: "Замовлення оформлено" };
@@ -41,14 +41,14 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
         <dl className="space-y-3 text-sm md:text-base">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">Номер замовлення</dt>
-            <dd className="font-mono">{order.id.slice(0, 8)}</dd>
+            <dd>{order.id.slice(0, 8)}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Кількість товарів</dt>
+            <dt className="text-muted-foreground -sans">Кількість товарів</dt>
             <dd>{itemCount}</dd>
           </div>
           <div className="flex justify-between">
-            <dt className="font-display text-muted-foreground">Сума</dt>
+            <dt className="font-sans text-muted-foreground">Сума</dt>
             <dd className="font-display font-normal">{formatPrice(order.totalInCents)}</dd>
           </div>
           <div className="flex justify-between gap-6">
@@ -61,12 +61,7 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
       </div>
 
       <div className="mt-8">
-        <Link
-          href="/shop"
-          className="inline-block bg-foreground px-8 py-3 font-display text-sm font-extrabold text-background transition-opacity hover:opacity-90 md:text-base"
-        >
-          Продовжити покупки
-        </Link>
+        <ButtonLink href="/shop">Продовжити покупки</ButtonLink>
       </div>
     </div>
   );
