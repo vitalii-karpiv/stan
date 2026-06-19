@@ -1,8 +1,7 @@
 import { getStoreUrlForLegalCopy } from "@/lib/site-url";
 
 function StoreLink() {
-  const base = getStoreUrlForLegalCopy();
-  const href = `${base}/`;
+  const href = getStoreUrlForLegalCopy();
   return (
     <a href={href} className="underline underline-offset-2">
       {href}
@@ -10,16 +9,15 @@ function StoreLink() {
   );
 }
 
-const brown = "text-brand";
-const body = `font-sans text-xs sm:text-sm font-light italic leading-relaxed ${brown}`;
-const h2 = `font-[family-name:var(--font-cormorant)] text-base font-normal italic md:text-lg ${brown}`;
+const body =
+  "font-sans text-sm font-light leading-relaxed text-brand/85 md:text-base";
+const h2 =
+  "font-display text-xl font-normal tracking-tight text-brand md:text-2xl";
 
 export function OfferAgreementContent() {
   return (
-    <article className="mx-auto max-w-3xl px-6 py-12">
-      <h1
-        className={`text-center font-[family-name:var(--font-cormorant)] text-xl font-normal italic md:text-2xl ${brown}`}
-      >
+    <article className="mx-auto max-w-3xl px-6 py-12 md:py-16">
+      <h1 className="font-display text-3xl font-normal tracking-tight text-brand md:text-4xl">
         Договір публічної оферти
       </h1>
 
@@ -488,7 +486,7 @@ export function OfferAgreementContent() {
 
       <section className="mt-10">
         <h2 className={h2}>АДРЕСА ТА РЕКВІЗИТИ ПРОДАВЦЯ:</h2>
-        <div className="mt-4 space-y-2 text-xs leading-relaxed text-foreground">
+        <div className="mt-4 space-y-2 text-sm leading-relaxed text-brand md:text-base">
           <p className="font-sans font-normal">ФОП КАРПІВ НАТАЛЯ АНДРІЇВНА</p>
           <p className="font-sans font-normal">
             код ЄДРПОУ 3719303944
