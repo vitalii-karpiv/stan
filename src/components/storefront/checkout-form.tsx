@@ -247,12 +247,10 @@ export function CheckoutForm() {
               Коментар до замовлення
             </legend>
             <div className="space-y-1.5">
-              <label htmlFor="note" className="block text-sm font-medium md:text-base">
-                Примітка
-              </label>
               <textarea
                 id="note"
                 name="note"
+                aria-label="Коментар до замовлення"
                 rows={4}
                 maxLength={500}
                 defaultValue={state.values.note}
@@ -270,7 +268,7 @@ export function CheckoutForm() {
               Спосіб оплати
             </legend>
 
-            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-foreground bg-background px-3 py-3 sm:min-h-0 sm:px-4">
+            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-border bg-background px-3 py-3 has-[:checked]:border-foreground sm:min-h-0 sm:px-4">
               <input
                 type="radio"
                 name="paymentMethod"
@@ -283,7 +281,7 @@ export function CheckoutForm() {
               </span>
             </label>
 
-            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-border bg-background px-3 py-3 sm:min-h-0 sm:px-4">
+            <label className="flex min-h-12 cursor-pointer touch-manipulation items-center gap-3 rounded border border-border bg-background px-3 py-3 has-[:checked]:border-foreground sm:min-h-0 sm:px-4">
               <input
                 type="radio"
                 name="paymentMethod"

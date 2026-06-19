@@ -205,8 +205,7 @@ export default async function HomePage() {
     <div className="bg-[#fffefd]">
       {/* Hero */}
       <section
-        className="relative isolate flex min-h-[80vh] items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat px-6 py-20 text-center"
-        style={{ backgroundImage: "url('/main-background.png')" }}
+        className="relative isolate flex min-h-[80vh] items-center justify-center overflow-hidden bg-[url(/main-background-mobile.jpg)] bg-cover bg-center bg-no-repeat px-6 py-20 text-center sm:bg-[url(/main-background.png)]"
       >
         <div className="relative mx-auto max-w-3xl">
           <h1 className={`${headingClassName} text-3xl tracking-tight md:text-[40px]`}>
