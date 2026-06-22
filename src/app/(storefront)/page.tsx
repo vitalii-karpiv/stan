@@ -227,14 +227,16 @@ export default async function HomePage() {
         <h2 className={`${headingClassName} text-xl md:text-2xl`}>
           Створюй власну прикрасу
         </h2>
-        <Image
-          src="/home-builder-preview.png"
-          alt="Конструктор прикрас Stan"
-          width={2595}
-          height={1602}
+        <video
+          src="/home-builder-preview.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster="/home-builder-preview.png"
+          aria-label="Конструктор прикрас Stan"
           className="mt-6 h-auto w-full"
-          sizes="(max-width: 1280px) 100vw, 1216px"
-          priority
         />
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/builder">Конструктор</ButtonLink>
