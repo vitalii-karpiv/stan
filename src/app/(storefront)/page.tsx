@@ -234,9 +234,9 @@ export default async function HomePage() {
           muted
           playsInline
           preload="metadata"
-          poster="/home-builder-preview.png"
+          poster="/home-builder-preview.jpg"
           aria-label="Конструктор прикрас Stan"
-          className="mt-6 h-auto w-full"
+          className="mt-6 mx-auto h-auto max-h-[65vh] w-auto max-w-full"
         />
         <div className="mt-8 flex justify-center">
           <ButtonLink href="/builder">Конструктор</ButtonLink>
