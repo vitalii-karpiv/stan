@@ -51,11 +51,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const products = await db.product.findMany({
-    where: { published: true },
-    select: { slug: true, updatedAt: true },
-    orderBy: { updatedAt: "desc" },
-  });
+  const [products, collections] = await Promise.all([
+    db.product.findMany({
+      where: { published: true },
+      select: { slug: true, updatedAt: true },
+      orderBy: { updatedAt: "desc" },
+    }),
+    db.collection.findMany({
+      select: { slug: true },
+      orderBy: { name: "asc" },
+    }),
+  ]);
 
   const productPages: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${siteUrl}/shop/${product.slug}`,
@@ -64,5 +70,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...productPages];
+  const collectionPages: MetadataRoute.Sitemap = collections.map(
+    (collection) => ({
+      url: `${siteUrl}/collections/${collection.slug}`,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }),
+  );
+
+  return [...staticPages, ...collectionPages, ...productPages];
 }
