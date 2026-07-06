@@ -1,7 +1,7 @@
 /** Site origin without trailing slash (sitemap, robots). Local fallback when env unset. */
 export function getSiteUrl(): string {
   const rawUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
-  if (!rawUrl) return "http://localhost:3000";
+  if (!rawUrl) return "https://stanjewels.com";
   return rawUrl.replace(/\/+$/, "");
 }
 
